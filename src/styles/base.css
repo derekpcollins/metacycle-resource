@@ -195,7 +195,7 @@ main {
   margin: 0;
 }
 .block-title .n {
-  font-size: var(--text-xs);
+  font-size: inherit; /* same size as the heading text */
   color: var(--color-text-muted);
   font-weight: 400;
   letter-spacing: 0;
