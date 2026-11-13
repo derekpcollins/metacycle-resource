@@ -1,0 +1,50 @@
+# Adds the labels an issue form can't set by itself (issue forms only support fixed labels):
+#   - "Suggest a part or vendor" → new-part or new-vendor, from the "What are you suggesting?" answer
+#   - no answer under "Source or photo" (and no attached image) → needs-source (not for broken links)
+# Same rules as labelsFor() in src/lib/contribution.ts, which the web-form function applies itself.
+name: Issue labels
+
+on:
+  issues:
+    types: [opened, edited]
+
+permissions:
+  issues: write
+
+jobs:
+  label:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const issue = context.payload.issue;
+            const body = issue.body || '';
+            const has = (name) => issue.labels.some((l) => l.name === name);
+            const section = (label) => {
+              const m = body.match(new RegExp(`### ${label}\\s*\\n([\\s\\S]*?)(?=\\n### |\\n---|$)`));
+              return m ? m[1].trim() : null;
+            };
+            const add = [];
+            const remove = [];
+
+            const kind = section('What are you suggesting\\?');
+            if (kind !== null) {
+              const vendor = /^A vendor/.test(kind);
+              add.push(vendor ? 'new-vendor' : 'new-part');
+              remove.push(vendor ? 'new-part' : 'new-vendor');
+            }
+
+            const source = section('Source or photo');
+            if (source !== null && !has('broken-link')) {
+              const missing = source === '' || source === '_No response_';
+              (missing ? add : remove).push('needs-source');
+            }
+
+            const { owner, repo } = context.repo;
+            const toAdd = add.filter((l) => !has(l));
+            if (toAdd.length)
+              await github.rest.issues.addLabels({ owner, repo, issue_number: issue.number, labels: toAdd });
+            for (const name of remove.filter(has))
+              await github.rest.issues.removeLabel({ owner, repo, issue_number: issue.number, name });

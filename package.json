@@ -10,9 +10,13 @@
     "validate": "astro sync",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "ci": "npm run format:check && npm run check && npm run build && npm run test:validation",
+    "ci": "npm run format:check && npm run forms:check && npm run check && npm run build && npm run test:validation && npm run test:contribution",
     "test:validation": "node scripts/test-validation.mjs",
-    "verify:list": "node scripts/verify-list.mjs"
+    "verify:list": "node scripts/verify-list.mjs",
+    "forms:sync": "tsx scripts/sync-issue-forms.ts",
+    "forms:check": "tsx scripts/sync-issue-forms.ts --check",
+    "labels:sync": "tsx scripts/sync-labels.ts",
+    "test:contribution": "tsx scripts/test-contribution.ts"
   },
   "license": "SEE LICENSE IN LICENSE-CODE and LICENSE-CONTENT",
   "dependencies": {
@@ -24,6 +28,7 @@
     "pagefind": "^1.6.0",
     "prettier": "^3.10.1",
     "prettier-plugin-astro": "^1.1.2",
+    "tsx": "^4.23.15",
     "typescript": "^6.0.3",
     "yaml": "^2.9.1"
   },
