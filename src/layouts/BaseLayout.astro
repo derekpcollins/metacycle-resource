@@ -1,44 +1,39 @@
 ---
 import '../styles/base.css';
-import { site, editUrl, reportProblemUrl } from '../site.config';
+import { site } from '../site.config';
+import SiteHeader from '../components/SiteHeader.astro';
+import TabBar from '../components/TabBar.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import PageMeta from '../components/PageMeta.astro';
 
 interface Props {
   title: string;
   description?: string;
-  /** Repo-relative file to open in GitHub's editor; defaults to this page's source. */
+  /** Repo-relative file to open in GitHub's editor; defaults to none ("coming soon"). */
   editPath?: string;
   /** Links backing the page's facts. */
   sources?: string[];
-  /** Last-verified date shown in the page footer. */
+  /** Last-verified line in the page meta block ('never' or an ISO date). */
   lastVerified?: string;
 }
 
 const { title, description = site.description, editPath, sources = [], lastVerified } = Astro.props;
 const pageTitle = title === site.name ? site.name : `${title} · ${site.name}`;
-const path = Astro.url.pathname.replace(/\/$/, '') || '/';
-
-const primary = [
-  { href: '/parts', label: 'Parts' },
-  { href: '/troubleshooting', label: 'Troubleshoot' },
-  { href: '/guides', label: 'Guides' },
-  { href: '/specs', label: 'Specs' },
-];
-const menu = [
-  { href: '/tools', label: 'Tools' },
-  { href: '/community', label: 'Community' },
-  { href: '/contribute', label: 'Contribute' },
-];
-const isCurrent = (href: string) =>
-  path === href || path.startsWith(`${href}/`) ? 'page' : undefined;
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
+    <meta name="theme-color" content="#fafaf7" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#111110" media="(prefers-color-scheme: dark)" />
+    <!-- Lets CSS show JS-only controls before first paint (no layout shift). -->
+    <script is:inline>
+      document.documentElement.classList.add('js');
+    </script>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <!-- Private pre-launch: keep out of search engines until Phase 6. -->
     <meta name="robots" content="noindex" />
@@ -47,83 +42,28 @@ const isCurrent = (href: string) =>
     <a class="skip-link" href="#main">
       Skip to content
     </a>
-    <header class="site-header">
-      <div class="wrap">
-        <a class="site-title" href="/">
-          {site.name}
-        </a>
-        <nav aria-label="Primary">
-          <ul class="nav-list">
-            {primary.map((l) => (
-              <li>
-                <a href={l.href} aria-current={isCurrent(l.href)}>
-                  {l.label}
-                </a>
-              </li>
-            ))}
-            <li>
-              <details class="menu">
-                <summary>Menu</summary>
-                <ul>
-                  {menu.map((l) => (
-                    <li>
-                      <a href={l.href} aria-current={isCurrent(l.href)}>
-                        {l.label}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </details>
-            </li>
-          </ul>
-        </nav>
-      </div>
-    </header>
-
-    <main id="main" class="wrap">
+    <SiteHeader />
+    <main id="main" tabindex="-1">
       <slot />
-
-      <aside class="page-meta" aria-label="About this page">
-        {sources.length > 0 && (
-          <>
-            <h2 class="muted">Sources</h2>
-            <ol>
-              {sources.map((s) => (
-                <li>
-                  <a href={s}>{s}</a>
-                </li>
-              ))}
-            </ol>
-          </>
-        )}
-        {lastVerified && <p>Last verified: {lastVerified}</p>}
-        <ul>
-          <li>
-            {editPath ? (
-              <a href={editUrl(editPath)}>Edit this page</a>
-            ) : (
-              <span class="muted">Edit this page (coming soon)</span>
-            )}
-          </li>
-          <li>
-            <a href={reportProblemUrl(title)}>Report a problem</a>
-          </li>
-        </ul>
-      </aside>
     </main>
-
-    <footer class="site-footer">
-      <div class="wrap">
-        <p>
-          Independent, community-maintained resource — not affiliated with SONDORS Inc. or any
-          seller listed here. Use at your own risk. <a href="/disclaimer">Full disclaimer</a>.
-        </p>
-        <p>
-          Content: <a href={site.license.content.url}>{site.license.content.name}</a> · Code:
-          <a href={site.license.code.url}>{site.license.code.name}</a> ·{' '}
-          <a href="/about">About &amp; license</a> ·<a href={site.repoUrl}>Source on GitHub</a>
-        </p>
-      </div>
-    </footer>
+    <PageMeta title={title} sources={sources} lastVerified={lastVerified} editPath={editPath} />
+    <SiteFooter />
+    <TabBar />
+    <script>
+      // Close open menus (<details data-menu>) on outside tap or Escape. Menus work without JS.
+      const menus = () => document.querySelectorAll<HTMLDetailsElement>('details[data-menu][open]');
+      document.addEventListener('click', (e) => {
+        menus().forEach((d) => {
+          if (!d.contains(e.target as Node)) d.open = false;
+        });
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key !== 'Escape') return;
+        menus().forEach((d) => {
+          d.open = false;
+          d.querySelector('summary')?.focus();
+        });
+      });
+    </script>
   </body>
 </html>

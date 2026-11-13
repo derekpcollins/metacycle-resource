@@ -1,0 +1,121 @@
+---
+/** Bottom tab bar on phones (spec: Parts · Troubleshoot · Guides · Specs + menu). */
+import { primaryNav, menuNav, isCurrent } from '../lib/nav';
+import Icon from './icons/Icon.astro';
+
+const path = Astro.url.pathname;
+const menuActive = menuNav.some((l) => isCurrent(path, l.href));
+---
+
+<nav class="tabbar" aria-label="Primary (tabs)">
+  <ul>
+    {primaryNav.map((l) => (
+      <li>
+        <a href={l.href} aria-current={isCurrent(path, l.href) ? 'page' : undefined}>
+          <Icon name={l.icon} />
+          <span>{l.label}</span>
+        </a>
+      </li>
+    ))}
+    <li>
+      <details class="more" data-menu>
+        <summary class:list={[{ active: menuActive }]}>
+          <Icon name="more" />
+          <span>more</span>
+        </summary>
+        <ul class="sheet">
+          {menuNav.map((l) => (
+            <li>
+              <a href={l.href} aria-current={isCurrent(path, l.href) ? 'page' : undefined}>
+                {l.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </details>
+    </li>
+  </ul>
+</nav>
+
+<style>
+  .tabbar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 30;
+    background: var(--color-bg);
+    border-top: var(--border) solid var(--color-rule);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .tabbar > ul {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .tabbar a,
+  .more summary {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    min-height: var(--tabbar-height);
+    text-decoration: none;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: -0.02em;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    list-style: none;
+  }
+  .more summary::-webkit-details-marker {
+    display: none;
+  }
+  .tabbar > ul > li > a[aria-current='page'],
+  .more summary.active {
+    color: var(--color-text);
+    font-weight: 600;
+  }
+  .tabbar > ul > li > a[aria-current='page']::before,
+  .more summary.active::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 22%;
+    right: 22%;
+    height: var(--border-accent);
+    background: var(--color-accent);
+  }
+  .sheet {
+    position: absolute;
+    right: var(--space-2);
+    bottom: calc(100% + var(--space-2));
+    min-width: 13rem;
+    list-style: none;
+    margin: 0;
+    padding: var(--space-2) 0;
+    background: var(--color-bg);
+    border: var(--border) solid var(--color-rule-strong);
+    box-shadow: var(--shadow-menu);
+  }
+  .sheet a {
+    flex-direction: row;
+    justify-content: flex-start;
+    min-height: var(--tap-target);
+    padding: 0 var(--space-5);
+    font-size: var(--text-sm);
+    color: var(--color-text);
+  }
+  .sheet a[aria-current='page'] {
+    font-weight: 600;
+  }
+  @media (min-width: 60rem) {
+    .tabbar {
+      display: none;
+    }
+  }
+</style>

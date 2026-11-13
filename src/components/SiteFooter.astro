@@ -1,0 +1,34 @@
+---
+import { site } from '../site.config';
+---
+
+<footer class="site-footer">
+  <div class="wrap">
+    <p>
+      Independent, community-maintained resource — not affiliated with SONDORS Inc. or any seller
+      listed here. Use at your own risk. <a href="/disclaimer">Full disclaimer</a>.
+    </p>
+    <p class="mono">
+      content <a href={site.license.content.url}>{site.license.content.name}</a> · code{' '}
+      <a href={site.license.code.url}>{site.license.code.name}</a> ·{' '}
+      <a href="/about">about &amp; license</a> · <a href={site.repoUrl}>source</a>
+    </p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: var(--border) solid var(--color-rule);
+    padding: var(--space-6) 0 var(--space-8);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+  p {
+    margin: 0 0 var(--space-2);
+    max-width: 72ch;
+  }
+  a {
+    display: inline-block;
+    padding: var(--space-1) 0;
+  }
+</style>

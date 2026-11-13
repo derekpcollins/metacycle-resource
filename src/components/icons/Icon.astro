@@ -1,0 +1,33 @@
+---
+/** Small inline line icons (decorative; always aria-hidden). */
+interface Props {
+  name: 'search' | 'parts' | 'troubleshoot' | 'guides' | 'specs' | 'more' | 'close';
+  size?: number;
+}
+const { name, size = 20 } = Astro.props;
+const paths: Record<Props['name'], string> = {
+  search: '<circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/>',
+  parts:
+    '<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/>',
+  troubleshoot:
+    '<path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2.4-.6-.6-2.4z"/>',
+  guides: '<path d="M4 4h12l4 4v12H4z"/><path d="M8 10h8M8 14h8M8 18h5"/>',
+  specs: '<path d="M4 6h16M4 12h16M4 18h16"/><path d="M9 4v4M15 10v4M7 16v4"/>',
+  more: '<circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/>',
+  close: '<path d="M6 6l12 12M18 6 6 18"/>',
+};
+---
+
+<svg
+  width={size}
+  height={size}
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.75"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden="true"
+  focusable="false"
+  set:html={paths[name]}
+/>

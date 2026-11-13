@@ -1,0 +1,98 @@
+---
+/** One part in a list: name, system, failure rate, buy-option summary, last verified. */
+import type { CollectionEntry } from 'astro:content';
+import { FAILURE_RATES, SOURCE_STATUSES, SYSTEMS } from '../lib/enums';
+import { bestStatus, isoDate, latestVerified, sourceIsStale, statusTone } from '../lib/format';
+import Badge from './Badge.astro';
+import StaleBadge from './StaleBadge.astro';
+
+interface Props {
+  part: CollectionEntry<'parts'>;
+  headingLevel?: 'h2' | 'h3';
+}
+const { part, headingLevel = 'h3' } = Astro.props;
+const d = part.data;
+const best = bestStatus(d.sources);
+const verified = latestVerified(d.sources);
+const allStale = d.sources.length > 0 && d.sources.every(sourceIsStale);
+const H = headingLevel;
+---
+
+<article class="part-card">
+  <H class="name">
+    <a href={`/parts/${part.id}`}>{d.name}</a>
+  </H>
+  {d.aliases.length > 0 && <p class="aka">also: {d.aliases.join(', ')}</p>}
+  <dl class="facts">
+    <div>
+      <dt class="visually-hidden">System</dt>
+      <dd>{SYSTEMS[d.system].toLowerCase()}</dd>
+    </div>
+    {d.failure_rate && (
+      <div>
+        <dt>fails</dt>
+        <dd>{FAILURE_RATES[d.failure_rate].toLowerCase()}</dd>
+      </div>
+    )}
+    <div>
+      <dt>buy</dt>
+      <dd>
+        {d.sources.length} {d.sources.length === 1 ? 'option' : 'options'}
+        {best && <Badge tone={statusTone(best)}>{SOURCE_STATUSES[best].toLowerCase()}</Badge>}
+      </dd>
+    </div>
+    <div>
+      <dt>verified</dt>
+      <dd>
+        {verified ? isoDate(verified) : 'never'}
+        {allStale && <StaleBadge />}
+      </dd>
+    </div>
+  </dl>
+</article>
+
+<style>
+  .part-card {
+    padding: var(--space-4) 0;
+    border-bottom: var(--border) solid var(--color-rule);
+  }
+  .name {
+    font-family: var(--font-sans);
+    font-size: var(--text-lg);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin: 0;
+  }
+  .name a {
+    display: inline-block;
+    padding: var(--space-1) 0;
+  }
+  .aka {
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+  .facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1) var(--space-5);
+    margin: var(--space-2) 0 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+  }
+  .facts div {
+    display: flex;
+    gap: var(--space-2);
+    align-items: center;
+  }
+  .facts dt {
+    color: var(--color-text-muted);
+  }
+  .facts dd {
+    margin: 0;
+    display: flex;
+    gap: var(--space-2);
+    align-items: center;
+    flex-wrap: wrap;
+  }
+</style>

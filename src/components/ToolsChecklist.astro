@@ -1,0 +1,66 @@
+---
+/** "Tools you'll need" — tickable list of tool entries. */
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  tools: CollectionEntry<'tools'>[];
+}
+const { tools } = Astro.props;
+---
+
+{tools.length === 0 ? (
+  <p class="muted">None listed.</p>
+) : (
+  <ul class="checklist">
+    {tools.map((t) => (
+      <li>
+        <input type="checkbox" id={`tool-${t.id}`} data-tool-check={t.id} />
+        <label for={`tool-${t.id}`}>
+          <span class="name">{t.data.name}</span>
+          <span class="spec">{t.data.spec}</span>
+        </label>
+        <a class="text-link" href={`/tools/${t.id}`}>
+          details<span class="visually-hidden">: {t.data.name}</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+)}
+
+<style>
+  .checklist {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  li {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    border-bottom: var(--border) solid var(--color-rule);
+    min-height: 56px;
+  }
+  input {
+    flex: none;
+    width: 24px;
+    height: 24px;
+    margin: 0;
+    accent-color: var(--color-text);
+  }
+  label {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-2) 0;
+    cursor: pointer;
+  }
+  .spec {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+  li:has(input:checked) .name {
+    text-decoration: line-through;
+    color: var(--color-text-muted);
+  }
+</style>

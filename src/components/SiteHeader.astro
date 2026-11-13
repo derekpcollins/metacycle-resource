@@ -1,0 +1,166 @@
+---
+import { site } from '../site.config';
+import { primaryNav, menuNav, isCurrent } from '../lib/nav';
+import Icon from './icons/Icon.astro';
+
+const path = Astro.url.pathname;
+const menuActive = menuNav.some((l) => isCurrent(path, l.href));
+---
+
+<header class="site-header">
+  <div class="wrap bar">
+    <a class="brand" href="/">
+      <span class="mark" aria-hidden="true"></span>
+      <span>{site.name.toLowerCase()}</span>
+    </a>
+    <nav class="topnav" aria-label="Primary">
+      <ul>
+        {primaryNav.map((l) => (
+          <li>
+            <a href={l.href} aria-current={isCurrent(path, l.href) ? 'page' : undefined}>
+              {l.label}
+            </a>
+          </li>
+        ))}
+        <li>
+          <details class="menu" data-menu>
+            <summary class:list={[{ active: menuActive }]}>more</summary>
+            <ul class="menu-panel">
+              {menuNav.map((l) => (
+                <li>
+                  <a href={l.href} aria-current={isCurrent(path, l.href) ? 'page' : undefined}>
+                    {l.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </details>
+        </li>
+      </ul>
+    </nav>
+    <a
+      class="search-link"
+      href="/search"
+      aria-label="Search"
+      aria-current={isCurrent(path, '/search') ? 'page' : undefined}
+    >
+      <Icon name="search" />
+    </a>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    border-bottom: var(--border) solid var(--color-rule);
+    background: var(--color-bg);
+  }
+  .bar {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    min-height: 60px;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: var(--tap-target);
+    font-family: var(--font-mono);
+    font-weight: 600;
+    font-size: var(--text-sm);
+    text-decoration: none;
+  }
+  .mark {
+    flex: none;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    box-shadow: 0 0 0 1.5px var(--color-text);
+  }
+  .search-link {
+    margin-left: auto;
+    display: grid;
+    place-items: center;
+    width: var(--tap-target);
+    height: var(--tap-target);
+    flex: none;
+  }
+  .topnav {
+    display: none;
+    margin-left: auto;
+  }
+  .topnav > ul {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: var(--space-1);
+  }
+  .topnav a,
+  .menu summary {
+    display: flex;
+    align-items: center;
+    min-height: var(--tap-target);
+    padding: 0 var(--space-3);
+    text-decoration: none;
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    cursor: pointer;
+  }
+  .topnav a:hover,
+  .menu summary:hover {
+    color: var(--color-text);
+  }
+  .topnav a[aria-current='page'],
+  .menu summary.active {
+    color: var(--color-text);
+    font-weight: 600;
+    background: linear-gradient(
+      transparent 62%,
+      var(--color-mark) 62%,
+      var(--color-mark) 92%,
+      transparent 92%
+    );
+  }
+  .menu {
+    position: relative;
+  }
+  .menu summary {
+    list-style: none;
+  }
+  .menu summary::-webkit-details-marker {
+    display: none;
+  }
+  .menu summary::after {
+    content: '▾';
+    margin-left: 0.35em;
+    font-size: 0.8em;
+  }
+  .menu-panel {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    z-index: 20;
+    min-width: 12rem;
+    list-style: none;
+    margin: 0;
+    padding: var(--space-2) 0;
+    background: var(--color-bg);
+    border: var(--border) solid var(--color-rule-strong);
+    box-shadow: var(--shadow-menu);
+  }
+  .menu-panel a {
+    padding: 0 var(--space-4);
+  }
+  @media (min-width: 60rem) {
+    .topnav {
+      display: block;
+    }
+    .search-link {
+      margin-left: 0;
+    }
+  }
+</style>

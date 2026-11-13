@@ -1,0 +1,9 @@
+---
+/** "needs re-check": a source never verified, or verified longer ago than site.staleAfterDays. */
+import { site } from '../site.config';
+import Badge from './Badge.astro';
+---
+
+<Badge tone="flag" title={`Not verified in the last ${site.staleAfterDays} days`}>
+  needs re-check
+</Badge>

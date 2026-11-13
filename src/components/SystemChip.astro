@@ -1,0 +1,31 @@
+---
+/** A system label; links to the parts index filtered by that system when `href` is true. */
+import { SYSTEMS } from '../lib/enums';
+
+interface Props {
+  system: keyof typeof SYSTEMS;
+  link?: boolean;
+}
+const { system, link = false } = Astro.props;
+const label = SYSTEMS[system].toLowerCase();
+---
+
+{link ? (
+  <a class="chip" href={`/parts?system=${system}`}>
+    {label}
+  </a>
+) : (
+  <span class="chip">{label}</span>
+)}
+
+<style>
+  .chip {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+  }
+  a.chip {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+  }
+</style>

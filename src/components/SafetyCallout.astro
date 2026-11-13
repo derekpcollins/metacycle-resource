@@ -1,0 +1,41 @@
+---
+interface Props {
+  label?: string;
+}
+const { label = 'safety' } = Astro.props;
+---
+
+<div class="safety" role="note">
+  <span class="bang" aria-hidden="true">
+    !
+  </span>
+  <div>
+    <p class="lbl">{label}</p>
+    <div class="body">
+      <slot />
+    </div>
+  </div>
+</div>
+
+<style>
+  .safety {
+    display: flex;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    border-left: var(--border-accent) solid var(--color-accent);
+    background: var(--color-surface);
+    margin: 0 0 var(--space-3);
+  }
+  .bang,
+  .lbl {
+    font-family: var(--font-mono);
+    font-weight: 600;
+  }
+  .lbl {
+    font-size: var(--text-xs);
+    margin: 0 0 var(--space-1);
+  }
+  .body :global(p) {
+    margin: 0;
+  }
+</style>

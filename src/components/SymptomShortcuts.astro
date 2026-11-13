@@ -1,0 +1,24 @@
+---
+/** "What's wrong?" — symptom-first links to troubleshooting entries. */
+import type { CollectionEntry } from 'astro:content';
+import { SYSTEMS } from '../lib/enums';
+
+interface Props {
+  entries: CollectionEntry<'troubleshooting'>[];
+}
+const { entries } = Astro.props;
+---
+
+<ul class="rows">
+  {entries.map((t) => (
+    <li>
+      <a href={`/troubleshooting/${t.id}`}>
+        <span class="t">{t.data.symptom}</span>
+        <span class="meta">{SYSTEMS[t.data.system].toLowerCase()}</span>
+        <span class="go" aria-hidden="true">
+          →
+        </span>
+      </a>
+    </li>
+  ))}
+</ul>

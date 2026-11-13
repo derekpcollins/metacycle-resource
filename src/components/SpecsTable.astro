@@ -1,0 +1,31 @@
+---
+import { formatSpec } from '../lib/format';
+
+interface Props {
+  specs: Record<string, string | number | boolean>;
+  caption?: string;
+}
+const { specs, caption } = Astro.props;
+const rows = Object.entries(specs).map(([k, v]) => formatSpec(k, v));
+---
+
+<table class="data-table specs">
+  {caption && <caption class="visually-hidden">{caption}</caption>}
+  <tbody>
+    {rows.map((r) => (
+      <tr>
+        <th scope="row">{r.label}</th>
+        <td>{r.value}</td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
+<style>
+  .specs th {
+    width: 50%;
+  }
+  .specs td {
+    color: var(--color-text);
+  }
+</style>

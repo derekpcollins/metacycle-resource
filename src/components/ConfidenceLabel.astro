@@ -1,0 +1,20 @@
+---
+/** Trust level shown on every guide and fix (spec → Governance). */
+import { CONFIDENCE } from '../lib/enums';
+import Badge from './Badge.astro';
+
+interface Props {
+  value: keyof typeof CONFIDENCE;
+}
+const { value } = Astro.props;
+const tone = value === 'confirmed' ? 'outline' : 'dashed';
+const help = {
+  confirmed: 'Tested by the editor or a co-maintainer',
+  'community-reported': 'Reported by owners; not yet confirmed',
+  theory: 'Unconfirmed idea; treat with care',
+}[value];
+---
+
+<Badge tone={tone} title={help}>
+  {CONFIDENCE[value].toLowerCase()}
+</Badge>
