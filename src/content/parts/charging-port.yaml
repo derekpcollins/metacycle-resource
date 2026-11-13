@@ -34,7 +34,7 @@ sources:
       amount: TODO
       currency: USD
     last_verified: TODO
-    status: unverified
+    status: dead
     notes: Returned HTTP 404 in an automated check on 2026-11-12; probably dead.
   - vendor: jnicon
     url: https://www.jniconconnector.com/sale-26553092-push-locking-ip67-waterproof-connector-m23-8-pin-panel-mount-for-e-scooter.html
