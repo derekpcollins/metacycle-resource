@@ -1,9 +1,13 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import Labeled from '../../components/Labeled.astro';
-import { getCollection, getEntry, type CollectionEntry } from 'astro:content';
-import { FAILURE_RATES, FITS, SOURCE_STATUSES, SOURCE_TYPES, SYSTEMS } from '../../lib/enums';
-import { formatDate, guidesForPart, isStale, repoPath } from '../../lib/content';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { FAILURE_RATES, SYSTEMS } from '../../lib/enums';
+import { guidesForPart, repoPath } from '../../lib/content';
+import { isoDate, latestVerified } from '../../lib/format';
+import BuyOptions from '../../components/BuyOptions.astro';
+import SpecsTable from '../../components/SpecsTable.astro';
+import SystemChip from '../../components/SystemChip.astro';
+import DifficultyMeter from '../../components/DifficultyMeter.astro';
 
 export async function getStaticPaths() {
   return (await getCollection('parts')).map((entry) => ({
@@ -13,101 +17,135 @@ export async function getStaticPaths() {
 }
 const { entry } = Astro.props as { entry: CollectionEntry<'parts'> };
 const d = entry.data;
-const vendors = await Promise.all(d.sources.map((s) => getEntry(s.vendor)));
 const guides = await guidesForPart(entry);
+const verified = latestVerified(d.sources);
+const hasSpecs = Object.keys(d.specs).length > 0;
+let n = 1;
+const num = () => String(n++).padStart(2, '0');
 ---
 
-<BaseLayout title={d.name} editPath={repoPath(entry)} sources={d.references}>
-  <h1>{d.name}</h1>
-  <Labeled
-    items={[
-      ['System', SYSTEMS[d.system]],
-      ['Also called', d.aliases.join(', ')],
-      ['OEM part number', d.oem_part_number],
-      ['Failure rate', d.failure_rate && FAILURE_RATES[d.failure_rate]],
-      ['Replacement difficulty', d.difficulty && `${d.difficulty} / 5`],
-      ['Diagram callout', d.diagram_ref],
-    ]}
-  />
-
-  {Object.keys(d.specs).length > 0 && (
-    <>
-      <h2>Specs</h2>
-      <table>
-        <tbody>
-          {Object.entries(d.specs).map(([k, v]) => (
-            <tr>
-              <th scope="row">
-                <code>{k}</code>
-              </th>
-              <td>{String(v)}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </>
-  )}
-
-  <h2>Where to buy</h2>
-  {d.sources.length === 0 ? (
-    <p class="muted">No buy options known yet.</p>
-  ) : (
-    <table>
-      <thead>
-        <tr>
-          <th>Vendor</th>
-          <th>Type</th>
-          <th>Fit</th>
-          <th>Price</th>
-          <th>Status</th>
-          <th>Verified</th>
-          <th>Link</th>
-        </tr>
-      </thead>
-      <tbody>
-        {d.sources.map((s, i) => (
-          <tr class={isStale(s.last_verified) ? 'stale' : undefined}>
-            <td>
-              <a href={`/vendors/${s.vendor.id}`}>{vendors[i]?.data.name ?? s.vendor.id}</a>
-            </td>
-            <td>{SOURCE_TYPES[s.type]}</td>
-            <td>{FITS[s.fit]}</td>
-            <td>{s.price ? `${s.price.amount} ${s.price.currency}` : '—'}</td>
-            <td>{SOURCE_STATUSES[s.status]}</td>
-            <td>{formatDate(s.last_verified)}</td>
-            <td>
-              {s.url === 'TODO' ? (
-                'TODO'
-              ) : (
-                <a href={s.url} rel="nofollow noopener">
-                  Open
-                </a>
-              )}
-              {s.notes && <> — {s.notes}</>}
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  )}
-
-  {d.fits_notes && (
-    <>
-      <h2>Fit notes</h2>
-      <p>{d.fits_notes}</p>
-    </>
-  )}
-
-  <h2>Related guides</h2>
-  {guides.length ? (
-    <ul>
-      {guides.map((g) => (
+<BaseLayout
+  title={d.name}
+  description={`${d.name}: specs, where to buy, and fit notes for the Sondors Metacycle.`}
+  editPath={repoPath(entry)}
+  sources={d.references}
+  lastVerified={verified ? isoDate(verified) : 'never'}
+>
+  <article class="wrap" data-pagefind-body data-pagefind-filter="type:Part">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <ol>
         <li>
-          <a href={`/guides/${g.id}`}>{g.data.title}</a>
+          <a href="/parts">parts</a>
         </li>
-      ))}
-    </ul>
-  ) : (
-    <p class="muted">None yet.</p>
-  )}
+        <li>
+          <a href={`/parts?system=${d.system}`}>{SYSTEMS[d.system].toLowerCase()}</a>
+        </li>
+        <li aria-current="page">{entry.id}</li>
+      </ol>
+    </nav>
+
+    <header class="page-head">
+      <h1 data-pagefind-meta="title">{d.name}</h1>
+      {d.aliases.length > 0 && (
+        <p class="lede" data-pagefind-weight="6">
+          Also called {d.aliases.join(', ')}.
+        </p>
+      )}
+      <dl class="kv">
+        <div>
+          <dt>system</dt>
+          <dd>
+            <SystemChip system={d.system} link />
+          </dd>
+        </div>
+        {d.oem_part_number && (
+          <div>
+            <dt>part no.</dt>
+            <dd>{d.oem_part_number}</dd>
+          </div>
+        )}
+        {d.failure_rate && (
+          <div>
+            <dt>failure rate</dt>
+            <dd>{FAILURE_RATES[d.failure_rate].toLowerCase()}</dd>
+          </div>
+        )}
+        {d.difficulty && (
+          <div>
+            <dt>difficulty</dt>
+            <dd>
+              <DifficultyMeter value={d.difficulty} />
+            </dd>
+          </div>
+        )}
+        {d.diagram_ref && (
+          <div>
+            <dt>diagram</dt>
+            <dd>#{d.diagram_ref}</dd>
+          </div>
+        )}
+      </dl>
+    </header>
+
+    <section class="block" aria-labelledby="h-buy">
+      <h2 class="block-title" id="h-buy">
+        <span class="n">{num()}</span>Where to buy
+      </h2>
+      <div data-pagefind-ignore>
+        <BuyOptions part={entry} />
+      </div>
+    </section>
+
+    <div class="layout">
+      <div>
+        {hasSpecs && (
+          <section class="block" aria-labelledby="h-specs">
+            <h2 class="block-title" id="h-specs">
+              <span class="n">{num()}</span>Specs
+            </h2>
+            <SpecsTable specs={d.specs} caption={`${d.name} specs`} />
+          </section>
+        )}
+        {d.fits_notes && (
+          <section class="block" aria-labelledby="h-fit">
+            <h2 class="block-title" id="h-fit">
+              <span class="n">{num()}</span>Fit notes
+            </h2>
+            <p class="note">{d.fits_notes}</p>
+          </section>
+        )}
+      </div>
+
+      <aside class="side" aria-label="Related">
+        <section>
+          <h2>Related guides</h2>
+          {guides.length ? (
+            <ul>
+              {guides.map((g) => (
+                <li>
+                  <a href={`/guides/${g.id}`}>{g.data.title}</a>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p class="muted">
+              None yet. <a href="/contribute">Share a fix</a>.
+            </p>
+          )}
+        </section>
+      </aside>
+    </div>
+  </article>
 </BaseLayout>
+
+<style>
+  .note {
+    padding: var(--space-4) 0 0;
+    margin: 0;
+    max-width: 60ch;
+  }
+  .side a {
+    display: inline-block;
+    padding: var(--space-1) 0;
+  }
+</style>

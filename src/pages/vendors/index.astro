@@ -1,19 +1,43 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
+import { YES_NO_UNKNOWN } from '../../lib/enums';
+import { partsFromVendor } from '../../lib/content';
+
 const vendors = (await getCollection('vendors')).sort((a, b) =>
   a.data.name.localeCompare(b.data.name),
 );
+const rows = await Promise.all(
+  vendors.map(async (v) => ({ v, count: (await partsFromVendor(v.id)).length })),
+);
 ---
 
-<BaseLayout title="Vendors">
-  <h1>Vendors</h1>
-  <ul>
-    {vendors.map((v) => (
-      <li>
-        <a href={`/vendors/${v.id}`}>{v.data.name}</a>
-        {v.data.country && <span class="muted"> — {v.data.country}</span>}
-      </li>
-    ))}
-  </ul>
+<BaseLayout title="Vendors" editPath="src/pages/vendors/index.astro">
+  <div class="wrap">
+    <header class="page-head">
+      <h1>Vendors</h1>
+      <p class="lede">Who sells Metacycle parts, where they ship from, and what to watch for.</p>
+    </header>
+    <ul class="rows">
+      {rows.map(({ v, count }) => (
+        <li>
+          <a href={`/vendors/${v.id}`}>
+            <span class="t">
+              {v.data.name}
+              <span class="sub">
+                {v.data.country ? `ships from ${v.data.country}` : 'origin unknown'} · US warehouse:{' '}
+                {YES_NO_UNKNOWN[v.data.us_warehouse].toLowerCase()}
+              </span>
+            </span>
+            <span class="meta">
+              {count} {count === 1 ? 'part' : 'parts'}
+            </span>
+            <span class="go" aria-hidden="true">
+              →
+            </span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
 </BaseLayout>

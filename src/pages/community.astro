@@ -1,10 +1,64 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { community, communitySource } from '../data/community';
 ---
 
-<BaseLayout title="Community" editPath="src/pages/community.astro">
-  <h1>Community</h1>
-  <p class="muted">
-    Coming soon. Links to r/metacycle, Discord and Facebook groups arrive in Phase 3.
-  </p>
+<BaseLayout title="Community" editPath="src/pages/community.astro" sources={[communitySource]}>
+  <div class="wrap">
+    <header class="page-head">
+      <h1>Community</h1>
+      <p class="lede">
+        This site isn’t a forum. For questions and chat, owners gather in these places.
+      </p>
+    </header>
+    <ul class="rows">
+      {community.map((c) => (
+        <li>
+          {c.url ? (
+            <a href={c.url}>
+              <span class="t">{c.name}</span>
+              <span class="meta">{c.kind}</span>
+              <span class="go" aria-hidden="true">
+                ↗
+              </span>
+            </a>
+          ) : (
+            <div class="row-static">
+              <span class="t">{c.name}</span>
+              <span class="meta">{c.kind} · link coming soon</span>
+            </div>
+          )}
+        </li>
+      ))}
+    </ul>
+    <p class="caption">
+      Until every link here is verified,{' '}
+      <a href={communitySource}>Metacyclopedia’s community page</a> has them all.
+    </p>
+  </div>
 </BaseLayout>
+
+<style>
+  .row-static {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0 var(--space-4);
+    min-height: 60px;
+    padding: var(--space-3) var(--space-1);
+    border-bottom: var(--border) solid var(--color-rule);
+  }
+  .row-static .t {
+    flex: 1;
+    font-weight: 500;
+  }
+  .row-static .meta {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+  .caption a {
+    display: inline-block;
+    padding: var(--space-2) 0;
+  }
+</style>

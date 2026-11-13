@@ -1,30 +1,147 @@
 ---
+/** Tools page: starter kit + diagnostic gear; `used in` is derived from guides (spec). */
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 import { TOOL_CATEGORIES } from '../../lib/enums';
-const tools = (await getCollection('tools')).sort((a, b) => a.data.name.localeCompare(b.data.name));
+import EmptyState from '../../components/EmptyState.astro';
+
+const [tools, guides] = await Promise.all([getCollection('tools'), getCollection('guides')]);
+tools.sort((a, b) => a.data.name.localeCompare(b.data.name));
+const usedIn = (id: string) => guides.filter((g) => g.data.tools.some((t) => t.id === id));
+
+const isDiagnostic = (c: string) => c === 'diagnostic' || c === 'electrical';
 const groups = [
-  { label: 'Starter kit', items: tools.filter((t) => t.data.essential) },
-  { label: 'Everything else', items: tools.filter((t) => !t.data.essential) },
+  {
+    id: 'starter',
+    title: 'Starter kit',
+    blurb: 'What most owners need for routine jobs.',
+    items: tools.filter((t) => t.data.essential),
+  },
+  {
+    id: 'diagnostic',
+    title: 'Diagnostic gear',
+    blurb: 'For electrical faults and controller work.',
+    items: tools.filter((t) => !t.data.essential && isDiagnostic(t.data.category)),
+  },
+  {
+    id: 'other',
+    title: 'Everything else',
+    blurb: 'Needed for specific jobs only.',
+    items: tools.filter((t) => !t.data.essential && !isDiagnostic(t.data.category)),
+  },
 ];
 ---
 
 <BaseLayout title="Tools" editPath="src/pages/tools/index.astro">
-  <h1>Tools</h1>
-  {groups.map(
-    (g) =>
-      g.items.length > 0 && (
-        <>
-          <h2>{g.label}</h2>
-          <ul>
-            {g.items.map((t) => (
-              <li>
-                <a href={`/tools/${t.id}`}>{t.data.name}</a>{' '}
-                <span class="muted">— {TOOL_CATEGORIES[t.data.category]}</span>
-              </li>
-            ))}
-          </ul>
-        </>
-      ),
-  )}
+  <div class="wrap">
+    <header class="page-head">
+      <h1>Tools</h1>
+      <p class="lede">
+        Every tool our guides call for, with exact sizes. Each guide lists the ones it needs.
+      </p>
+    </header>
+
+    {groups.map((g, i) => (
+      <section class="block" aria-labelledby={`h-${g.id}`}>
+        <h2 class="block-title" id={`h-${g.id}`}>
+          <span class="n">{String(i + 1).padStart(2, '0')}</span>
+          {g.title}
+        </h2>
+        <p class="caption">{g.blurb}</p>
+        {g.items.length === 0 ? (
+          <EmptyState title="nothing listed yet">
+            <p>
+              Know what belongs here? <a href="/contribute">Suggest a tool</a>.
+            </p>
+          </EmptyState>
+        ) : (
+          <table class="data-table tools">
+            <caption class="visually-hidden">{g.title}</caption>
+            <thead>
+              <tr>
+                <th scope="col">tool</th>
+                <th scope="col">spec</th>
+                <th scope="col">category</th>
+                <th scope="col">used in</th>
+              </tr>
+            </thead>
+            <tbody>
+              {g.items.map((t) => {
+                const uses = usedIn(t.id);
+                return (
+                  <tr>
+                    <th scope="row">
+                      <a href={`/tools/${t.id}`}>{t.data.name}</a>
+                    </th>
+                    <td>{t.data.spec}</td>
+                    <td>{TOOL_CATEGORIES[t.data.category].toLowerCase()}</td>
+                    <td>
+                      {uses.length ? (
+                        <ul class="uses">
+                          {uses.map((u) => (
+                            <li>
+                              <a href={`/guides/${u.id}`}>{u.data.title}</a>
+                            </li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <span class="todo">no guides yet</span>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        )}
+      </section>
+    ))}
+  </div>
 </BaseLayout>
+
+<style>
+  .caption {
+    margin: var(--space-2) 0 var(--space-2);
+  }
+  .tools tbody th {
+    color: var(--color-text);
+    font-family: var(--font-sans);
+    font-weight: 600;
+  }
+  .tools a {
+    display: inline-block;
+    padding: var(--space-1) 0;
+  }
+  .uses {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-sans);
+  }
+  @media (max-width: 40rem) {
+    .tools thead {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+    }
+    .tools tr {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-1) var(--space-4);
+      padding: var(--space-3) 0;
+      border-bottom: var(--border) solid var(--color-rule);
+    }
+    .tools th,
+    .tools td {
+      display: block;
+      padding: 0;
+      border: 0;
+    }
+    .tools tbody th,
+    .tools td:last-child {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

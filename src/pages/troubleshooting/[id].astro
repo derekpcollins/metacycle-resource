@@ -1,8 +1,9 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection, getEntry, render, type CollectionEntry } from 'astro:content';
-import { CONFIDENCE, SYSTEMS } from '../../lib/enums';
+import { SYSTEMS } from '../../lib/enums';
 import { repoPath } from '../../lib/content';
+import ConfidenceLabel from '../../components/ConfidenceLabel.astro';
 
 export async function getStaticPaths() {
   return (await getCollection('troubleshooting')).map((entry) => ({
@@ -20,66 +21,219 @@ const fixes = await Promise.all(
   })),
 );
 const { Content } = await render(entry);
+const pad = (i: number) => String(i + 1).padStart(2, '0');
 ---
 
-<BaseLayout title={d.symptom} editPath={repoPath(entry)} sources={d.sources}>
-  <h1>{d.symptom}</h1>
-  <p>
-    <strong>System:</strong> {SYSTEMS[d.system]} · <strong>Confidence:</strong>{' '}
-    {CONFIDENCE[d.confidence]}
-  </p>
-  <Content />
-
-  <h2>Likely causes</h2>
-  <ol>
-    {d.likely_causes.map((c) => (
-      <li>{c}</li>
-    ))}
-  </ol>
-
-  {d.checks.length > 0 && (
-    <>
-      <h2>Checks</h2>
+<BaseLayout
+  title={d.symptom}
+  description={`Diagnose "${d.symptom}" on a Sondors Metacycle: likely causes, checks and fixes.`}
+  editPath={repoPath(entry)}
+  sources={d.sources}
+>
+  <article class="wrap" data-pagefind-body data-pagefind-filter="type:Symptom">
+    <nav class="crumbs" aria-label="Breadcrumb">
       <ol>
-        {d.checks.map((c) => (
-          <li>
-            {c.step}
-            <ul>
-              <li>
-                <strong>Pass:</strong> {c.pass}
-              </li>
-              <li>
-                <strong>Fail:</strong> {c.fail}
-              </li>
-            </ul>
-          </li>
-        ))}
+        <li>
+          <a href="/troubleshooting">troubleshoot</a>
+        </li>
+        <li aria-current="page">{SYSTEMS[d.system].toLowerCase()}</li>
       </ol>
-    </>
-  )}
+    </nav>
 
-  {fixes.length > 0 && (
-    <>
-      <h2>Fix</h2>
-      <ul>
-        {fixes.map((f) => (
-          <li>
-            {f.note}
-            {f.guide && (
-              <>
-                {' '}
-                Guide: <a href={`/guides/${f.guide.id}`}>{f.guide.data.title}</a>.
-              </>
-            )}
-            {f.part && (
-              <>
-                {' '}
-                Part: <a href={`/parts/${f.part.id}`}>{f.part.data.name}</a>.
-              </>
-            )}
-          </li>
-        ))}
-      </ul>
-    </>
-  )}
+    <header class="page-head">
+      <p class="label kicker">symptom</p>
+      <h1>{d.symptom}</h1>
+      <dl class="kv" data-pagefind-ignore>
+        <div>
+          <dt>system</dt>
+          <dd>{SYSTEMS[d.system].toLowerCase()}</dd>
+        </div>
+        <div>
+          <dt>trust</dt>
+          <dd>
+            <ConfidenceLabel value={d.confidence} />
+          </dd>
+        </div>
+      </dl>
+    </header>
+
+    <div class="layout">
+      <div>
+        <div class="prose intro">
+          <Content />
+        </div>
+
+        {d.checks.length > 0 && (
+          <section class="block" aria-labelledby="h-checks">
+            <h2 class="block-title" id="h-checks">
+              <span class="n">01</span>Checks, in order
+            </h2>
+            <ol class="checks">
+              {d.checks.map((c, i) => (
+                <li class="check">
+                  <p class="step">
+                    <span class="num" aria-hidden="true">
+                      {pad(i)}
+                    </span>
+                    <span>{c.step}</span>
+                  </p>
+                  <dl class="branches">
+                    <div class="pass">
+                      <dt>
+                        <span aria-hidden="true">✓ </span>pass
+                      </dt>
+                      <dd>{c.pass}</dd>
+                    </div>
+                    <div class="fail">
+                      <dt>
+                        <span aria-hidden="true">✗ </span>fail
+                      </dt>
+                      <dd>{c.fail}</dd>
+                    </div>
+                  </dl>
+                </li>
+              ))}
+            </ol>
+          </section>
+        )}
+
+        {fixes.length > 0 && (
+          <section class="block" aria-labelledby="h-fix">
+            <h2 class="block-title" id="h-fix">
+              <span class="n">02</span>Fix
+            </h2>
+            <ul class="fixes">
+              {fixes.map((f) => (
+                <li>
+                  {f.note && <p>{f.note}</p>}
+                  <div class="fix-links">
+                    {f.guide && (
+                      <a class="btn" href={`/guides/${f.guide.id}`}>
+                        guide: {f.guide.data.title} →
+                      </a>
+                    )}
+                    {f.part && (
+                      <a class="btn" href={`/parts/${f.part.id}`}>
+                        part: {f.part.data.name} →
+                      </a>
+                    )}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+      </div>
+
+      <aside class="side" aria-label="Likely causes">
+        <section>
+          <h2>Likely causes</h2>
+          <p class="label">most likely first</p>
+          <ol class="causes">
+            {d.likely_causes.map((c) => (
+              <li>{c}</li>
+            ))}
+          </ol>
+        </section>
+      </aside>
+    </div>
+  </article>
 </BaseLayout>
+
+<style>
+  .kicker {
+    margin: 0 0 var(--space-2);
+  }
+  .intro {
+    padding-bottom: var(--space-2);
+  }
+  .checks {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .check {
+    padding: var(--space-4) 0 var(--space-5);
+    border-bottom: var(--border) solid var(--color-rule);
+  }
+  .step {
+    display: flex;
+    gap: var(--space-3);
+    margin: 0 0 var(--space-3);
+    font-size: var(--text-lg);
+    font-weight: 500;
+  }
+  .num {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    padding-top: 0.35em;
+    flex: none;
+  }
+  .branches {
+    display: grid;
+    gap: var(--space-2);
+    margin: 0 0 0 calc(2ch + var(--space-3));
+  }
+  .branches > div {
+    display: grid;
+    grid-template-columns: 5.5ch 1fr;
+    gap: var(--space-3);
+    padding: var(--space-2) var(--space-3);
+    background: var(--color-surface);
+    border-left: var(--border-accent) solid var(--color-rule);
+  }
+  .branches .pass {
+    border-left-color: var(--color-ok);
+  }
+  .branches .fail {
+    border-left-color: var(--color-bad);
+  }
+  .branches dt {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    padding-top: 0.2em;
+  }
+  .pass dt {
+    color: var(--color-ok);
+  }
+  .fail dt {
+    color: var(--color-bad);
+  }
+  .branches dd {
+    margin: 0;
+  }
+  .fixes {
+    list-style: none;
+    margin: 0;
+    padding: var(--space-4) 0 0;
+  }
+  .fixes li {
+    margin-bottom: var(--space-4);
+  }
+  .fix-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+  .causes {
+    margin: var(--space-2) 0 0;
+    padding-left: 1.4em;
+  }
+  .causes li + li {
+    margin-top: var(--space-2);
+  }
+  /* Phones: show likely causes before the checks. */
+  .side {
+    order: -1;
+  }
+  .side > section:first-child {
+    margin-top: 0;
+  }
+  @media (min-width: 60rem) {
+    .side {
+      order: 0;
+    }
+  }
+</style>

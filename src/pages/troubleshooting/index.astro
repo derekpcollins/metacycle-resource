@@ -1,21 +1,31 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
-import { SYSTEMS } from '../../lib/enums';
+import { SYSTEMS, keys } from '../../lib/enums';
+import SymptomShortcuts from '../../components/SymptomShortcuts.astro';
+
 const entries = (await getCollection('troubleshooting')).sort((a, b) =>
   a.data.symptom.localeCompare(b.data.symptom),
 );
+const groups = keys(SYSTEMS)
+  .map((s) => ({ s, label: SYSTEMS[s], items: entries.filter((e) => e.data.system === s) }))
+  .filter((g) => g.items.length > 0);
 ---
 
-<BaseLayout title="Troubleshoot">
-  <h1>Troubleshoot</h1>
-  <p>Pick what you're seeing.</p>
-  <ul>
-    {entries.map((t) => (
-      <li>
-        <a href={`/troubleshooting/${t.id}`}>{t.data.symptom}</a>{' '}
-        <span class="muted">— {SYSTEMS[t.data.system]}</span>
-      </li>
+<BaseLayout title="Troubleshoot" editPath="src/pages/troubleshooting/index.astro">
+  <div class="wrap">
+    <header class="page-head">
+      <h1>What’s wrong?</h1>
+      <p class="lede">Pick what you’re seeing. Each page walks through checks in order.</p>
+    </header>
+    {groups.map((g, i) => (
+      <section class="block" aria-labelledby={`h-${g.s}`}>
+        <h2 class="block-title" id={`h-${g.s}`}>
+          <span class="n">{String(i + 1).padStart(2, '0')}</span>
+          {g.label}
+        </h2>
+        <SymptomShortcuts entries={g.items} />
+      </section>
     ))}
-  </ul>
+  </div>
 </BaseLayout>

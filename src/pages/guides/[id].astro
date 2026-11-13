@@ -1,9 +1,15 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import Labeled from '../../components/Labeled.astro';
-import { getCollection, getEntries, render, type CollectionEntry } from 'astro:content';
-import { CONFIDENCE, GUIDE_TYPES, SYSTEMS } from '../../lib/enums';
-import { formatDate, repoPath } from '../../lib/content';
+import { getCollection, getEntries, getEntry, render, type CollectionEntry } from 'astro:content';
+import { GUIDE_TYPES, SOURCE_STATUSES, SYSTEMS } from '../../lib/enums';
+import { repoPath } from '../../lib/content';
+import { bestStatus, isoDate, statusTone } from '../../lib/format';
+import SystemChip from '../../components/SystemChip.astro';
+import DifficultyMeter from '../../components/DifficultyMeter.astro';
+import ConfidenceLabel from '../../components/ConfidenceLabel.astro';
+import SafetyCallout from '../../components/SafetyCallout.astro';
+import ToolsChecklist from '../../components/ToolsChecklist.astro';
+import Badge from '../../components/Badge.astro';
 
 export async function getStaticPaths() {
   return (await getCollection('guides')).map((entry) => ({
@@ -14,8 +20,18 @@ export async function getStaticPaths() {
 const { entry } = Astro.props as { entry: CollectionEntry<'guides'> };
 const d = entry.data;
 const tools = await getEntries(d.tools);
-const parts = await getEntries(d.parts);
+const parts = await Promise.all(
+  (await getEntries(d.parts)).map(async (p) => ({
+    p,
+    links: await Promise.all(
+      p.data.sources
+        .filter((s) => s.url !== 'TODO')
+        .map(async (s) => ({ url: s.url, vendor: (await getEntry(s.vendor))?.data.name })),
+    ),
+  })),
+);
 const { Content } = await render(entry);
+const verifiedDate = d.last_verified instanceof Date ? isoDate(d.last_verified) : undefined;
 ---
 
 <BaseLayout
@@ -23,52 +39,213 @@ const { Content } = await render(entry);
   description={d.summary}
   editPath={repoPath(entry)}
   sources={d.sources}
-  lastVerified={d.last_verified ? formatDate(d.last_verified) : undefined}
+  lastVerified={verifiedDate ?? 'never'}
 >
-  <h1>{d.title}</h1>
-  <p>{d.summary}</p>
-  {d.safety.map((s) => (
-    <p class="callout" role="note">
-      <strong>Safety:</strong> {s}
-    </p>
-  ))}
-  <Labeled
-    items={[
-      ['Type', GUIDE_TYPES[d.type]],
-      ['System', SYSTEMS[d.system]],
-      ['Difficulty', `${d.difficulty} / 5`],
-      ['Time', d.time_minutes === 'TODO' ? 'TODO' : `${d.time_minutes} min`],
-      ['Confidence', CONFIDENCE[d.confidence]],
-      ['Verified by', d.verified_by],
-    ]}
-  />
-
-  <h2>Tools you'll need</h2>
-  {tools.length ? (
-    <ul>
-      {tools.map((t) => (
+  <article class="wrap" data-pagefind-body data-pagefind-filter="type:Guide">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <ol>
         <li>
-          <a href={`/tools/${t.id}`}>{t.data.name}</a> <span class="muted">({t.data.spec})</span>
+          <a href="/guides">guides</a>
         </li>
-      ))}
-    </ul>
-  ) : (
-    <p class="muted">None listed.</p>
-  )}
+        <li aria-current="page">{GUIDE_TYPES[d.type].toLowerCase()}</li>
+      </ol>
+    </nav>
 
-  <h2>Parts</h2>
-  {parts.length ? (
-    <ul>
-      {parts.map((p) => (
-        <li>
-          <a href={`/parts/${p.id}`}>{p.data.name}</a>
-        </li>
-      ))}
-    </ul>
-  ) : (
-    <p class="muted">None listed.</p>
-  )}
+    <header class="page-head">
+      <h1>{d.title}</h1>
+      <p class="lede">{d.summary}</p>
+      <dl class="kv" data-pagefind-ignore>
+        <div>
+          <dt>system</dt>
+          <dd>
+            <SystemChip system={d.system} link />
+          </dd>
+        </div>
+        <div>
+          <dt>difficulty</dt>
+          <dd>
+            <DifficultyMeter value={d.difficulty} />
+          </dd>
+        </div>
+        <div>
+          <dt>time</dt>
+          <dd>
+            {d.time_minutes === 'TODO' ? (
+              <span class="todo">not yet known</span>
+            ) : (
+              `${d.time_minutes} min`
+            )}
+          </dd>
+        </div>
+        <div>
+          <dt>trust</dt>
+          <dd>
+            <ConfidenceLabel value={d.confidence} />
+          </dd>
+        </div>
+        <div>
+          <dt>verified</dt>
+          <dd>
+            {d.verified_by ? (
+              <Badge tone="outline">
+                by {d.verified_by}
+                {verifiedDate && ` · ${verifiedDate}`}
+              </Badge>
+            ) : (
+              <Badge tone="off">not yet</Badge>
+            )}
+          </dd>
+        </div>
+      </dl>
+    </header>
 
-  <h2>Steps</h2>
-  <Content />
+    {d.safety.length > 0 && (
+      <section aria-label="Safety" class="safety-list">
+        {d.safety.map((s) => (
+          <SafetyCallout>
+            <p>{s}</p>
+          </SafetyCallout>
+        ))}
+      </section>
+    )}
+
+    <div class="prep">
+      <section class="block" aria-labelledby="h-tools">
+        <h2 class="block-title" id="h-tools">
+          <span class="n">01</span>Tools you’ll need
+          <a class="more" href="/tools">
+            all tools →
+          </a>
+        </h2>
+        <div data-pagefind-ignore>
+          <ToolsChecklist tools={tools} />
+        </div>
+      </section>
+
+      <section class="block" aria-labelledby="h-parts">
+        <h2 class="block-title" id="h-parts">
+          <span class="n">02</span>Parts
+        </h2>
+        {parts.length === 0 ? (
+          <p class="muted none">No parts needed.</p>
+        ) : (
+          <ul class="parts">
+            {parts.map(({ p, links }) => {
+              const best = bestStatus(p.data.sources);
+              return (
+                <li>
+                  <a class="pname" href={`/parts/${p.id}`}>
+                    {p.data.name}
+                  </a>
+                  {best && (
+                    <Badge tone={statusTone(best)}>{SOURCE_STATUSES[best].toLowerCase()}</Badge>
+                  )}
+                  <span class="buy">
+                    {links.length === 0 ? (
+                      <span class="todo">no buy link yet</span>
+                    ) : (
+                      links.map((l) => (
+                        <a class="text-link ext" href={l.url} rel="nofollow noopener noreferrer">
+                          {l.vendor ?? 'store'}
+                        </a>
+                      ))
+                    )}
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
+        )}
+      </section>
+    </div>
+
+    <section class="block steps" aria-labelledby="h-steps">
+      <h2 class="block-title" id="h-steps">
+        <span class="n">03</span>Steps
+      </h2>
+      <div class="steps-body">
+        <Content />
+      </div>
+      <p class="caption" data-pagefind-ignore>
+        Tick steps as you go. Ticks stay on this device only.
+      </p>
+    </section>
+  </article>
 </BaseLayout>
+
+<style>
+  .safety-list {
+    max-width: var(--measure);
+  }
+  .prep {
+    display: grid;
+    gap: 0 var(--space-10);
+  }
+  .none {
+    padding-top: var(--space-4);
+  }
+  .parts {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .parts li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0 var(--space-3);
+    border-bottom: var(--border) solid var(--color-rule);
+    min-height: 56px;
+    padding: var(--space-2) 0;
+  }
+  .pname {
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap-target);
+  }
+  .buy {
+    margin-left: auto;
+    display: flex;
+    gap: var(--space-3);
+  }
+  .steps-body {
+    padding-top: var(--space-2);
+  }
+  .steps-body > :global(p) {
+    max-width: var(--measure);
+  }
+  .steps-body :global(.step:first-of-type) {
+    border-top: 0;
+  }
+  @media (min-width: 60rem) {
+    .prep {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+</style>
+
+<script>
+  // Remember ticked steps and tools on this device, per guide.
+  const key = `ticks:${location.pathname}`;
+  let saved: Record<string, boolean> = {};
+  try {
+    saved = JSON.parse(localStorage.getItem(key) ?? '{}');
+  } catch {
+    /* storage unavailable: ticks still work for this visit */
+  }
+  document
+    .querySelectorAll<HTMLInputElement>('input[data-step-check], input[data-tool-check]')
+    .forEach((box) => {
+      const id = box.dataset.stepCheck ? `s${box.dataset.stepCheck}` : `t${box.dataset.toolCheck}`;
+      if (saved[id]) box.checked = true;
+      box.addEventListener('change', () => {
+        saved[id] = box.checked;
+        try {
+          localStorage.setItem(key, JSON.stringify(saved));
+        } catch {
+          /* ignore */
+        }
+      });
+    });
+</script>

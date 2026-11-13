@@ -1,31 +1,220 @@
 ---
+/**
+ * Parts index. Without JS: the full list, sorted by name. With JS: filter by system,
+ * source type, fit and status; sort by name or last verified. Filters live in the URL
+ * (?system=…&type=…&fit=…&status=…&sort=…) so links from the home page work.
+ */
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
-import { SYSTEMS } from '../../lib/enums';
+import { FITS, SOURCE_STATUSES, SOURCE_TYPES, SYSTEMS, keys } from '../../lib/enums';
+import { latestVerified } from '../../lib/format';
+import PartCard from '../../components/PartCard.astro';
 
 const parts = (await getCollection('parts')).sort((a, b) => a.data.name.localeCompare(b.data.name));
+const uniq = (xs: string[]) => [...new Set(xs)].join(' ');
+
+const filters = [
+  { name: 'system', label: 'system', options: SYSTEMS, all: 'all systems' },
+  { name: 'type', label: 'source type', options: SOURCE_TYPES, all: 'any type' },
+  { name: 'fit', label: 'fit', options: FITS, all: 'any fit' },
+  { name: 'status', label: 'status', options: SOURCE_STATUSES, all: 'any status' },
+] as const;
 ---
 
-<BaseLayout title="Parts">
-  <h1>Parts</h1>
-  <table>
-    <thead>
-      <tr>
-        <th>Part</th>
-        <th>System</th>
-        <th>Buy options</th>
-      </tr>
-    </thead>
-    <tbody>
-      {parts.map((p) => (
-        <tr>
-          <td>
-            <a href={`/parts/${p.id}`}>{p.data.name}</a>
-          </td>
-          <td>{SYSTEMS[p.data.system]}</td>
-          <td>{p.data.sources.length}</td>
-        </tr>
-      ))}
-    </tbody>
-  </table>
+<BaseLayout title="Parts" editPath="src/pages/parts/index.astro">
+  <div class="wrap">
+    <header class="page-head">
+      <h1>Parts</h1>
+      <p class="lede">
+        Every part, where to buy it today, and when each link was last checked by a person.
+      </p>
+    </header>
+
+    <form class="filters" id="part-filters" action="/parts" method="get">
+      <fieldset>
+        <legend class="visually-hidden">Filter and sort parts</legend>
+        {filters.map((f) => (
+          <div class="field">
+            <label for={`f-${f.name}`}>{f.label}</label>
+            <select id={`f-${f.name}`} name={f.name}>
+              <option value="">{f.all}</option>
+              {keys(f.options).map((k) => (
+                <option value={k}>{(f.options as Record<string, string>)[k]}</option>
+              ))}
+            </select>
+          </div>
+        ))}
+        <div class="field">
+          <label for="f-sort">sort</label>
+          <select id="f-sort" name="sort">
+            <option value="name">name (a–z)</option>
+            <option value="verified">last verified (newest)</option>
+          </select>
+        </div>
+        <div class="field reset">
+          <button type="reset" class="btn">
+            reset
+          </button>
+        </div>
+      </fieldset>
+    </form>
+
+    <p class="count label" id="part-count" aria-live="polite">
+      {parts.length}
+      {parts.length === 1 ? 'part' : 'parts'}
+    </p>
+
+    <ul class="part-list" id="part-list">
+      {parts.map((p) => {
+        const verified = latestVerified(p.data.sources);
+        return (
+          <li
+            data-name={p.data.name.toLowerCase()}
+            data-system={p.data.system}
+            data-type={uniq(p.data.sources.map((s) => s.type))}
+            data-fit={uniq(p.data.sources.map((s) => s.fit))}
+            data-status={uniq(p.data.sources.map((s) => s.status))}
+            data-verified={verified ? verified.getTime() : 0}
+          >
+            <PartCard part={p} headingLevel="h2" />
+          </li>
+        );
+      })}
+    </ul>
+    <p class="no-match" id="no-match" hidden>
+      No parts match these filters. <a href="/parts">Show all parts</a>.
+    </p>
+  </div>
 </BaseLayout>
+
+<style>
+  .filters {
+    border-top: var(--border) solid var(--color-rule-strong);
+    border-bottom: var(--border) solid var(--color-rule);
+    padding: var(--space-4) 0;
+    margin-bottom: var(--space-4);
+  }
+  /* JS-only: hidden when scripts are off (the full list still shows). */
+  .filters {
+    display: none;
+  }
+  :global(.js) .filters {
+    display: block;
+  }
+  fieldset {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--space-3) var(--space-4);
+    min-width: 0;
+  }
+  .field {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+  label {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+  select {
+    width: 100%;
+    min-width: 0;
+    min-height: var(--tap-target);
+    padding: 0 var(--space-3);
+    border: var(--border) solid var(--color-rule-strong);
+    border-radius: 0;
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+  }
+  .reset {
+    justify-content: flex-end;
+  }
+  .count {
+    margin: 0 0 var(--space-2);
+  }
+  .part-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: var(--border) solid var(--color-rule);
+  }
+  .no-match {
+    padding: var(--space-6) 0;
+  }
+  @media (min-width: 60rem) {
+    fieldset {
+      grid-template-columns: repeat(5, minmax(0, 1fr)) auto;
+      align-items: end;
+    }
+  }
+</style>
+
+<script>
+  const form = document.getElementById('part-filters') as HTMLFormElement | null;
+  const list = document.getElementById('part-list');
+  const count = document.getElementById('part-count');
+  const noMatch = document.getElementById('no-match');
+
+  if (form && list && count && noMatch) {
+    const items = Array.from(list.children) as HTMLElement[];
+    const total = items.length;
+    const fields = ['system', 'type', 'fit', 'status'] as const;
+    const select = (n: string) => form.elements.namedItem(n) as HTMLSelectElement;
+
+    // Restore state from the URL, ignoring unknown values.
+    const params = new URLSearchParams(location.search);
+    for (const n of [...fields, 'sort']) {
+      const v = params.get(n);
+      const el = select(n);
+      if (v && Array.from(el.options).some((o) => o.value === v)) el.value = v;
+    }
+
+    const apply = () => {
+      const want = Object.fromEntries(fields.map((n) => [n, select(n).value]));
+      let shown = 0;
+      for (const li of items) {
+        const ok = fields.every(
+          (n) => !want[n] || (li.dataset[n] ?? '').split(' ').includes(want[n]),
+        );
+        li.hidden = !ok;
+        if (ok) shown++;
+      }
+
+      const sort = select('sort').value;
+      const sorted = [...items].sort((a, b) =>
+        sort === 'verified'
+          ? Number(b.dataset.verified) - Number(a.dataset.verified) ||
+            (a.dataset.name ?? '').localeCompare(b.dataset.name ?? '')
+          : (a.dataset.name ?? '').localeCompare(b.dataset.name ?? ''),
+      );
+      sorted.forEach((li) => list.appendChild(li));
+
+      count.textContent =
+        shown === total
+          ? `${total} ${total === 1 ? 'part' : 'parts'}`
+          : `${shown} of ${total} parts`;
+      noMatch.hidden = shown !== 0;
+
+      const next = new URLSearchParams();
+      for (const n of fields) if (want[n]) next.set(n, want[n]);
+      if (sort !== 'name') next.set('sort', sort);
+      const qs = next.toString();
+      history.replaceState(null, '', qs ? `?${qs}` : location.pathname);
+    };
+
+    form.addEventListener('change', apply);
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      apply();
+    });
+    form.addEventListener('reset', () => setTimeout(apply));
+    apply();
+  }
+</script>

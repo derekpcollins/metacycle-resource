@@ -1,24 +1,47 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
-import { GUIDE_TYPES, SYSTEMS } from '../../lib/enums';
+import { GUIDE_TYPES, SYSTEMS, keys } from '../../lib/enums';
+
 const guides = (await getCollection('guides')).sort((a, b) =>
   a.data.title.localeCompare(b.data.title),
 );
+const groups = keys(GUIDE_TYPES)
+  .map((t) => ({ t, label: GUIDE_TYPES[t], items: guides.filter((g) => g.data.type === t) }))
+  .filter((g) => g.items.length > 0);
 ---
 
-<BaseLayout title="Guides">
-  <h1>Guides</h1>
-  <ul>
-    {guides.map((g) => (
-      <li>
-        <a href={`/guides/${g.id}`}>{g.data.title}</a>{' '}
-        <span class="muted">
-          — {GUIDE_TYPES[g.data.type]} · {SYSTEMS[g.data.system]}
-        </span>
-        <br />
-        {g.data.summary}
-      </li>
+<BaseLayout title="Guides" editPath="src/pages/guides/index.astro">
+  <div class="wrap">
+    <header class="page-head">
+      <h1>Guides</h1>
+      <p class="lede">How-tos, maintenance and mods, with the tools and parts each one needs.</p>
+    </header>
+    {groups.map((g, i) => (
+      <section class="block" aria-labelledby={`h-${g.t}`}>
+        <h2 class="block-title" id={`h-${g.t}`}>
+          <span class="n">{String(i + 1).padStart(2, '0')}</span>
+          {g.label}
+        </h2>
+        <ul class="rows">
+          {g.items.map((x) => (
+            <li>
+              <a href={`/guides/${x.id}`}>
+                <span class="t">
+                  {x.data.title}
+                  <span class="sub">{x.data.summary}</span>
+                </span>
+                <span class="meta">
+                  {SYSTEMS[x.data.system].toLowerCase()} · {x.data.difficulty}/5
+                </span>
+                <span class="go" aria-hidden="true">
+                  →
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
     ))}
-  </ul>
+  </div>
 </BaseLayout>

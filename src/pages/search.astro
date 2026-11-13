@@ -1,0 +1,127 @@
+---
+/**
+ * Search results, powered by Pagefind (static index built by the pagefind integration in
+ * astro.config.mjs after `astro build`). Reads ?q= from the URL.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Search" editPath="src/pages/search.astro">
+  <div class="wrap">
+    <header class="page-head">
+      <h1>Search</h1>
+      <p class="lede">Parts (including what owners call them), guides and symptoms.</p>
+    </header>
+    <div id="search" class="pf"></div>
+    <noscript>
+      <p>
+        Search needs JavaScript. Browse instead: <a href="/parts">parts</a> ·
+        <a href="/troubleshooting">symptoms</a> · <a href="/guides">guides</a>.
+      </p>
+    </noscript>
+    <p class="caption" id="search-dev-note" hidden>
+      The search index is built with <code>npm run build</code>; it isn’t available in
+      <code>astro dev</code>.
+    </p>
+  </div>
+  <link rel="stylesheet" href="/pagefind/pagefind-ui.css" />
+  <script is:inline>
+    (function () {
+      var s = document.createElement('script');
+      s.src = '/pagefind/pagefind-ui.js';
+      s.onload = function () {
+        var ui = new PagefindUI({
+          element: '#search',
+          showSubResults: false,
+          showImages: false,
+          resetStyles: false,
+          autofocus: true,
+          translations: { placeholder: 'part, symptom or guide' },
+        });
+        var q = new URLSearchParams(location.search).get('q');
+        if (q) ui.triggerSearch(q);
+        // Keep ?q= in sync so results can be shared or reloaded.
+        document.addEventListener('input', function (e) {
+          var t = e.target;
+          if (!t || !t.classList || !t.classList.contains('pagefind-ui__search-input')) return;
+          var u = new URL(location.href);
+          if (t.value) u.searchParams.set('q', t.value);
+          else u.searchParams.delete('q');
+          history.replaceState(null, '', u);
+        });
+      };
+      s.onerror = function () {
+        document.getElementById('search-dev-note').hidden = false;
+      };
+      document.body.appendChild(s);
+    })();
+  </script>
+</BaseLayout>
+
+<style is:global>
+  /* Pagefind default UI, mapped onto our tokens. */
+  .pf {
+    --pagefind-ui-scale: 1;
+    --pagefind-ui-primary: var(--color-text);
+    --pagefind-ui-text: var(--color-text);
+    --pagefind-ui-background: var(--color-bg);
+    --pagefind-ui-border: var(--color-rule-strong);
+    --pagefind-ui-tag: var(--color-surface);
+    --pagefind-ui-border-width: 1px;
+    --pagefind-ui-border-radius: 0;
+    --pagefind-ui-image-border-radius: 0;
+    --pagefind-ui-font: var(--font-sans);
+  }
+  .pf .pagefind-ui__search-input {
+    font-family: var(--font-mono);
+    font-size: var(--text-base);
+    font-weight: 400;
+    height: 56px;
+  }
+  .pf .pagefind-ui__search-input::placeholder {
+    color: var(--color-text-muted);
+    opacity: 1;
+  }
+  .pf .pagefind-ui__search-clear {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text);
+    min-height: var(--tap-target);
+  }
+  .pf .pagefind-ui__message,
+  .pf .pagefind-ui__filter-name,
+  .pf .pagefind-ui__result-tag {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+  }
+  .pf .pagefind-ui__result {
+    border-top: var(--border) solid var(--color-rule);
+    padding: var(--space-4) 0;
+  }
+  .pf .pagefind-ui__result-title {
+    font-family: var(--font-sans);
+    font-size: var(--text-lg);
+  }
+  .pf .pagefind-ui__result-link {
+    color: var(--color-text);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .pf .pagefind-ui__result-excerpt {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+  .pf mark {
+    background: var(--color-mark);
+    color: var(--color-text);
+  }
+  .pf .pagefind-ui__button {
+    font-family: var(--font-mono);
+    border-radius: 0;
+    min-height: var(--tap-target);
+  }
+  .pf .pagefind-ui__filter-checkbox {
+    width: 20px;
+    height: 20px;
+  }
+</style>

@@ -2,44 +2,208 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 import { site } from '../site.config';
-import { SYSTEMS } from '../lib/enums';
+import { SYSTEMS, keys } from '../lib/enums';
+import { isoDate, latestVerified } from '../lib/format';
+import { community, communitySource } from '../data/community';
+import SearchBox from '../components/SearchBox.astro';
+import SymptomShortcuts from '../components/SymptomShortcuts.astro';
+import PartCard from '../components/PartCard.astro';
+import EmptyState from '../components/EmptyState.astro';
 
-const symptoms = await getCollection('troubleshooting');
+const [symptoms, parts] = await Promise.all([
+  getCollection('troubleshooting'),
+  getCollection('parts'),
+]);
+symptoms.sort((a, b) => a.data.symptom.localeCompare(b.data.symptom));
+
+const systemCounts = keys(SYSTEMS).map((s) => ({
+  id: s,
+  label: SYSTEMS[s].toLowerCase(),
+  count: parts.filter((p) => p.data.system === s).length,
+}));
+
+const recentlyVerified = parts
+  .map((p) => ({ p, d: latestVerified(p.data.sources) }))
+  .filter((x): x is { p: (typeof parts)[number]; d: Date } => x.d !== undefined)
+  .sort((a, b) => b.d.getTime() - a.d.getTime())
+  .slice(0, 5);
 ---
 
 <BaseLayout title={site.name} editPath="src/pages/index.astro">
-  <h1>{site.name}</h1>
-  <p>{site.tagline}</p>
-  <p class="muted">Phase 1 stub. Search and the full home page arrive in Phase 2.</p>
+  <section class="hero">
+    <div class="wrap">
+      <p class="label">sondors metacycle / owner resource</p>
+      <h1>{site.tagline}</h1>
+      <SearchBox id="home-search" />
+      <p class="hint label">try: absorber · won’t power on · battery removal</p>
+    </div>
+  </section>
 
-  <h2>What's wrong?</h2>
-  <ul>
-    {symptoms.map((t) => (
-      <li>
-        <a href={`/troubleshooting/${t.id}`}>{t.data.symptom}</a>
-      </li>
-    ))}
-  </ul>
+  <div class="wrap sections">
+    <section class="block" aria-labelledby="h-symptoms">
+      <h2 class="block-title" id="h-symptoms">
+        <span class="n">01</span>What’s wrong?
+        <a class="more" href="/troubleshooting">
+          all symptoms →
+        </a>
+      </h2>
+      <SymptomShortcuts entries={symptoms} />
+    </section>
 
-  <h2>Browse</h2>
-  <ul>
-    <li>
-      <a href="/parts">Parts</a>
-    </li>
-    <li>
-      <a href="/troubleshooting">Troubleshoot</a>
-    </li>
-    <li>
-      <a href="/guides">Guides</a>
-    </li>
-    <li>
-      <a href="/specs">Specs</a>
-    </li>
-    <li>
-      <a href="/tools">Tools</a> · <a href="/vendors">Vendors</a>
-    </li>
-  </ul>
+    <section class="block" aria-labelledby="h-systems">
+      <h2 class="block-title" id="h-systems">
+        <span class="n">02</span>Browse by system
+      </h2>
+      <ul class="systems">
+        {systemCounts.map((s) => (
+          <li>
+            <a href={`/parts?system=${s.id}`}>
+              <span>{s.label}</span>
+              <span class="c">
+                {s.count}
+                <span class="visually-hidden">{s.count === 1 ? 'part' : 'parts'}</span>
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+      <p class="caption">number = parts listed</p>
+    </section>
 
-  <h2>Systems</h2>
-  <p class="muted">{Object.values(SYSTEMS).join(' · ')}</p>
+    <div class="two-col">
+      <section class="block" aria-labelledby="h-verified">
+        <h2 class="block-title" id="h-verified">
+          <span class="n">03</span>Recently verified
+        </h2>
+        {recentlyVerified.length > 0 ? (
+          <div>
+            {recentlyVerified.map(({ p, d }) => (
+              <div>
+                <PartCard part={p} />
+                <span class="visually-hidden">verified {isoDate(d)}</span>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <EmptyState title="no buy links verified yet">
+            <p>
+              Every link is checked by a person and dated. Found one that works?{' '}
+              <a href="/contribute">Help verify it</a>.
+            </p>
+          </EmptyState>
+        )}
+      </section>
+
+      <section class="block" aria-labelledby="h-community">
+        <h2 class="block-title" id="h-community">
+          <span class="n">04</span>Community
+        </h2>
+        <ul class="community">
+          {community.map((c) => (
+            <li>
+              {c.url ? (
+                <a class="ext" href={c.url}>
+                  {c.name}
+                </a>
+              ) : (
+                <span>{c.name}</span>
+              )}
+            </li>
+          ))}
+        </ul>
+        <p class="caption">
+          Links to every group: <a href="/community">community page</a> ·{' '}
+          <a class="ext" href={communitySource}>
+            Metacyclopedia’s list
+          </a>
+        </p>
+      </section>
+    </div>
+  </div>
 </BaseLayout>
+
+<style>
+  .hero {
+    padding: var(--space-10) 0 var(--space-6);
+  }
+  .hero h1 {
+    font-size: var(--text-2xl);
+    margin: var(--space-3) 0 var(--space-6);
+    max-width: 22ch;
+  }
+  .hint {
+    margin: var(--space-3) 0 0;
+  }
+  .sections .block {
+    padding-top: var(--space-10);
+  }
+  .systems {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    columns: 2;
+    column-gap: var(--space-6);
+  }
+  .systems li {
+    break-inside: avoid;
+  }
+  .systems a {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: var(--tap-target);
+    padding: var(--space-1) 0;
+    border-bottom: var(--border) solid var(--color-rule);
+    text-decoration: none;
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    line-height: 1.3;
+  }
+  .systems a:hover span:first-child {
+    text-decoration: underline;
+  }
+  .systems .c {
+    color: var(--color-text-muted);
+    font-size: var(--text-xs);
+  }
+  .community {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+  }
+  .community li {
+    display: flex;
+    align-items: center;
+    min-height: var(--tap-target);
+    border-bottom: var(--border) solid var(--color-rule);
+  }
+  .community a {
+    display: flex;
+    align-items: center;
+    min-height: var(--tap-target);
+  }
+  .community .caption a,
+  .caption a {
+    display: inline-block;
+    padding: var(--space-2) 0;
+  }
+  @media (min-width: 60rem) {
+    .hero {
+      padding: var(--space-16) 0 var(--space-6);
+    }
+    .hero h1 {
+      font-size: var(--text-3xl);
+    }
+    .systems {
+      columns: 3;
+    }
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-10);
+    }
+  }
+</style>

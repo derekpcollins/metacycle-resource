@@ -1,10 +1,19 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import EmptyState from '../components/EmptyState.astro';
 ---
 
 <BaseLayout title="Specs" editPath="src/pages/specs.astro">
-  <h1>Specs</h1>
-  <p class="muted">
-    Coming soon. Spec sheet, fuse map, connector pinouts and downloads arrive in Phase 3.
-  </p>
+  <div class="wrap">
+    <header class="page-head">
+      <h1>Specs</h1>
+      <p class="lede">Spec sheet, fuse map, connector pinouts and downloads.</p>
+    </header>
+    <EmptyState title="coming soon">
+      <p>
+        The spec sheet and reference pages are being written. Meanwhile, each{' '}
+        <a href="/parts">part page</a> lists the specs we have sources for.
+      </p>
+    </EmptyState>
+  </div>
 </BaseLayout>
