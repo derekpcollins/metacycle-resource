@@ -12,7 +12,7 @@ Requires Node 22.12+.
 npm install
 npm run dev        # http://localhost:4321
 npm run build      # static site in dist/
-npm run ci         # format check, type check, build, and content-validation tests
+npm run ci         # format, issue-form sync, type check, build, and tests
 ```
 
 ## How content works
@@ -31,7 +31,7 @@ Schemas are in [`src/content.config.ts`](src/content.config.ts). A misspelled fi
 
 ## Contribute
 
-See [CONTRIBUTING.md](CONTRIBUTING.md). Easier no-Git options (issue forms and a web form) are coming.
+See [CONTRIBUTING.md](CONTRIBUTING.md). Owners without GitHub use the site's web form (`/contribute/form`); GitHub users get issue forms and "edit this page" links (live once the repo is public).
 
 ## Docs
 
