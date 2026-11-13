@@ -79,22 +79,35 @@ const source = z.strictObject({
 
 const parts = defineCollection({
   loader: glob({ pattern: '**/*.{yaml,yml}', base: './src/content/parts', generateId }),
-  schema: z.strictObject({
-    id: slug,
-    name: z.string().min(1),
-    system,
-    aliases: z.array(z.string()).default([]),
-    oem_part_number: z.string().optional(),
-    specs: z.record(z.string(), z.union([z.string(), z.number(), z.boolean()])).default({}),
-    failure_rate: z.enum(keys(FAILURE_RATES)).optional(),
-    difficulty: difficulty.optional(),
-    // Required by the spec; may be empty while no buy option is known yet.
-    sources: z.array(source),
-    fits_notes: z.string().optional(),
-    related_guides: z.array(reference('guides')).default([]),
-    references: z.array(url).min(1, 'Every part needs at least one reference link'),
-    diagram_ref: z.string().optional(),
-  }),
+  schema: z
+    .strictObject({
+      id: slug,
+      name: z.string().min(1),
+      system,
+      aliases: z.array(z.string()).default([]),
+      oem_part_number: z.string().optional(),
+      specs: z.record(z.string(), z.union([z.string(), z.number(), z.boolean()])).default({}),
+      failure_rate: z.enum(keys(FAILURE_RATES)).optional(),
+      difficulty: difficulty.optional(),
+      // Required by the spec; may be empty while no buy option is known yet.
+      sources: z.array(source),
+      fits_notes: z.string().optional(),
+      related_guides: z.array(reference('guides')).default([]),
+      references: z.array(url).min(1, 'Every part needs at least one reference link'),
+      diagram_ref: z.string().optional(),
+      // Optional photo (Phase 3 decision, docs/PHASES.md). A site path under /public
+      // (e.g. /images/parts/rear-shock.jpg) or an https URL. Alt text is required with a
+      // photo; credit names the photographer/source so licensing stays traceable.
+      photo: z
+        .union([z.string().regex(/^\/[^\s]+$/, 'Use a site path like /images/parts/x.jpg'), url])
+        .optional(),
+      photo_alt: z.string().min(1).optional(),
+      photo_credit: z.string().min(1).optional(),
+    })
+    .refine((p) => !p.photo || p.photo_alt, {
+      message: 'photo_alt is required when photo is set',
+      path: ['photo_alt'],
+    }),
 });
 
 // ---------- tools ----------

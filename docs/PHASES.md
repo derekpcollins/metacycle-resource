@@ -59,6 +59,11 @@ Launch (beta invites, announcements) is non-development and happens after Phase 
 - **New routes:** `/search` and `/404`. `Labeled.astro` was removed. Shared display helpers are in `src/lib/format.ts`, nav in `src/lib/nav.ts`, community links in `src/data/community.ts`.
 - **Spec gaps flagged, not filled:** the Part detail template mentions a photo, but the part data model has no photo field (needs a schema decision). The Vendor template mentions duties, but there's no duties field, so they go in `buying_tips`. The optional exploded-diagram view isn't built because no diagram exists yet.
 
+### Phase 3 decisions (confirmed by Derek, Nov 12)
+
+- **Part photos:** add optional `photo`, `photo_alt` and `photo_credit` fields to the part schema and Part detail template now. `photo_alt` is required whenever `photo` is set. No photos are seeded unless they're sourced and licensed for reuse.
+- **Sources beyond the research brief:** facts may come from pages actually fetched (Metacyclopedia sub-pages, vendor listings), as long as each fact is cited in the entry's `references` / `sources` and every new source is added to `docs/RESEARCH.md`.
+
 ## Phase 2 notes (deferred / learned)
 
 - **Verified:** axe (WCAG 2.0/2.1 A + AA) found 0 violations on 21 routes × phone/desktop × light/dark. Lighthouse mobile scored 100 for accessibility, performance and best practices on home, parts, part detail, guide and troubleshooting. No page scrolls horizontally at 375px. Search returns "absorber" and "votol" → parts, "battery removal" and "storage" → guides, "power on" and "speedometer" → symptoms, both locally and on Vercel. `npm run ci` passes locally and in GitHub Actions; all 23 pages plus `/content-check.json` and `/pagefind/*` return 200 on production.

@@ -85,6 +85,12 @@ const num = () => String(n++).padStart(2, '0');
           </div>
         )}
       </dl>
+      {d.photo && (
+        <figure class="photo" data-pagefind-ignore>
+          <img src={d.photo} alt={d.photo_alt} loading="lazy" decoding="async" />
+          {d.photo_credit && <figcaption class="label">photo: {d.photo_credit}</figcaption>}
+        </figure>
+      )}
     </header>
 
     <section class="block" aria-labelledby="h-buy">
@@ -148,7 +154,21 @@ const num = () => String(n++).padStart(2, '0');
 </BaseLayout>
 
 <style>
+  .photo {
+    margin: var(--space-6) 0 0;
+    max-width: 36rem;
+  }
+  .photo img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: var(--border) solid var(--color-rule);
+  }
+  .photo figcaption {
+    margin-top: var(--space-2);
+  }
   .note {
+    white-space: pre-line;
     padding: var(--space-4) 0 0;
     margin: 0;
     max-width: 60ch;
