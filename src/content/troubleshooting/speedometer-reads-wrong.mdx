@@ -1,8 +1,6 @@
 ---
 symptom: Speedometer reads wrong
 system: controls-display
-likely_causes:
-  - The display is set to the factory tire circumference of 1915 mm, which is too large.
 checks:
   - step: Enter the display's programming mode (hold the left button on the back), enter code 153 and check the circumference.
     pass: It's already 1675 mm. TODO, no other cause is documented yet; ask in the community groups.

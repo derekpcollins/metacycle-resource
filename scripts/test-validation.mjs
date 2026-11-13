@@ -71,6 +71,19 @@ category: hand-tool
 used_in: [battery-removal]
 `,
   },
+  {
+    // likely_causes was dropped in Phase 4: ordered checks with most_likely carry it now.
+    name: 'troubleshooting entry with the retired likely_causes field',
+    file: 'src/content/troubleshooting/zz-test-likely-causes.mdx',
+    body: `---
+symptom: Test
+system: brakes
+likely_causes: [Test]
+confidence: theory
+sources: [https://example.com]
+---
+`,
+  },
 ];
 
 let failures = 0;

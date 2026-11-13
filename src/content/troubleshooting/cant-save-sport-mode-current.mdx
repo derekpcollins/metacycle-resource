@@ -1,8 +1,6 @@
 ---
 symptom: Can't save sport-mode current or other controller settings
 system: powertrain
-likely_causes:
-  - The controller's settings (sport current, busbar amps, brand and others) are read-only until its firmware is reflashed.
 checks:
   - step: Change one setting, press Param Write, then reconnect and read the settings back.
     pass: The new value stuck. Settings are writable; no fix needed.

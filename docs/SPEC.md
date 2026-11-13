@@ -151,8 +151,7 @@ Steps use a `<Step>` component (number, text, optional photo, optional torque va
 | --- | --- |
 | `symptom` | Owner's words: "Drives but no lights or horn" |
 | `system` | Enum |
-| `likely_causes` | Ordered, most likely first |
-| `checks` | Ordered steps, each with a pass/fail outcome |
+| `checks` | Ordered steps, most likely first, each with a pass/fail outcome; the most likely ones can be tagged |
 | `fix` | Links to a guide or a part |
 | `confidence` | confirmed / community-reported / theory |
 

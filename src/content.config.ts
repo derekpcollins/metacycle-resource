@@ -177,7 +177,6 @@ const troubleshooting = defineCollection({
   schema: z.strictObject({
     symptom: z.string().min(1),
     system,
-    likely_causes: z.array(z.string()).min(1),
     checks: z.array(check).default([]),
     fix: z.array(fix).default([]),
     confidence: z.enum(keys(CONFIDENCE)),
