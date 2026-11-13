@@ -66,7 +66,7 @@ const rows = await Promise.all(
               <td class="actions">
                 {s.url === 'TODO' ? (
                   <span class="btn" aria-disabled="true">
-                    link not added yet
+                    no link yet
                   </span>
                 ) : (
                   <a class="btn btn-primary" href={s.url} rel="nofollow noopener noreferrer">
@@ -203,10 +203,16 @@ const rows = await Promise.all(
     }
     .actions {
       margin: 0;
+      text-align: right;
+    }
+    .actions .btn {
       white-space: nowrap;
     }
     .actions .text-link {
-      margin-left: var(--space-3);
+      display: flex;
+      justify-content: flex-end;
+      min-height: 2.75rem;
+      white-space: nowrap;
     }
     [data-k='price'] {
       white-space: nowrap;
