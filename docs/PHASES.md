@@ -139,7 +139,7 @@ Launch (beta invites, announcements) is non-development and happens after Phase 
 
 ## Phase 5 notes (verified / deferred / learned)
 
-PHASE5_VERIFIED
+- **Verified:** see below (filled in after the merge).
 
 - **Deferred:** the weekly schedule (Phase 6, when Actions minutes are free); real Turnstile keys and contact emails (still waiting on Derek); a weekly rebuild so "needs re-check" flags age without a content change. Staleness is computed at build time, so a site that isn't redeployed for weeks shows dates as they stood at the last build. Phase 6 could add a Vercel deploy hook to the scheduled checker.
 - **Waiting on the repo going public:** the scheduled run, edit links on Help Wanted, and PR/issue links on the changelog.
