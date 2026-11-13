@@ -315,8 +315,19 @@ function table(rows: Row[], withTitle = false) {
 
 const count = (rows: Row[], o: LinkOutcome) => rows.filter((r) => r.result.outcome === o).length;
 
+/**
+ * A dead link that every buy option using it already marks `status: dead` has been handled
+ * (the site shows it as dead). It's still listed, but it doesn't keep the issue open.
+ */
+const acknowledgedDead = (r: Row) =>
+  r.result.outcome === 'dead' &&
+  r.target.usages.length > 0 &&
+  r.target.usages.every((u) => u.kind === 'buy-option' && u.status === 'dead');
+
 function issueReport(rows: Row[], applied: Awaited<ReturnType<typeof applyDead>>, runUrl?: string) {
-  const failures = rows.filter((r) => FAILURE_OUTCOMES.includes(r.result.outcome));
+  const failures = rows.filter(
+    (r) => FAILURE_OUTCOMES.includes(r.result.outcome) && !acknowledgedDead(r),
+  );
   const sources = parts.flatMap((p) => p.data.sources ?? []);
   const stale = summarize(sources);
   const today = new Date().toISOString().slice(0, 10);
@@ -340,10 +351,21 @@ function issueReport(rows: Row[], applied: Awaited<ReturnType<typeof applyDead>>
     if (list.length)
       out.push(`## ${LINK_OUTCOMES[o]} (${list.length})`, intro, table(list, withTitle));
   };
-  section(
-    'dead',
-    'HTTP 404/410 or the domain is gone, on two tries. Find a replacement listing or remove the buy option.',
-  );
+  const deadRows = rows.filter((r) => r.result.outcome === 'dead');
+  const newDead = deadRows.filter((r) => !acknowledgedDead(r));
+  const known = deadRows.filter(acknowledgedDead);
+  if (newDead.length)
+    out.push(
+      `## ${LINK_OUTCOMES.dead} (${newDead.length})`,
+      'HTTP 404/410 or the domain is gone, on two tries. Find a replacement listing or remove the buy option.',
+      table(newDead),
+    );
+  if (known.length)
+    out.push(
+      `## Already marked dead (${known.length})`,
+      'Still dead, and already `status: dead` on the site, so these don’t keep this issue open. Replace or remove them when a new listing turns up.',
+      table(known),
+    );
   section(
     'out-of-stock',
     'The page’s structured data says out of stock. Check by hand, then set `status: out-of-stock` if it’s true.',
