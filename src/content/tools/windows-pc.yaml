@@ -1,0 +1,7 @@
+# Source: Metacyclopedia Windows Software + Programming Cable pages. buy_links stay empty until Phase 4+; affiliate is off.
+id: windows-pc
+name: Windows computer + Votol software
+spec: Windows PC (Windows 10 reported working) running Votol EM V3-40 software
+category: diagnostic
+essential: false
+buy_links: []

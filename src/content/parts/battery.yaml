@@ -1,0 +1,48 @@
+# Phase 3 seed from Metacyclopedia and the research brief. Prices, links and dates need a human check.
+id: battery
+name: Battery pack (72 V 54.4 Ah NCM)
+system: battery-charging
+aliases:
+  - battery
+  - pack
+  - 4kwh battery
+  - lithium battery
+  - traction battery
+specs:
+  voltage_v: 72
+  capacity_ah: 54.4
+  energy_kwh: 4
+  chemistry: NCM lithium
+  continuous_a: 100
+  peak_a: 250
+  bms: CAN bus
+  internal_fuse: 300 A (ASTM A2209-300)
+  maker: Believed to be Greenway (unconfirmed)
+fits_notes: >-
+  Bolted in with T40 and T50 Torx fasteners, despite being called "removable". If the bike
+  will sit, disconnect the battery so the alarm doesn't drain it, and never charge it near
+  or below freezing (32 °F).
+sources:
+  - vendor: cnqsmotor
+    url: https://www.cnqsmotor.com/product/battery-for-sondors-ebike-4kwh-battery-74v-54-4ah-ncm-lithium-battery/
+    type: OEM
+    fit: exact
+    price:
+      amount: TODO
+      currency: USD
+    last_verified: TODO
+    status: unverified
+  - vendor: e-bike-market-place
+    url: https://ebikemarketplace.com/products/sondors-bullet-battery-rebuild-36v-14ah
+    type: rebuild-service
+    fit: exact
+    price:
+      amount: TODO
+      currency: USD
+    last_verified: TODO
+    status: unverified
+    notes: Rebuild of your own pack; Metacycle is listed as supported. Ask for a Metacycle quote.
+references:
+  - https://metacyclopedia.github.io/parts/
+  - https://metacyclopedia.github.io/battery/
+  - https://metacyclopedia.github.io/can-bus/

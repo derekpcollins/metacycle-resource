@@ -1,0 +1,110 @@
+---
+title: Reprogramming the Votol EM200-2SP controller
+summary: Build a USB programming cable, connect with the Votol Windows software, back up your settings and change them safely.
+type: mod
+system: powertrain
+difficulty: 4
+time_minutes: TODO
+tools: [votol-programming-cable, usb-data-cable, electrical-tape, wire-cutter, windows-pc]
+parts: [controller]
+safety:
+  - Proceed at your own risk. Settings beyond what the hardware supports can destroy the controller or motor and leave you stranded. Watch closely for heat after any change.
+  - Changing controller settings will void any warranty.
+  - Save a backup of your current settings before you write anything.
+confidence: community-reported
+sources:
+  - https://metacyclopedia.github.io/programming/
+  - https://metacyclopedia.github.io/programming-cable/
+  - https://metacyclopedia.github.io/connect-through-usb-port/
+  - https://metacyclopedia.github.io/connect-with-20-pin-cable/
+  - https://metacyclopedia.github.io/windows-software/
+  - https://metacyclopedia.github.io/metahack/
+  - https://metacyclopedia.github.io/problems/
+  - https://www.youtube.com/watch?v=Y6rSq_TIzTU
+---
+
+import Step from '../../components/Step.astro';
+
+The controller talks [CAN bus](https://metacyclopedia.github.io/can-bus/) to the bike. A USB adapter turns that into a serial link for Votol's Windows software. Other routes exist: a cable to the 20-pin connector behind the display, Votol's Bluetooth adapter and Android app, or [MetaHack](https://metacyclopedia.github.io/metahack/) (an app plus a custom adapter). This guide covers the most common route: the USB port in the storage compartment.
+
+### Check your bike and build the cable
+
+<Step n={1}>
+  Check the USB port can carry data. Take off the seat and carefully open the sheathing on the cable
+  going to the storage-compartment USB port. **Four wires:** this method should work. **Two wires:**
+  it's power only, so use the [20-pin
+  method](https://metacyclopedia.github.io/connect-with-20-pin-cable/) instead.
+</Step>
+
+<Step n={2}>
+  Get the Votol EM200-2SP USB programming cable: it's **blue with a black band**. Ones without the
+  band are the wrong version.
+</Step>
+
+<Step n={3}>
+  Take any USB-A cable with four wires (a data cable, not charge-only). Cut off the other end and
+  strip the outer sheath.
+</Step>
+
+<Step n={4}>
+  Wire it to the adapter. Only H (Data +) and L (Data −) are used:
+  - USB green (Data +) → adapter **H** (middle, pin 3)
+  - USB white (Data −) → adapter **L** (left of centre, pin 4)
+  - USB red (+5 V) and black (GND): unused. Tape each one off so it can't touch anything.
+
+The pins are labeled on the bottom of the adapter.
+
+</Step>
+
+### Connect and back up
+
+<Step n={5}>
+  Install the Votol EM V3-40 software on a Windows PC. No driver is needed on Windows 10; the
+  default Microsoft driver works and the adapter appears as a COM port.
+</Step>
+
+<Step n={6}>
+  Turn on the Metacycle and plug the cable into the storage-compartment USB port. Don't connect it
+  to the computer yet.
+</Step>
+
+<Step n={7}>Launch the software and note any ports already listed in the PORT drop-down.</Step>
+
+<Step n={8}>
+  Plug the adapter into the computer and press **Research**. Select the new COM port, set the baud
+  rate to **115200**, and make sure **CAN enable is not checked**.
+</Step>
+
+<Step n={9}>
+  Press **Open**, then **Connect**. The software reads the controller and fills in its pages.
+</Step>
+
+<Step n={10}>
+  **Save Param** first, before changing anything, and keep that file safe. If you never made a
+  backup, Metacyclopedia shares a factory 2021 Metacycle settings file (made with EM V3-40).
+</Step>
+
+### Change settings
+
+<Step n={11}>
+  Change one thing at a time and press **Param Write** to commit it. Settings owners have shared
+  (all at their own risk) are on Metacyclopedia's [Programming
+  page](https://metacyclopedia.github.io/programming/). The factory limits are under 200 A (220 A in
+  sport mode).
+</Step>
+
+<Step n={12}>
+  Test ride gently and check for heat. If anything behaves oddly, write your backup back.
+</Step>
+
+<Step n={13}>
+  If sport-mode current, busbar amps or other settings won't save (they read back unchanged), the
+  controller is read-only. Follow the video [VOTOL EM260/2: fixing read-only busbar / sport
+  current](https://www.youtube.com/watch?v=Y6rSq_TIzTU), which writes settings and flashes two
+  firmware versions. Metacyclopedia reports it has worked on a Metacycle controller.
+</Step>
+
+<Step n={14}>
+  TODO: the Votol software and manuals will be mirrored on this site's downloads page (Phase 6).
+  Until then, Metacyclopedia's [Files page](https://metacyclopedia.github.io/files/) has them.
+</Step>

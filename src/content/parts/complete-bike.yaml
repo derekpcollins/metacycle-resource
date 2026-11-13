@@ -1,0 +1,36 @@
+# Phase 3 seed from Metacyclopedia and the research brief. Prices, links and dates need a human check.
+id: complete-bike
+name: Complete bike (new, from the factory)
+system: body-frame
+aliases:
+  - whole bike
+  - new metacycle
+  - donor bike
+  - parts bike
+fits_notes: >-
+  The factory sells the entire bike. Useful as a parts donor. Metacyclopedia suggests searching
+  AliExpress for "SiAECOSYS Motorcycle 72v". E Smart Way's listing said the bike was "still
+  under development" when checked (Nov 2026).
+sources:
+  - vendor: siaecosys-aliexpress
+    url: https://www.aliexpress.us/item/3256806835974869.html
+    type: OEM
+    fit: exact
+    price:
+      amount: TODO
+      currency: USD
+    last_verified: TODO
+    status: unverified
+  - vendor: e-smart-way
+    url: https://e-smartway.com/products/siaecosys-electric-motorcycle-72v-120kph-high-power-cast-aluminum-integrally-formed-frame-mt-with-4kwh-lithium-ion-battery
+    type: OEM
+    fit: exact
+    price:
+      amount: TODO
+      currency: USD
+    last_verified: TODO
+    status: unverified
+    notes: Duties and tax not included.
+references:
+  - https://metacyclopedia.github.io/parts/
+  - https://e-smartway.com/products/siaecosys-electric-motorcycle-72v-120kph-high-power-cast-aluminum-integrally-formed-frame-mt-with-4kwh-lithium-ion-battery

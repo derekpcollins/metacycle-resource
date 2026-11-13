@@ -1,0 +1,15 @@
+# Phase 3 seed from Metacyclopedia and the research brief. Prices, links and dates need a human check.
+id: rear-fender
+name: Rear fender
+system: body-frame
+aliases:
+  - mudguard
+  - rear mudguard
+  - fender
+  - hugger
+fits_notes: >-
+  No OEM source is known. For a lower rear fender, a KTM Duke 390 fender fits and is reported
+  to work well.
+references:
+  - https://metacyclopedia.github.io/parts/
+sources: []

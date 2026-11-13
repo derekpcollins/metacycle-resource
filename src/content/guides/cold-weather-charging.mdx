@@ -1,0 +1,48 @@
+---
+title: Cold-weather charging
+summary: When it's safe to charge in the cold, and how to charge the battery in or out of the bike.
+type: how-to
+system: battery-charging
+difficulty: 1
+time_minutes: TODO
+tools: []
+parts: [charger, battery, charge-adapter-connector]
+safety:
+  - Do not charge when the battery is cold. Charging lithium cells near or below freezing (32 °F / 0 °C) can permanently damage them.
+  - The charger plugs into mains power (120/240 VAC) and outputs 84 V DC. Keep the connectors dry.
+confidence: community-reported
+sources:
+  - https://metacyclopedia.github.io/battery/
+  - https://metacyclopedia.github.io/charger/
+  - https://www.youtube.com/watch?v=PDbgJK4OnP0
+---
+
+import Step from '../../components/Step.astro';
+
+The stock charger fills the 4 kWh pack in about 5 hours. The one firm rule for cold weather: **never charge a battery that's near or below freezing**.
+
+<Step n={1}>
+  Check the battery's temperature first. If the bike or battery has been somewhere at or below
+  freezing, don't charge yet. TODO: how long to let a cold pack warm up, and whether the BMS blocks
+  cold charging, aren't documented. Share what you know.
+</Step>
+
+<Step n={2}>
+  If you're charging the battery out of the bike, attach the charge-adapter cord to the battery.
+</Step>
+
+<Step n={3}>Plug the cable with the blue end into the Metacycle (or into the adapter cord).</Step>
+
+<Step n={4}>Fit the right mains plug to the charger (US NEMA 5-15 or EU Type C).</Step>
+
+<Step n={5}>
+  Plug the charger into the wall. If its light blinks red-red-green, that's a communication error,
+  but it still charges.
+</Step>
+
+<Step n={6}>When charging is done, unplug the charger from the wall outlet first.</Step>
+
+<Step n={7}>
+  Wait for the click from the Metacycle (it should come fairly soon), then disconnect the charger
+  from the bike or the battery adapter.
+</Step>

@@ -1,0 +1,26 @@
+---
+symptom: Lost key fobs
+system: security
+likely_causes:
+  - All key fobs are lost or broken.
+checks:
+  - step: Decide whether you want to keep the alarm.
+    pass: Keep it. Replace the alarm module (it comes with two fobs), or clone a fob if you still have one.
+    fail: Lose it. Remove the alarm and fit a key switch.
+fix:
+  - part: alarm-module
+    note: A new module comes with two fobs. It's under the seat.
+  - guide: alarm-removal
+    note: Replace the module, or remove the alarm and use a key switch.
+  - part: key-switch
+confidence: community-reported
+sources:
+  - https://metacyclopedia.github.io/problems/
+  - https://metacyclopedia.github.io/removing-alarm-system/
+---
+
+Three options:
+
+1. **Replace the alarm module.** It's under the seat, and a new one comes with two key fobs.
+2. **Clone a fob.** If you still have one, a fob cloner can copy its lock and unlock signals. Proximity unlocking probably won't work.
+3. **Remove the alarm** and use a key switch instead. See [Alarm removal & bypass](/guides/alarm-removal).

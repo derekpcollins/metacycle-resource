@@ -1,24 +1,41 @@
-# Facts from docs/RESEARCH.md §1, §2 and §4. Buy-link details still TODO.
+# Phase 3 seed from Metacyclopedia and the research brief. Prices, links and dates need a human check.
 id: controller
 name: Motor controller (Votol EM200-2SP)
 system: powertrain
-aliases: [controller, votol, em200, em200-2sp, esc]
+aliases:
+  - controller
+  - votol
+  - em200
+  - em200-2sp
+  - esc
+  - motor controller
+  - ecu
+failure_rate: common
 specs:
   model: Votol EM200-2SP (not the plain EM200)
   voltage_v: 60–72
-  factory_current_limit: under 200 A (220 A in sport mode)
-failure_rate: common
-fits_notes: >
-  A former Sondors engineer cites a high controller failure rate (poor MOSFET
-  choice). Replacement alternatives (e.g. Fardriver) are not yet documented — TODO.
+  rated_current: 200 A rated, 250 A boost (sources vary)
+  factory_current_limit: Under 200 A (220 A in sport mode)
+  waterproofing: IP67 claimed (some say IP65)
+  bms_link: CAN bus
+fits_notes: >-
+  A former Sondors engineer cites a high controller failure rate (poor MOSFET choice), and
+  owners report water damage despite the IP rating. Metacyclopedia's parts list calls the
+  AliExpress unit "EM200-2SM"; its controller page says EM200-2SP. Two controllers with the
+  same model name may differ inside. Replacement alternatives (e.g. Fardriver) are not yet
+  documented.
 sources:
-  - vendor: siaecosys-aliexpress
-    url: TODO
+  - vendor: aliexpress
+    url: https://a.aliexpress.com/_mMQLIle
     type: OEM
     fit: exact
-    price: { amount: TODO, currency: USD }
+    price:
+      amount: TODO
+      currency: USD
     last_verified: TODO
     status: unverified
 references:
   - https://metacyclopedia.github.io/controller/
+  - https://metacyclopedia.github.io/parts/
+  - https://votol.cn/product/votol-em200-2/
   - https://electrek.co/2024/05/12/failed-sondors-metacycle-motorcycle-was-never-street-legal-reveals-employee/

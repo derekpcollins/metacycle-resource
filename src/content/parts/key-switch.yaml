@@ -1,0 +1,26 @@
+# Phase 3 seed from Metacyclopedia and the research brief. Prices, links and dates need a human check.
+id: key-switch
+name: Key switch (alarm bypass)
+system: security
+aliases:
+  - ignition switch
+  - key ignition
+  - alarm bypass switch
+specs:
+  fits_without_drilling: 20 mm diameter switch
+fits_notes: >-
+  Bridging the alarm's orange (harness yellow) and red (harness red/white) wires through a
+  switch bypasses the alarm entirely. A 20 mm switch fits without drilling.
+sources:
+  - vendor: amazon
+    url: https://www.amazon.com/gp/product/B09N7L7X7V
+    type: aftermarket
+    fit: adapt
+    price:
+      amount: TODO
+      currency: USD
+    last_verified: TODO
+    status: unverified
+    notes: Needs wiring to the alarm harness.
+references:
+  - https://metacyclopedia.github.io/removing-alarm-system/

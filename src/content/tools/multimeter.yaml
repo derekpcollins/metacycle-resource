@@ -1,0 +1,7 @@
+# Source: docs/SPEC.md Tools section (diagnostic gear). buy_links stay empty until Phase 4+; affiliate is off.
+id: multimeter
+name: Multimeter
+spec: Digital multimeter with DC volts and continuity
+category: diagnostic
+essential: false
+buy_links: []

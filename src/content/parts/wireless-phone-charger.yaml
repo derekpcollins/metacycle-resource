@@ -1,0 +1,28 @@
+# Phase 3 seed from Metacyclopedia and the research brief. Prices, links and dates need a human check.
+id: wireless-phone-charger
+name: Wireless phone charger
+system: electrical
+aliases:
+  - phone charger
+  - qi charger
+  - usb port
+  - wireless charger
+specs:
+  output_w: 10
+  input: 5 V USB
+fits_notes: >-
+  The USB port in the storage compartment is also used to program the controller, but only
+  on bikes whose USB cable has four wires (two-wire ports carry power only).
+sources:
+  - vendor: cnqsmotor
+    url: https://www.cnqsmotor.com/product/siaecosys-5v-usb-cable-10w-motorcycle-phone-wireless-charger/
+    type: OEM
+    fit: exact
+    price:
+      amount: TODO
+      currency: USD
+    last_verified: TODO
+    status: unverified
+references:
+  - https://metacyclopedia.github.io/parts/
+  - https://metacyclopedia.github.io/connect-through-usb-port/

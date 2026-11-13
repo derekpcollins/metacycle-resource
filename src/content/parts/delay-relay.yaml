@@ -1,0 +1,13 @@
+# Phase 3 seed from Metacyclopedia and the research brief. Prices, links and dates need a human check.
+id: delay-relay
+name: Delay relay
+system: electrical
+aliases:
+  - relay
+  - time delay relay
+fits_notes: >-
+  Not much is known: its function and a replacement are undocumented. Photos and questions
+  are in the Sondors Metacycle Mods Club Facebook group. Help wanted.
+references:
+  - https://metacyclopedia.github.io/parts/
+sources: []

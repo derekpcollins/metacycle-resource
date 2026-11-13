@@ -1,0 +1,44 @@
+# Phase 3 seed from Metacyclopedia and the research brief. Prices, links and dates need a human check.
+id: mirrors
+name: Mirrors
+system: body-frame
+aliases:
+  - mirror
+  - rearview mirrors
+  - bar end mirrors
+fits_notes: >-
+  Both mirror bolts are clockwise thread; the size (8 mm or 10 mm) is unconfirmed. For bar-end
+  mirrors, look for ones that friction-fit a 7/8" ID tube or clamp onto the bar end. Owners
+  report it's hard, and that the smallest size from a bar-end size kit is needed.
+sources:
+  - vendor: cnqsmotor
+    url: https://www.cnqsmotor.com/product/siaecosys-rearview-mirrors-2pcs-pair-for-electric-bicycle-scooter-motorcycle/
+    type: OEM
+    fit: exact
+    price:
+      amount: TODO
+      currency: USD
+    last_verified: TODO
+    status: unverified
+  - vendor: aliexpress
+    url: https://a.aliexpress.com/_msuNqxY
+    type: OEM
+    fit: exact
+    price:
+      amount: TODO
+      currency: USD
+    last_verified: TODO
+    status: unverified
+  - vendor: amazon
+    url: https://www.amazon.com/dp/B0937G1LYF
+    type: aftermarket
+    fit: adapt
+    price:
+      amount: TODO
+      currency: USD
+    last_verified: TODO
+    status: unverified
+    notes: Bar-end size kit; owners report the smallest size is needed.
+references:
+  - https://metacyclopedia.github.io/parts/
+  - https://www.reddit.com/r/metacycle/comments/wnqp8e/bar_end_mirrors_are_basically_impossible/

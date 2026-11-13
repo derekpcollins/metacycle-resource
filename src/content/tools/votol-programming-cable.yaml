@@ -1,0 +1,8 @@
+# Source: Metacyclopedia Programming Cable page. buy_links stay empty until Phase 4+; affiliate is off.
+id: votol-programming-cable
+name: Votol USB programming cable
+spec: 'Votol EM200-2SP USB-CAN adapter: blue with a black band (others are the wrong version);
+  115200 baud; only H and L pins used'
+category: diagnostic
+essential: false
+buy_links: []

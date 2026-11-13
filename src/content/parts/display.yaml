@@ -1,0 +1,49 @@
+# Phase 3 seed from Metacyclopedia and the research brief. Prices, links and dates need a human check.
+id: display
+name: Display unit / speedometer (DKD 061)
+system: controls-display
+aliases:
+  - speedometer
+  - dash
+  - dashboard
+  - lcd
+  - dkd
+  - 061 dkd
+  - gauge
+  - odometer
+specs:
+  model: SiAECOSYS 061 DKD
+  connector: 20-pin (to the controller and harness)
+  supply_v: 72
+  protocol: one-LIN or CAN bus
+  correct_wheel_circumference_mm: 1675
+  factory_wheel_circumference_mm: 1915
+fits_notes: >-
+  Factory wheel setting makes it read about 80 mph at a true 70 mph; see the "Speedometer
+  reads wrong" fix. A "New 061 TFT DKD" display is not plug-and-play: pins must be remapped,
+  its supply changed from 72 V to 12 V, and it shows gear 3/4 instead of D/S. Owners have
+  also tried the CJ-V5-03.
+sources:
+  - vendor: cnqsmotor
+    url: https://www.cnqsmotor.com/product/sondors-motorcycle-72v-dkd-lcd-mt-speedometer-for-metacycle/
+    type: OEM
+    fit: exact
+    price:
+      amount: TODO
+      currency: USD
+    last_verified: TODO
+    status: unverified
+  - vendor: aliexpress
+    url: https://www.aliexpress.us/item/3256804221088096.html
+    type: OEM
+    fit: exact
+    price:
+      amount: TODO
+      currency: USD
+    last_verified: TODO
+    status: unverified
+references:
+  - https://metacyclopedia.github.io/parts/
+  - https://metacyclopedia.github.io/display-unit/
+  - https://metacyclopedia.github.io/problems/
+  - https://sites.google.com/view/metacycle-pedia/parts

@@ -1,0 +1,24 @@
+# Phase 3 seed from Metacyclopedia and the research brief. Prices, links and dates need a human check.
+id: handlebar
+name: Handlebar
+system: controls-display
+aliases:
+  - bars
+  - handle bar
+  - crossbar
+fits_notes: >-
+  The cross-bar (a decorative 15 mm tube) is cosmetic: it can be removed or used as a mount
+  point, and its clamps can be reused to mount a raised display.
+sources:
+  - vendor: cnqsmotor
+    url: https://www.cnqsmotor.com/product/motorcycle-high-quality-electric-scooter-bicycle-handbar/
+    type: OEM
+    fit: exact
+    price:
+      amount: TODO
+      currency: USD
+    last_verified: TODO
+    status: unverified
+references:
+  - https://metacyclopedia.github.io/parts/
+  - https://metacyclopedia.github.io/accessories/

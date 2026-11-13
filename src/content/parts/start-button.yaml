@@ -1,0 +1,20 @@
+# Phase 3 seed from Metacyclopedia and the research brief. Prices, links and dates need a human check.
+id: start-button
+name: Start / power button
+system: controls-display
+aliases:
+  - power button
+  - on button
+  - ignition button
+sources:
+  - vendor: aliexpress
+    url: https://www.aliexpress.us/item/3256805774710562.html
+    type: OEM
+    fit: exact
+    price:
+      amount: TODO
+      currency: USD
+    last_verified: TODO
+    status: unverified
+references:
+  - https://metacyclopedia.github.io/parts/

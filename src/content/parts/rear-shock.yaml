@@ -1,25 +1,50 @@
-# Example from docs/SPEC.md. Prices, URLs and verification dates still TODO.
+# Phase 3 seed from Metacyclopedia and the research brief. Prices, links and dates need a human check.
 id: rear-shock
 name: Rear shock absorber
 system: suspension
-aliases: [shock, rear suspension, absorber]
+aliases:
+  - shock
+  - rear suspension
+  - absorber
+  - monoshock
 specs:
   eye_to_eye_mm: 310
   mount_hole_mm: 10
   end_width_mm: 25
-failure_rate: occasional
-difficulty: 2
-fits_notes: >
-  Stock unit is reported as low quality. Some owners fit 320–330 mm
-  to raise ride height.
+fits_notes: >-
+  The stock unit is reported to be poor quality. Some owners fit 320 or 330 mm for more ride
+  height. A KTM RC 390 shock is very similar, but about 1 mm must be filed off the width of
+  the bushing on the eyelet where it mounts to the bike.
 sources:
-  - vendor: siaecosys-aliexpress
-    url: TODO
+  - vendor: cnqsmotor
+    url: https://www.cnqsmotor.com/product/motorcycle-310mm-rear-shock-electric-scooter-accessories/
     type: OEM
     fit: exact
-    price: { amount: TODO, currency: USD }
+    price:
+      amount: TODO
+      currency: USD
     last_verified: TODO
     status: unverified
+  - vendor: aliexpress
+    url: https://a.aliexpress.com/_msLygzw
+    type: OEM
+    fit: exact
+    price:
+      amount: TODO
+      currency: USD
+    last_verified: TODO
+    status: unverified
+  - vendor: aliexpress
+    url: https://vi.aliexpress.com/item/32861205900.html
+    type: aftermarket
+    fit: adapt
+    price:
+      amount: TODO
+      currency: USD
+    last_verified: TODO
+    status: unverified
+    notes: Owner-suggested; fit not documented. Check the dimensions above.
 references:
   - https://metacyclopedia.github.io/parts/
   - https://sites.google.com/view/metacycle-pedia/parts
+  - https://www.reddit.com/r/metacycle/comments/18ueabw/metacycle_oem_parts_list/

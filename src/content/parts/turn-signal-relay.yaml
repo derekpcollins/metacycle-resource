@@ -1,0 +1,20 @@
+# Phase 3 seed from Metacyclopedia and the research brief. Prices, links and dates need a human check.
+id: turn-signal-relay
+name: Turn signal relay (flasher)
+system: electrical
+aliases:
+  - flasher relay
+  - blinker relay
+  - flasher
+sources:
+  - vendor: aliexpress
+    url: https://www.aliexpress.us/item/3256804341243871.html
+    type: OEM
+    fit: exact
+    price:
+      amount: TODO
+      currency: USD
+    last_verified: TODO
+    status: unverified
+references:
+  - https://metacyclopedia.github.io/parts/

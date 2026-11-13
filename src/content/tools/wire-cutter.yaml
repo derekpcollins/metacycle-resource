@@ -1,0 +1,7 @@
+# Source: Metacyclopedia Tools page. buy_links stay empty until Phase 4+; affiliate is off.
+id: wire-cutter
+name: Wire cutter or knife
+spec: Side cutters or a utility knife
+category: hand-tool
+essential: false
+buy_links: []

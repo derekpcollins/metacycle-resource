@@ -1,25 +1,44 @@
 ---
 title: Long-term storage
-summary: Keep the battery healthy when the bike sits for weeks or months.
+summary: Keep the battery healthy when the bike sits for weeks or months, including over winter.
 type: maintenance
 system: battery-charging
 difficulty: 1
 time_minutes: TODO
-tools: []
-parts: []
+tools: [torx-t40, torx-t50]
+parts: [battery, charger, charge-adapter-connector, battery-activator]
 safety:
-  - Never charge the battery near or below freezing.
+  - Never charge the battery near or below freezing (32 °F / 0 °C). Lithium cells can be permanently damaged.
+  - Disconnecting or removing the battery means working near a 72 V pack. See the battery removal guide's safety notes.
 confidence: community-reported
 sources:
   - https://metacyclopedia.github.io/battery/
+  - https://metacyclopedia.github.io/charger/
+  - https://metacyclopedia.github.io/battery-activator/
 ---
 
 import Step from '../../components/Step.astro';
 
+The alarm module draws power all the time, so a bike left with its battery connected slowly drains it.
+
 <Step n={1}>
-  Disconnect the battery before storage. If it stays connected, the alarm slowly drains it.
+  Disconnect the battery before storage so the alarm can't drain it. To take it out completely (for
+  example, to keep it indoors over winter), follow [Battery removal &
+  reinstall](/guides/battery-removal).
 </Step>
 
 <Step n={2}>
-  Don't charge near or below freezing. TODO: safe charging temperature range not yet sourced.
+  To top it up while it's out of the bike, use the charge-adapter cable that came with the bike:
+  attach it to the battery, then plug in the charger. See [Cold-weather
+  charging](/guides/cold-weather-charging) for the full charging procedure.
+</Step>
+
+<Step n={3}>
+  Don't charge near or below freezing. TODO: the ideal storage charge level and storage temperature
+  range aren't sourced yet. Help wanted.
+</Step>
+
+<Step n={4}>
+  When you reconnect the battery, wake it up with the [battery activator](/parts/battery-activator)
+  or by plugging in the [charger](/parts/charger). Listen for the click.
 </Step>

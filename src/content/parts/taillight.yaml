@@ -1,0 +1,30 @@
+# Phase 3 seed from Metacyclopedia and the research brief. Prices, links and dates need a human check.
+id: taillight
+name: Taillight / brake light
+system: electrical
+aliases:
+  - tail light
+  - brake light
+  - rear light
+  - stop light
+sources:
+  - vendor: cnqsmotor
+    url: https://www.cnqsmotor.com/product/electric-motorcycle-accessories-taillight-suit-for-scooter/
+    type: OEM
+    fit: exact
+    price:
+      amount: TODO
+      currency: USD
+    last_verified: TODO
+    status: unverified
+  - vendor: aliexpress
+    url: http://a.aliexpress.com/_mstR7JW
+    type: OEM
+    fit: exact
+    price:
+      amount: TODO
+      currency: USD
+    last_verified: TODO
+    status: unverified
+references:
+  - https://metacyclopedia.github.io/parts/

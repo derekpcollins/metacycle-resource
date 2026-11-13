@@ -2,36 +2,45 @@
 symptom: Won't power on / remotes dead
 system: electrical
 likely_causes:
-  - Kill switch is in the off position.
-  - Controller or motor is too hot.
-  - Battery needs reactivating.
+  - Engine kill switch is set to off.
+  - Controller or motor is too hot and has shut everything down.
+  - Battery isn't connected internally (needs activating after a reconnect or a charge).
   - Key fob batteries are dead.
-  - Blown 5 A fuse.
-  - Alarm module fault.
+  - Blown 5 A fuse in the battery compartment.
+  - Failed alarm module.
 checks:
-  - step: Check the kill switch.
-    pass: Switch is on. Continue.
-    fail: Flip it on and try again.
-  - step: Let the controller and motor cool down, then retry.
+  - step: Make sure the engine kill switch is set to "On".
+    pass: It's on. Continue.
+    fail: Set it to "On" and try again.
+  - step: Wait a while. If the controller or motor got too hot, everything shuts down as a safety measure.
+    pass: Still dead after cooling. Continue.
+    fail: It powers on once cool. Heat was the cause; ease off until you know why it overheated.
+  - step: Use the activation dongle, or plug in the charger, so the battery connects internally. Listen for a click.
     pass: Still dead. Continue.
-    fail: Powers on. Heat was the cause.
-  - step: Reactivate the battery (activator dongle or charger).
-    pass: Still dead. Continue.
-    fail: Powers on. Battery needed reactivating.
-  - step: Replace the key fob batteries.
-    pass: Still dead. Continue.
-    fail: Remotes work again.
-  - step: Check the 5 A fuse.
-    pass: Fuse is good. Continue.
-    fail: Replace the fuse.
-  - step: If the alarm is silent, bridge the orange and red wires under the seat to test.
-    pass: Bike powers on. The alarm is the likely fault.
-    fail: TODO — next diagnostic step not yet documented.
+    fail: It powers on. The battery needed activating.
+  - step: Replace the batteries in the key fobs, and check the fob LEDs blink when you press a button (that means they're transmitting).
+    pass: Fobs blink but the bike still doesn't respond. Continue.
+    fail: The bike responds with new batteries. Done.
+  - step: Check the 5 A blade fuse in the battery compartment.
+    pass: The fuse is good. Continue.
+    fail: It's burned out. Replace it.
+  - step: If the alarm still doesn't chirp when you press the fob buttons, unplug it and bridge the harness's red/white and yellow wires (the alarm's red and orange) under the seat.
+    pass: The bike turns on. The alarm is the fault; replace or bypass it.
+    fail: The bike stays off. The problem isn't the alarm. TODO, next step not documented; ask in the community groups.
 fix:
-  - note: Work through the checks in order. If the alarm is at fault, see "Lost key fobs" for alarm replacement or removal options (TODO guide).
+  - part: fuse-5a
+    note: If the fuse was blown.
+  - part: battery-activator
+    note: To wake the battery after a reconnect (or plug in the charger).
+  - guide: alarm-removal
+    note: If bridging the wires turns the bike on — replace or bypass the alarm.
+  - part: alarm-module
 confidence: community-reported
 sources:
   - https://metacyclopedia.github.io/problems/
+  - https://metacyclopedia.github.io/battery/
+  - https://metacyclopedia.github.io/removing-alarm-system/
+  - https://metacyclopedia.github.io/battery-activator/
 ---
 
-Work through the checks in order; most owners find the cause in the first few.
+Work through the checks in order; most owners find the cause in the first few. The alarm module is the bike's most troublesome part.

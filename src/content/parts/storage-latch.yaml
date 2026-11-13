@@ -1,0 +1,21 @@
+# Phase 3 seed from Metacyclopedia and the research brief. Prices, links and dates need a human check.
+id: storage-latch
+name: Storage area latch
+system: body-frame
+aliases:
+  - latch
+  - compartment latch
+  - lock
+sources:
+  - vendor: amazon
+    url: https://www.amazon.com/dp/B07FLHDGKG
+    type: OEM-equivalent
+    fit: exact
+    price:
+      amount: TODO
+      currency: USD
+    last_verified: TODO
+    status: unverified
+    notes: 'Metacyclopedia: possibly OEM; identical to the one on the bike.'
+references:
+  - https://metacyclopedia.github.io/parts/

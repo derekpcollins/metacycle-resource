@@ -1,0 +1,13 @@
+# Phase 3 seed. Every fact is backed by the references below.
+id: aliexpress
+name: AliExpress (seller not confirmed)
+url: https://www.aliexpress.com/
+country: China
+ships_to_us: unknown
+us_warehouse: unknown
+buying_tips: >-
+  Marketplace listings that Metacyclopedia links (often as OEM) without naming the seller.
+  Check the seller and the selected variant before you pay. AliExpress blocks automated link
+  checks, so these links need a human to confirm them.
+references:
+  - https://metacyclopedia.github.io/parts/

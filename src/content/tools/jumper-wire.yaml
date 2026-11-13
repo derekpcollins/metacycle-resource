@@ -1,0 +1,7 @@
+# Source: Metacyclopedia Removing the Alarm page. buy_links stay empty until Phase 4+; affiliate is off.
+id: jumper-wire
+name: Jumper wire or paperclip
+spec: Short length of spare wire or a paperclip, for bridging two harness wires
+category: consumable
+essential: false
+buy_links: []

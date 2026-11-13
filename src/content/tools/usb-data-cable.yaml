@@ -1,0 +1,8 @@
+# Source: Metacyclopedia Connect through USB Port page. buy_links stay empty until Phase 4+; affiliate is off.
+id: usb-data-cable
+name: USB-A data cable (4-wire)
+spec: Any USB-A cable with 4 wires (data, not charge-only), to cut and wire to the programming
+  cable
+category: consumable
+essential: false
+buy_links: []

@@ -1,0 +1,7 @@
+# Source: Metacyclopedia Programming Cable page. buy_links stay empty until Phase 4+; affiliate is off.
+id: electrical-tape
+name: Electrical tape
+spec: PVC electrical tape, to insulate unused wires
+category: consumable
+essential: false
+buy_links: []

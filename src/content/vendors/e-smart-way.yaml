@@ -1,12 +1,21 @@
-# SiAECOSYS reseller (docs/RESEARCH.md §2; buying tip from docs/SPEC.md).
+# Phase 3 seed. Every fact is backed by the references below.
 id: e-smart-way
 name: E Smart Way
-url: https://e-smartway.com
-ships_to_us: unknown
+url: https://e-smartway.com/
+country: China
+ships_to_us: 'yes'
 us_warehouse: some-items
-buying_tips: >
-  SiAECOSYS reseller with a US warehouse for some items. Customs duties are not
-  included on orders.
+languages:
+  - English
+buying_tips: >-
+  Chinese online store and SiAECOSYS reseller; some items ship from a US warehouse and arrive
+  much faster. Everything else goes to North America by sea, about 40–50 days after boarding,
+  and tracking shows only "label created" until it reaches UPS/FedEx. Orders do not include
+  customs duties or tax, which the buyer pays (stated on the complete-bike listing). The store
+  says it doesn't accept refund requests over delays beyond its control, so expect long waits.
 references:
-  - https://metacyclopedia.github.io/parts/
+  - https://e-smartway.com/policies/shipping-policy
+  - https://e-smartway.com/pages/about-us
+  - https://e-smartway.com/products/siaecosys-electric-motorcycle-72v-120kph-high-power-cast-aluminum-integrally-formed-frame-mt-with-4kwh-lithium-ion-battery
   - https://e-smartway.com/products/us-warehouse-siaecosys-siayq72180-programmable-electric-motorcycle-controller-72v-180a-for-high-power-motor-1
+  - https://metacyclopedia.github.io/parts/

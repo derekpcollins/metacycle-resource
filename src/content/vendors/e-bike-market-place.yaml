@@ -1,0 +1,20 @@
+# Phase 3 seed. Every fact is backed by the references below.
+id: e-bike-market-place
+name: E-Bike Market Place
+url: https://ebikemarketplace.com/
+country: United States
+ships_to_us: 'yes'
+us_warehouse: 'yes'
+languages:
+  - English
+buying_tips: >-
+  Battery rebuild shop in Las Vegas, NV. Its Sondors rebuild service lists the Metacycle among
+  supported packs: it replaces the cells, reuses your housing, connectors and BMS where possible,
+  and gives a 90-day workmanship warranty. Turnaround is 2–3 weeks after the pack arrives.
+  Ship your charger with the pack and fill in the intake form. Shipping is continental US
+  only and rebuilds are final sale unless defective. Prices on the page are for e-bike packs,
+  not the Metacycle, so ask for a quote first.
+references:
+  - https://ebikemarketplace.com/products/sondors-bullet-battery-rebuild-36v-14ah
+  - https://sites.google.com/view/metacycle-pedia/parts
+  - https://metacyclopedia.github.io/parts/

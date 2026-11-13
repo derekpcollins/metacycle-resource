@@ -1,0 +1,10 @@
+# Phase 3 seed. Every fact is backed by the references below.
+id: tapias-seats
+name: Tapia's Seats
+url: https://www.tapiasseats.com/
+languages:
+  - English
+buying_tips: >-
+  Makes custom seats; installation is reported to be very similar to the Corbin seat.
+references:
+  - https://metacyclopedia.github.io/parts/

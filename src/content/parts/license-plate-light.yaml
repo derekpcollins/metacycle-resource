@@ -1,0 +1,19 @@
+# Phase 3 seed from Metacyclopedia and the research brief. Prices, links and dates need a human check.
+id: license-plate-light
+name: License plate light
+system: electrical
+aliases:
+- plate light
+- number plate light
+sources:
+- vendor: aliexpress
+  url: https://www.aliexpress.us/item/3256805806346039.html
+  type: OEM
+  fit: exact
+  price:
+    amount: TODO
+    currency: USD
+  last_verified: TODO
+  status: unverified
+references:
+- https://metacyclopedia.github.io/parts/

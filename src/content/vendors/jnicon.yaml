@@ -1,0 +1,8 @@
+# Phase 3 seed. Every fact is backed by the references below.
+id: jnicon
+name: Jnicon
+url: https://www.jniconconnector.com/
+buying_tips: >-
+  Connector maker; Metacyclopedia links its IP67 8-pin panel-mount connector.
+references:
+  - https://metacyclopedia.github.io/parts/

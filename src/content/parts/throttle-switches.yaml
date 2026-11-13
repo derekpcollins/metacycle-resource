@@ -1,0 +1,45 @@
+# Phase 3 seed from Metacyclopedia and the research brief. Prices, links and dates need a human check.
+id: throttle-switches
+name: Grips, throttle & combination switches
+system: controls-display
+aliases:
+  - throttle
+  - twist throttle
+  - grips
+  - switch gear
+  - switchgear
+  - k126
+  - horn button
+specs:
+  listing_model: SiAECOSYS K126 throttle with combination switch
+sources:
+  - vendor: cnqsmotor
+    url: https://www.cnqsmotor.com/product/siaecosys-k126-throttle-with-combination-switch-suitable-for-electric-motorcycle/
+    type: OEM
+    fit: exact
+    price:
+      amount: TODO
+      currency: USD
+    last_verified: TODO
+    status: unverified
+  - vendor: aliexpress
+    url: https://www.aliexpress.us/item/3256805941044936.html
+    type: OEM
+    fit: exact
+    price:
+      amount: TODO
+      currency: USD
+    last_verified: TODO
+    status: unverified
+  - vendor: cnqsmotor
+    url: https://www.cnqsmotor.com/product-category/siaecosys-accessories/twist-throttle/
+    type: aftermarket
+    fit: adapt
+    price:
+      amount: TODO
+      currency: USD
+    last_verified: TODO
+    status: unverified
+    notes: Other SiAECOSYS throttle models that may work; unconfirmed.
+references:
+  - https://metacyclopedia.github.io/parts/

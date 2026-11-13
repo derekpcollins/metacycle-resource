@@ -1,0 +1,45 @@
+# Phase 3 seed from Metacyclopedia and the research brief. Prices, links and dates need a human check.
+id: hub-motor
+name: Rear hub motor (QS273 8000W)
+system: powertrain
+aliases:
+  - motor
+  - hub motor
+  - qs273
+  - qs motor
+  - rear wheel motor
+  - engine
+specs:
+  model: QS Motor QS273 8000W 3T (several revisions exist)
+  type: Direct-drive hub motor
+  nominal_power_kw: 8
+  peak_power_kw: 14.5
+  nominal_torque_nm: 108
+  peak_torque_nm: 176
+fits_notes: >-
+  The engine number is stamped behind the rear brake disc (look through the disc's windows);
+  it starts with "SIA72V800WN". One AliExpress listing includes the front rim.
+sources:
+  - vendor: cnqsmotor
+    url: https://www.cnqsmotor.com/product/sondors-ebike-qs273-8000w-v3-hub-motor-for-sondors-meta-cycle/
+    type: OEM
+    fit: exact
+    price:
+      amount: TODO
+      currency: USD
+    last_verified: TODO
+    status: unverified
+  - vendor: aliexpress
+    url: https://a.aliexpress.com/_mrbmdgY
+    type: OEM
+    fit: exact
+    price:
+      amount: TODO
+      currency: USD
+    last_verified: TODO
+    status: unverified
+    notes: Hub motor and front rim.
+references:
+  - https://metacyclopedia.github.io/parts/
+  - https://metacyclopedia.github.io/motor/
+  - https://metacyclopedia.github.io/registration/

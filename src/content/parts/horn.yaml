@@ -1,0 +1,34 @@
+# Phase 3 seed from Metacyclopedia and the research brief. Prices, links and dates need a human check.
+id: horn
+name: Horn
+system: electrical
+aliases:
+  - hooter
+  - beeper
+specs:
+  voltage_v: 12
+  loudness: 105 dB
+  current_draw_a: 0.9
+fits_notes: >-
+  The 0.9 A draw is a measured observation, not a factory rating.
+sources:
+  - vendor: cnqsmotor
+    url: https://www.cnqsmotor.com/product/siaecosys-loud-12v-general-motorcycle-electric-horn-round-speaker-suitable-for-bicycle-scooter-motorcycle-in-105db/
+    type: OEM
+    fit: exact
+    price:
+      amount: TODO
+      currency: USD
+    last_verified: TODO
+    status: unverified
+  - vendor: alibaba
+    url: https://x.alibaba.com/AvFmlM?ck=pdp
+    type: OEM
+    fit: exact
+    price:
+      amount: TODO
+      currency: USD
+    last_verified: TODO
+    status: unverified
+references:
+  - https://metacyclopedia.github.io/parts/

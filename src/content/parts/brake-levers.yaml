@@ -1,0 +1,54 @@
+# Phase 3 seed from Metacyclopedia and the research brief. Prices, links and dates need a human check.
+id: brake-levers
+name: Brake levers
+system: brakes
+aliases:
+  - brake handles
+  - brake lever
+  - levers
+  - adjustable levers
+fits_notes: >-
+  No OEM source is known; these are owner-found replacements.
+sources:
+  - vendor: aliexpress
+    url: https://a.aliexpress.com/_m0nqbrS
+    type: aftermarket
+    fit: exact
+    price:
+      amount: TODO
+      currency: USD
+    last_verified: TODO
+    status: unverified
+    notes: Fits, but a slightly different shape.
+  - vendor: amazon
+    url: https://www.amazon.com/dp/B07FF5N2FQ
+    type: aftermarket
+    fit: exact
+    price:
+      amount: TODO
+      currency: USD
+    last_verified: TODO
+    status: unverified
+    notes: Adjustable; no modification needed; a bit shorter.
+  - vendor: amazon
+    url: https://www.amazon.com/dp/B07XGLND27
+    type: aftermarket
+    fit: minor-mod
+    price:
+      amount: TODO
+      currency: USD
+    last_verified: TODO
+    status: unverified
+    notes: Adjustable; nearly fits; needs minor work with a rotary tool or drill.
+  - vendor: aliexpress
+    url: https://a.aliexpress.com/_msGTU2G
+    type: aftermarket
+    fit: exact
+    price:
+      amount: TODO
+      currency: USD
+    last_verified: TODO
+    status: unverified
+    notes: Select types 6+7, 14+15 or 17+18 at checkout.
+references:
+  - https://metacyclopedia.github.io/parts/

@@ -1,0 +1,14 @@
+# Phase 3 seed. Every fact is backed by the references below.
+id: amazon
+name: Amazon
+url: https://www.amazon.com/
+country: United States
+ships_to_us: 'yes'
+us_warehouse: unknown
+languages:
+  - English
+buying_tips: >-
+  Listings Metacyclopedia found for parts that fit or nearly fit. Third-party sellers and
+  stock change often; match the exact item before buying.
+references:
+  - https://metacyclopedia.github.io/parts/

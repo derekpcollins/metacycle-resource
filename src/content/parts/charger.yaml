@@ -1,0 +1,45 @@
+# Phase 3 seed from Metacyclopedia and the research brief. Prices, links and dates need a human check.
+id: charger
+name: Battery charger (1800 W, 84 V 18 A)
+system: battery-charging
+aliases:
+  - charger
+  - battery charger
+  - charging brick
+specs:
+  input_vac: 120/240
+  power_w: 1800
+  output_vdc: 84
+  output_a: 18
+  full_charge_time: About 5 hours
+  plugs_included: NEMA 5-15 (US) and Type C (EU)
+  port_connector: Chogori
+fits_notes: >-
+  Blinking red-red-green means a communication error, but it still charges; one owner traced
+  it to an unsoldered wire in the connector. Plugging in the charger also "activates" a reconnected
+  battery like the activation dongle. Because it accepts 240 V, owners use public J1772 chargers
+  with a J1772-to-NEMA 5-15/5-20 adapter.
+sources:
+  - vendor: cnqsmotor
+    url: https://www.cnqsmotor.com/product/sondors-charger-ac110v-12a-1800w-battery-charger-for-sondors-electric-motorcycle/
+    type: OEM
+    fit: exact
+    price:
+      amount: TODO
+      currency: USD
+    last_verified: TODO
+    status: unverified
+  - vendor: cnqsmotor
+    url: https://www.cnqsmotor.com/product/motorcycle-battery-charger-1800w-72v-20a-portable-charger/
+    type: aftermarket
+    fit: exact
+    price:
+      amount: TODO
+      currency: USD
+    last_verified: TODO
+    status: unverified
+    notes: 20 A model, smaller and lighter. Specify a US plug.
+references:
+  - https://metacyclopedia.github.io/parts/
+  - https://metacyclopedia.github.io/charger/
+  - https://sites.google.com/view/metacycle-pedia/parts

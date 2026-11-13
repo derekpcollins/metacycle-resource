@@ -1,0 +1,12 @@
+# Phase 3 seed. Every fact is backed by the references below.
+id: alibaba
+name: Alibaba
+url: https://www.alibaba.com/
+country: China
+ships_to_us: unknown
+us_warehouse: unknown
+buying_tips: >-
+  Business-to-business marketplace; listings may have minimum order quantities.
+references:
+  - https://metacyclopedia.github.io/parts/
+  - https://www.alibaba.com/category/Motorcycle-Electrical-System_100001663_58.html

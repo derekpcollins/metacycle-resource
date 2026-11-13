@@ -1,0 +1,20 @@
+---
+symptom: Can't save sport-mode current or other controller settings
+system: powertrain
+likely_causes:
+  - The controller's settings (sport current, busbar amps, brand and others) are read-only until its firmware is reflashed.
+checks:
+  - step: Change one setting, press Param Write, then reconnect and read the settings back.
+    pass: The new value stuck. Settings are writable; no fix needed.
+    fail: It reverted. The settings are read-only; follow the firmware fix.
+fix:
+  - guide: votol-reprogramming
+    note: Step 13 links the video that writes the settings and flashes two firmware versions.
+  - part: controller
+confidence: community-reported
+sources:
+  - https://metacyclopedia.github.io/problems/
+  - https://www.youtube.com/watch?v=Y6rSq_TIzTU
+---
+
+Some controllers won't save sport-mode current, busbar amps, brand or other settings. The fix in [this video](https://www.youtube.com/watch?v=Y6rSq_TIzTU) writes various settings and flashes two different firmware versions. Metacyclopedia reports it has worked on a Metacycle controller. Save a backup of your settings first.

@@ -1,0 +1,25 @@
+# Phase 3 seed from Metacyclopedia and the research brief. Prices, links and dates need a human check.
+id: wiring-harness
+name: Wiring harness
+system: electrical
+aliases:
+  - harness
+  - loom
+  - wiring loom
+  - em200 harness
+fits_notes: >-
+  No exact replacement is known. The listing below (for EM200/2) is not identical but may
+  work.
+sources:
+  - vendor: aliexpress
+    url: https://a.aliexpress.com/_ms1J0dw
+    type: aftermarket
+    fit: adapt
+    price:
+      amount: TODO
+      currency: USD
+    last_verified: TODO
+    status: unverified
+    notes: EM200/2 harness; not the same as stock.
+references:
+  - https://metacyclopedia.github.io/parts/

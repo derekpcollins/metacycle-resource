@@ -1,0 +1,23 @@
+# Phase 3 seed from Metacyclopedia and the research brief. Prices, links and dates need a human check.
+id: swingarm
+name: Swingarm
+system: suspension
+aliases:
+  - swing arm
+  - rear fork
+fits_notes: >-
+  The orange power wire and brake-light wires can rub the rear tire; zip-tie them to the swingarm.
+  See "Cables rubbing rear tire".
+sources:
+  - vendor: cnqsmotor
+    url: https://www.cnqsmotor.com/product/sondors-metacycle-swingarm-for-sondors-electric-motorcycle/
+    type: OEM
+    fit: exact
+    price:
+      amount: TODO
+      currency: USD
+    last_verified: TODO
+    status: unverified
+references:
+  - https://metacyclopedia.github.io/parts/
+  - https://metacyclopedia.github.io/problems/

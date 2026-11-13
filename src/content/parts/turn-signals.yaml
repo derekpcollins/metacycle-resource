@@ -1,0 +1,26 @@
+# Phase 3 seed from Metacyclopedia and the research brief. Prices, links and dates need a human check.
+id: turn-signals
+name: LED turn signals
+system: electrical
+aliases:
+  - indicators
+  - blinkers
+  - turn signal
+  - winkers
+specs:
+  voltage_v: 12
+fits_notes: >-
+  A front-and-rear turn signal swap tutorial is on Reddit (r/metacycle, "Tutorial 3").
+sources:
+  - vendor: cnqsmotor
+    url: https://www.cnqsmotor.com/product/12v-universal-turn-signal-electric-motorcycle-indicator/
+    type: OEM
+    fit: exact
+    price:
+      amount: TODO
+      currency: USD
+    last_verified: TODO
+    status: unverified
+references:
+  - https://metacyclopedia.github.io/parts/
+  - https://www.reddit.com/r/metacycle/comments/wl939j/tutorial_3_front_and_rear_turn_signal_swap_with/

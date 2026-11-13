@@ -1,0 +1,20 @@
+# Phase 3 seed from Metacyclopedia and the research brief. Prices, links and dates need a human check.
+id: center-console
+name: Center console
+system: body-frame
+aliases:
+  - console
+  - tank cover
+  - storage compartment
+sources:
+  - vendor: siaecosys-aliexpress
+    url: https://a.aliexpress.com/_mOnzVfH
+    type: OEM
+    fit: exact
+    price:
+      amount: TODO
+      currency: USD
+    last_verified: TODO
+    status: unverified
+references:
+  - https://metacyclopedia.github.io/parts/

@@ -1,0 +1,25 @@
+# Phase 3 seed from Metacyclopedia and the research brief. Prices, links and dates need a human check.
+id: brake-system
+name: Brake system (complete)
+system: brakes
+aliases:
+  - brakes
+  - brake caliper
+  - calipers
+  - master cylinder
+  - brake kit
+fits_notes: >-
+  Front caliper, pads and fluid specs are not documented anywhere yet. Contributions welcome.
+sources:
+  - vendor: aliexpress
+    url: https://a.aliexpress.com/_mr3b3VW
+    type: OEM
+    fit: exact
+    price:
+      amount: TODO
+      currency: USD
+    last_verified: TODO
+    status: unverified
+    notes: Full brake system.
+references:
+  - https://metacyclopedia.github.io/parts/

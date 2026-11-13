@@ -1,0 +1,28 @@
+# Phase 3 seed from Metacyclopedia and the research brief. Prices, links and dates need a human check.
+id: charge-adapter-connector
+name: Charge-adapter cable connector (FEFB-10009A-02)
+system: battery-charging
+aliases:
+  - charge adapter
+  - adapter cable
+  - battery charging cable
+  - 2+9 pin connector
+oem_part_number: FEFB-10009A-02
+specs:
+  type: 2+9 pin hybrid power connector
+fits_notes: >-
+  Part of the cable that came with the bike for charging the battery outside the bike (e.g.
+  when it's removed for winter). The other end is a round Chogori connector.
+sources:
+  - vendor: renhotec
+    url: https://www.renhotecev.com/product/29pin-hybrid-power-connector-70a-1000v-dc-ip67-waterproof-straight-plug
+    type: OEM
+    fit: exact
+    price:
+      amount: TODO
+      currency: USD
+    last_verified: TODO
+    status: unverified
+references:
+  - https://metacyclopedia.github.io/parts/
+  - https://metacyclopedia.github.io/charger/

@@ -1,0 +1,7 @@
+# Source: Metacyclopedia Tools + Problems pages. buy_links stay empty until Phase 4+; affiliate is off.
+id: zip-ties
+name: Zip ties
+spec: Nylon cable ties
+category: consumable
+essential: false
+buy_links: []

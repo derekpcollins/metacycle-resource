@@ -2,16 +2,26 @@
 symptom: Speedometer reads wrong
 system: controls-display
 likely_causes:
-  - Display is set to the factory tire circumference of 1915 mm.
+  - The display is set to the factory tire circumference of 1915 mm, which is too large.
 checks:
-  - step: Check the tire circumference setting in the display.
-    pass: It's already 1675 mm. Look for another cause (TODO).
-    fail: It's 1915 mm (factory). Change it to 1675 mm.
+  - step: Enter the display's programming mode (hold the left button on the back), enter code 153 and check the circumference.
+    pass: It's already 1675 mm. TODO, no other cause is documented yet; ask in the community groups.
+    fail: It's 1915 mm (factory). Change it to 1675 mm and leave pole pairs and offset alone.
 fix:
-  - note: Set the tire circumference in the display to 1675 mm.
+  - note: Set the display's wheel circumference to 1675 mm (code 153).
+  - part: display
 confidence: community-reported
 sources:
   - https://metacyclopedia.github.io/problems/
+  - https://metacyclopedia.github.io/display-unit/
+  - https://www.youtube.com/watch?v=vdKBwa3N2Kw
 ---
 
-The factory display setting uses a 1915 mm tire circumference. Owners report correct readings after changing it to 1675 mm.
+With the factory setting the display reads about 80 mph at a true 70 mph. Owners get accurate readings after setting the circumference to 1675 mm. You only need the two buttons on the back of the display ([video](https://www.youtube.com/watch?v=vdKBwa3N2Kw)):
+
+1. Hold the **left** button to enter programming mode. The screen shows "CC".
+2. Enter **153**: tap the left button to raise the blinking digit, and the right button to move one digit right.
+3. Set the circumference to **1675**. Leave the pole pairs and offset alone, or the bike may stop working.
+4. Long-press the **right** button to exit.
+
+Other codes in the same menu: 974 switches between km/h and mph; 372 resets the odometer (only three times).

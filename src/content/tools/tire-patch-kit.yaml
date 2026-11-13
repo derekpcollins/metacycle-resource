@@ -1,0 +1,7 @@
+# Source: Metacyclopedia Tools page. buy_links stay empty until Phase 4+; affiliate is off.
+id: tire-patch-kit
+name: Tire patch kit
+spec: Motorcycle tire repair kit (check whether your tires are tubeless)
+category: consumable
+essential: false
+buy_links: []

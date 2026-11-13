@@ -1,0 +1,24 @@
+# Phase 3 seed from Metacyclopedia and the research brief. Prices, links and dates need a human check.
+id: alarm-connector
+name: Alarm plug (DJ7065F-2.2-11)
+system: security
+aliases:
+  - dj7065f
+  - alarm connector
+  - alarm plug
+oem_part_number: DJ7065F-2.2-11
+fits_notes: >-
+  Lets you wire a key switch or a replacement alarm without cutting the bike's harness.
+sources:
+  - vendor: amazon
+    url: https://www.amazon.com/automotive-connectors-Connector-DJ7065F-2-2-11-replacement/dp/B0DP1TPT18
+    type: aftermarket
+    fit: exact
+    price:
+      amount: TODO
+      currency: USD
+    last_verified: TODO
+    status: unverified
+references:
+  - https://metacyclopedia.github.io/parts/
+  - https://metacyclopedia.github.io/removing-alarm-system/

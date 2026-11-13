@@ -1,0 +1,7 @@
+# Source: Metacyclopedia Tools page (seat). buy_links stay empty until Phase 4+; affiliate is off.
+id: hex-key-5mm
+name: 5 mm Allen key
+spec: 5 mm hex (Allen) key or bit (seat bolts)
+category: hand-tool
+essential: true
+buy_links: []

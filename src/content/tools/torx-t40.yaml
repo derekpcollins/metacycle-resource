@@ -1,7 +1,7 @@
-# The battery pack is bolted in with T40/T50 fasteners (docs/RESEARCH.md §1).
+# Source: Metacyclopedia Tools + Battery pages. buy_links stay empty until Phase 4+; affiliate is off.
 id: torx-t40
 name: Torx T40 bit
-spec: T40 Torx bit
+spec: T40 Torx bit or wrench (battery cover bolts)
 category: hand-tool
 essential: true
 buy_links: []

@@ -1,0 +1,29 @@
+# Phase 3 seed from Metacyclopedia and the research brief. Prices, links and dates need a human check.
+id: headlight
+name: Headlight
+system: electrical
+aliases:
+  - head light
+  - front light
+  - headlamp
+sources:
+  - vendor: cnqsmotor
+    url: https://www.cnqsmotor.com/product/siaecosys-ev-front-headlight-high-brightness-suitable-for-electric-bicycle-scooter-motorcycle/
+    type: OEM
+    fit: exact
+    price:
+      amount: TODO
+      currency: USD
+    last_verified: TODO
+    status: unverified
+  - vendor: aliexpress
+    url: https://www.aliexpress.us/item/3256805792490064.html
+    type: OEM
+    fit: exact
+    price:
+      amount: TODO
+      currency: USD
+    last_verified: TODO
+    status: unverified
+references:
+  - https://metacyclopedia.github.io/parts/

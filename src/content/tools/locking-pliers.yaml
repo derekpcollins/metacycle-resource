@@ -1,0 +1,7 @@
+# Source: Metacyclopedia Tools page. buy_links stay empty until Phase 4+; affiliate is off.
+id: locking-pliers
+name: Locking pliers (Vise-Grips)
+spec: Locking pliers; work as several small wrenches or an emergency brake lever
+category: hand-tool
+essential: false
+buy_links: []

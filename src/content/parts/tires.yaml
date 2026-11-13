@@ -1,0 +1,28 @@
+# Phase 3 seed from Metacyclopedia and the research brief. Prices, links and dates need a human check.
+id: tires
+name: Tires
+system: wheels-tires
+aliases:
+  - tyres
+  - tire
+  - front tire
+  - rear tire
+  - tire pressure
+  - psi
+specs:
+  front_size: 110/70 R17
+  front_pressure_psi: 32
+  rear_size: 150/60 R17
+  rear_pressure_psi: 30
+  factory_brands: Michelin Pilot Road 5, CST CM-NK01, possibly Kenda (varies by bike)
+fits_notes: >-
+  Bikes shipped with different tires. If your spokes go to tabs on the rim, you have tubeless
+  tires. Set the display's wheel circumference to 1675 mm for an accurate speedometer. Tire-change
+  videos: youtube.com/watch?v=Q7U2baauyt8 (short) and youtube.com/watch?v=VoAgnKyHUw4 (long).
+  No buy links yet: any tire in these sizes should fit, but nobody has confirmed specific
+  models — contributions welcome.
+references:
+  - https://metacyclopedia.github.io/parts/
+  - https://csttires.eu/cm-nk01/
+  - https://metacyclopedia.github.io/problems/
+sources: []

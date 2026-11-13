@@ -1,0 +1,18 @@
+# Phase 3 seed. Every fact is backed by the references below.
+id: cnqsmotor
+name: cnqsmotor.com (QS Motor / SiAECOSYS)
+url: https://www.cnqsmotor.com/
+country: China
+ships_to_us: unknown
+us_warehouse: unknown
+languages:
+  - English
+  - Chinese
+buying_tips: >-
+  Website of Taizhou Quanshun Electric Drive Technology Co. (brand QS Motor) in Taizhou, Zhejiang,
+  China, which also lists SiAECOSYS parts. Metacyclopedia labels these product links "SiAECOSYS"
+  and marks most of them OEM. Contact is by email, phone or WeChat from the contact page;
+  shipping terms and duties aren't published on the pages checked.
+references:
+  - https://metacyclopedia.github.io/parts/
+  - https://www.cnqsmotor.com/contact-us/

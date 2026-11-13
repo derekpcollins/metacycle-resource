@@ -1,0 +1,19 @@
+# Phase 3 seed from Metacyclopedia and the research brief. Prices, links and dates need a human check.
+id: fuse-5a
+name: 5 A blade fuse (battery compartment)
+system: battery-charging
+aliases:
+  - fuse
+  - 5a fuse
+  - blade fuse
+specs:
+  rating_a: 5
+  type: Blade fuse
+  location: Battery compartment
+fits_notes: >-
+  A burned-out 5 A fuse is one cause of a bike that won't power on. Standard blade fuse; no
+  specific listing has been confirmed.
+references:
+  - https://metacyclopedia.github.io/battery/
+  - https://metacyclopedia.github.io/problems/
+sources: []

@@ -1,0 +1,86 @@
+---
+title: Alarm removal & bypass
+summary: Confirm the alarm is the problem, then replace it, add a bypass switch, or remove it for a key switch.
+type: mod
+system: security
+difficulty: 3
+time_minutes: TODO
+tools: [hex-key-5mm, jumper-wire, wire-cutter, electrical-tape]
+parts: [alarm-module, key-switch, alarm-connector]
+safety:
+  - You're working on wiring connected to a 72 V system. If you're unsure, use a qualified technician.
+  - Bypassing the alarm removes the bike's immobilizer. Use a key switch so the bike can't be started by anyone.
+confidence: community-reported
+sources:
+  - https://metacyclopedia.github.io/removing-alarm-system/
+  - https://metacyclopedia.github.io/problems/
+  - https://metacyclopedia.github.io/tools/
+  - https://www.youtube.com/watch?v=ps6psLgywKc
+  - https://electrek.co/2024/05/12/failed-sondors-metacycle-motorcycle-was-never-street-legal-reveals-employee/
+---
+
+import Step from '../../components/Step.astro';
+
+The alarm module can fail without warning and its key fobs' batteries die. A former Sondors engineer called it one of the bike's worst features.
+
+Wire colours differ on each side of the plug:
+
+- Alarm **red** = harness **red with white stripe**
+- Alarm **orange** = harness **yellow**
+- Alarm **pink** = harness **blue with white stripe**
+
+### Confirm it's the alarm
+
+<Step n={1}>
+  Take off the seat: undo the two bolts (5 mm Allen), then pull up on the front while sliding it
+  forward.
+</Step>
+
+<Step n={2}>Find the alarm module under the seat.</Step>
+
+<Step n={3}>Follow its wires toward the front of the bike and unplug the alarm module.</Step>
+
+<Step n={4}>
+  On the **harness** side, bridge the red/white wire and the yellow wire with a spare piece of wire
+  or a paperclip. **Bike turns on:** the alarm is the likely fault. **Bike stays off:** the problem
+  isn't the alarm; go back to [Won't power on](/troubleshooting/wont-power-on).
+</Step>
+
+<Step n={5}>
+  Reconnect the alarm to make sure it still doesn't work. If the bike now works with the alarm
+  connected, the cause may have been excessive heat.
+</Step>
+
+### Option A: replace the module
+
+<Step n={6}>
+  Order a [replacement alarm module](/parts/alarm-module) first (it comes with two fobs). The old
+  module is held on with sticky tape: unplug it from the harness, then pull hard to pry it off.
+</Step>
+
+<Step n={7}>
+  Keep the old unit until the new one works. Replacements sometimes come with a different plug, so
+  you may need to splice the new unit's wires onto the old plug.
+</Step>
+
+### Option B: replace + switchable bypass
+
+<Step n={8}>
+  One owner fitted a three-position key switch: one position keeps the alarm working, another
+  bypasses it. This needs drilling. Follow [the video](https://www.youtube.com/watch?v=ps6psLgywKc).
+  Bridging to the alarm's pink wire (harness blue/white) as well also lights the power button.
+</Step>
+
+### Option C: total bypass with a key switch
+
+<Step n={9}>
+  Wire a [key switch](/parts/key-switch) between the alarm's orange (harness yellow) and red
+  (harness red/white) wires. A 20 mm diameter switch fits without drilling.
+</Step>
+
+<Step n={10}>
+  To avoid cutting the bike's harness, wire the switch to a spare [DJ7065F-2.2-11
+  plug](/parts/alarm-connector) and plug that in where the alarm was.
+</Step>
+
+<Step n={11}>Insulate every connection, refit the seat and test the switch.</Step>

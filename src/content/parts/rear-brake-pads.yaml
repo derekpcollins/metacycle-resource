@@ -1,0 +1,25 @@
+# Phase 3 seed from Metacyclopedia and the research brief. Prices, links and dates need a human check.
+id: rear-brake-pads
+name: Rear brake pads (EBC FA266)
+system: brakes
+aliases:
+  - brake pads
+  - pads
+  - fa266
+  - ebc
+oem_part_number: EBC FA266
+fits_notes: >-
+  Several versions share the FA266 number; owners report the organic ones are the quietest.
+sources:
+  - vendor: amazon
+    url: https://www.amazon.com/gp/product/B00666KLWO/
+    type: OEM
+    fit: exact
+    price:
+      amount: TODO
+      currency: USD
+    last_verified: TODO
+    status: unverified
+references:
+  - https://metacyclopedia.github.io/parts/
+  - https://sites.google.com/view/metacycle-pedia/parts

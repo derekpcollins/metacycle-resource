@@ -1,0 +1,26 @@
+# Phase 3 seed from Metacyclopedia and the research brief. Prices, links and dates need a human check.
+id: dc-converter-12v-10a
+name: DC-DC converter, 60/72 V to 12 V 10 A (+5 V 1 A)
+system: electrical
+aliases:
+  - dc converter
+  - dc-dc
+  - 12v converter
+  - step down converter
+specs:
+  input_v: 60–72
+  output_v: 12
+  output_a: 10
+  aux_output: 5 V 1 A
+sources:
+  - vendor: cnqsmotor
+    url: https://www.cnqsmotor.com/product/dc-dc-converter-60v-72v-to-12v-10a-with-5v-1a-output-wire/
+    type: OEM
+    fit: exact
+    price:
+      amount: TODO
+      currency: USD
+    last_verified: TODO
+    status: unverified
+references:
+  - https://metacyclopedia.github.io/parts/

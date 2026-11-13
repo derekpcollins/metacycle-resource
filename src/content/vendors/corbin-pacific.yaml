@@ -1,0 +1,11 @@
+# Phase 3 seed. Every fact is backed by the references below.
+id: corbin-pacific
+name: Corbin-Pacific
+url: https://www.corbin.com/
+languages:
+  - English
+buying_tips: >-
+  Makes an aftermarket seat for the Metacycle that owners report is more comfortable.
+references:
+  - https://metacyclopedia.github.io/parts/
+  - https://metacyclopedia.github.io/problems/

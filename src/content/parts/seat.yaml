@@ -1,0 +1,39 @@
+# Phase 3 seed from Metacyclopedia and the research brief. Prices, links and dates need a human check.
+id: seat
+name: Seat
+system: body-frame
+aliases:
+  - saddle
+  - seat cushion
+  - comfort seat
+  - corbin
+  - tapia
+specs:
+  mounting_bolts: M6 × 1.00 × 25 (2)
+  removal_tool: 5 mm Allen key
+fits_notes: >-
+  The stock seat is a common complaint. See the seat upgrades guide.
+sources:
+  - vendor: corbin-pacific
+    url: https://www.corbin.com/sondors/sonmeta.shtml
+    type: aftermarket
+    fit: exact
+    price:
+      amount: TODO
+      currency: USD
+    last_verified: TODO
+    status: unverified
+  - vendor: tapias-seats
+    url: https://www.tapiasseats.com/shop
+    type: aftermarket
+    fit: exact
+    price:
+      amount: TODO
+      currency: USD
+    last_verified: TODO
+    status: unverified
+    notes: Custom seats; install is very similar to Corbin.
+references:
+  - https://metacyclopedia.github.io/parts/
+  - https://metacyclopedia.github.io/problems/
+  - https://metacyclopedia.github.io/tools/

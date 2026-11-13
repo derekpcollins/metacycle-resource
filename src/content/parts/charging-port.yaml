@@ -1,0 +1,70 @@
+# Phase 3 seed from Metacyclopedia and the research brief. Prices, links and dates need a human check.
+id: charging-port
+name: Charging port / cable connector (Chogori)
+system: battery-charging
+aliases:
+  - charge port
+  - charging connector
+  - chogori
+  - charger plug
+  - 8 pin connector
+specs:
+  series: Chogori Large series 2+1+5 (also sold as 3+5 or 8P)
+  male_end: Believed Chogori 24305131-01
+  external_charge_cable: 24305635-01
+  battery_case_panel_mount: Appears to be 24305636-01
+fits_notes: >-
+  Some connectors don't have all the pins, so check the pin count before you buy. Waterproof
+  caps for the male and female ends are listed below.
+sources:
+  - vendor: aliexpress
+    url: https://www.aliexpress.com/i/3256805881164084.html
+    type: OEM
+    fit: exact
+    price:
+      amount: TODO
+      currency: USD
+    last_verified: TODO
+    status: unverified
+  - vendor: bms-battery
+    url: https://bmsbattery.com/home/880-18681-a-pair-50a-waterproof-connector-2-1-5-pins.html#/567-connector_type-male
+    type: OEM
+    fit: exact
+    price:
+      amount: TODO
+      currency: USD
+    last_verified: TODO
+    status: unverified
+  - vendor: jnicon
+    url: https://www.jniconconnector.com/sale-26553092-push-locking-ip67-waterproof-connector-m23-8-pin-panel-mount-for-e-scooter.html
+    type: OEM
+    fit: exact
+    price:
+      amount: TODO
+      currency: USD
+    last_verified: TODO
+    status: unverified
+  - vendor: wagner-online
+    url: https://www.wagneronline.com.au/large-series-waterproof-cap/chogori-large-series/chogori-connectors/plugs-sockets/cables-connectors/804-00008-00-99016/1006266/pd/
+    type: aftermarket
+    fit: exact
+    price:
+      amount: TODO
+      currency: USD
+    last_verified: TODO
+    status: unverified
+    notes: Waterproof cap, male end.
+  - vendor: wagner-online
+    url: https://www.wagneronline.com.au/large-series-waterproof-cap/chogori-large-series/chogori-connectors/plugs-sockets/cables-connectors/804-00005-00-99017/1006267/pd/
+    type: aftermarket
+    fit: exact
+    price:
+      amount: TODO
+      currency: USD
+    last_verified: TODO
+    status: unverified
+    notes: Waterproof cap, female end.
+references:
+  - https://metacyclopedia.github.io/parts/
+  - https://metacyclopedia.github.io/charger/
+  - https://www.reddit.com/r/metacycle/comments/ztytv7/metacycle_general_information_oem_parts_mods_etc/

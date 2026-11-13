@@ -1,23 +1,62 @@
 ---
 title: Battery removal & reinstall
-summary: Remove and reinstall the bolted-in 72 V battery pack.
+summary: Unbolt, disconnect and slide out the 72 V battery pack, then put it back and wake it up.
 type: how-to
 system: battery-charging
 difficulty: 3
 time_minutes: TODO
 tools: [torx-t40, torx-t50]
-parts: []
+parts: [battery, battery-activator, charger, fuse-5a]
 safety:
-  - The Metacycle has a 72 V high-voltage system. If you're unsure, use a qualified technician.
+  - The battery is a 72 V, 4 kWh high-voltage pack. Keep tools and jewelry away from the terminals, and if you're unsure, use a qualified technician.
+  - The pack is heavy. Support it as it comes out so it can't drop or tip.
 confidence: community-reported
 sources:
   - https://metacyclopedia.github.io/battery/
+  - https://www.youtube.com/watch?v=rWQAdfNzzi8
+  - https://www.reddit.com/r/metacycle/comments/wl2qoh/tutorial_2_battery_removal/
+  - https://metacyclopedia.github.io/battery-activator/
   - https://electrifynews.com/news/sondors-metabeast-electric-motorcycles-announced
 ---
 
 import Step from '../../components/Step.astro';
 
-The "removable" battery is really a bolted-in pack held with T40 and T50 Torx fasteners.
-The pack is 72 V, 54.4 Ah NCM (4 kWh) with a CAN-bus BMS, an internal 300 A fuse and a 5 A blade fuse.
+The "removable" battery is really a bolted-in pack. Removal takes a T40 and a T50 Torx. Owner video: [Sondors MetaCycle battery removal and replace](https://www.youtube.com/watch?v=rWQAdfNzzi8).
 
-<Step n={1}>TODO: step-by-step procedure not yet documented. Contribute one with photos.</Step>
+### Removal
+
+<Step n={1}>
+  On the side **without** the charging port, remove the two T40 bolts from the battery cover.
+</Step>
+
+<Step n={2}>From the bottom, pull the cover upwards, then pull it out to remove the shield.</Step>
+
+<Step n={3}>Remove the two T50 bolts from the battery brackets, and remove the brackets.</Step>
+
+<Step n={4}>Disconnect the orange wire and nudge the battery out.</Step>
+
+<Step n={5}>Disconnect the black wire and nudge the battery out.</Step>
+
+<Step n={6}>Disconnect the harness.</Step>
+
+<Step n={7}>
+  Remove the battery. The battery compartment also hides the 5 A blade fuse, so this is a good time
+  to check it.
+</Step>
+
+### Reinstall
+
+<Step n={8}>
+  Reverse steps 1–7. Slide the battery in carefully: it can tilt or jam on the way in.
+</Step>
+
+<Step n={9}>
+  Wake the battery up: connect the [battery activator](/parts/battery-activator) or plug in the
+  [charger](/parts/charger). This powers the internal relay (solenoid) so the battery can feed the
+  controller and motor. You'll hear a click inside the bike.
+</Step>
+
+<Step n={10}>
+  TODO: bolt torque values for the cover and brackets aren't documented anywhere yet. If you know
+  them (with a source or a photo of the manual), please [share them](/contribute).
+</Step>

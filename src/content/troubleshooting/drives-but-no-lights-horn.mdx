@@ -1,0 +1,28 @@
+---
+symptom: Drives but no lights, horn or turn signals
+system: electrical
+likely_causes:
+  - The controller didn't fully start, often because the bike was started while charging.
+checks:
+  - step: Do the controller reset below, in order.
+    pass: Horn, lights and turn signals work again. Fixed.
+    fail: Still nothing. TODO, the next step isn't documented; check the 5 A fuse and ask in the community groups.
+fix:
+  - note: Reset the controller with the 9-step charger/alarm sequence on this page.
+  - part: charger
+confidence: community-reported
+sources:
+  - https://metacyclopedia.github.io/problems/
+---
+
+Drive and reverse work, but the horn, turn signals and lights don't. The controller hasn't started correctly, and the bike may have been started while charging. Reset it:
+
+1. Disconnect the charger from the bike and the wall.
+2. Turn off the Metacycle and arm the alarm.
+3. Wait one minute for the systems to power down.
+4. Connect the charger to the bike.
+5. Plug the charger into the outlet.
+6. Wait a minute. You might hear a click.
+7. Unplug the charger from the wall and wait for a click and for the LED to go off.
+8. Disconnect the charger from the Metacycle.
+9. Disarm the alarm and start the Metacycle normally.

@@ -1,0 +1,29 @@
+# Phase 3 seed from Metacyclopedia and the research brief. Prices, links and dates need a human check.
+id: footpegs
+name: Folding footpegs
+system: body-frame
+aliases:
+  - foot pegs
+  - pegs
+  - footrests
+sources:
+  - vendor: cnqsmotor
+    url: https://www.cnqsmotor.com/product/electric-motorcycle-black-folded-footpeg-scooter-accessories/
+    type: OEM
+    fit: exact
+    price:
+      amount: TODO
+      currency: USD
+    last_verified: TODO
+    status: unverified
+  - vendor: aliexpress
+    url: https://a.aliexpress.com/_mLgi4Cc
+    type: OEM
+    fit: exact
+    price:
+      amount: TODO
+      currency: USD
+    last_verified: TODO
+    status: unverified
+references:
+  - https://metacyclopedia.github.io/parts/

@@ -1,0 +1,25 @@
+# Phase 3 seed from Metacyclopedia and the research brief. Prices, links and dates need a human check.
+id: dc-converter-12v-3a
+name: DC-DC converter, 72 V to 12 V 3 A (isolated)
+system: electrical
+aliases:
+  - isolated converter
+  - dc-dc
+  - 12v converter
+specs:
+  input_v: 72
+  output_v: 12
+  output_a: 3
+  isolated: true
+sources:
+  - vendor: cnqsmotor
+    url: https://www.cnqsmotor.com/product/isolated-dc-dc-converter-72v-to-12v-3a-for-electric-scooter/
+    type: OEM
+    fit: exact
+    price:
+      amount: TODO
+      currency: USD
+    last_verified: TODO
+    status: unverified
+references:
+  - https://metacyclopedia.github.io/parts/

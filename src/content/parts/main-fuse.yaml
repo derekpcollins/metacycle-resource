@@ -1,0 +1,20 @@
+# Phase 3 seed from Metacyclopedia and the research brief. Prices, links and dates need a human check.
+id: main-fuse
+name: Main battery fuse (300 A, internal)
+system: battery-charging
+aliases:
+  - 300a fuse
+  - main fuse
+  - a2209
+  - pack fuse
+oem_part_number: ASTM A2209-300
+specs:
+  rating_a: 300
+  location: Inside the battery pack
+fits_notes: >-
+  Owners report drawing more than 300 A for short periods, so it's believed to be a slow-blow
+  fuse. It's inside the sealed pack; replacing it means opening the battery.
+references:
+  - https://metacyclopedia.github.io/battery/
+  - https://astml.com/product/a2209-seriesev-fuse150a350a150v200vdc
+sources: []

@@ -1,0 +1,38 @@
+# Phase 3 seed from Metacyclopedia and the research brief. Prices, links and dates need a human check.
+id: alarm-module
+name: Alarm module & key fobs
+system: security
+aliases:
+  - alarm
+  - immobilizer
+  - key fob
+  - fob
+  - remote
+  - remotes
+  - security system
+failure_rate: common
+specs:
+  connector: DJ7065F-2.2-11 (waterproof)
+  location: Under the seat, stuck on with tape
+  fobs_included: 2
+fits_notes: >-
+  Extremely troublesome and a frequent cause of no-power problems; a former Sondors engineer
+  called the security system the bike's worst component. A new module comes with two fobs.
+  Replacements sometimes arrive with a different plug, so keep the old unit: you may need
+  to splice the new wires onto the old plug. Wire colours: alarm red = harness red/white;
+  alarm orange = harness yellow; alarm pink = harness blue/white.
+sources:
+  - vendor: aliexpress
+    url: https://www.aliexpress.us/item/3256805792328828.html
+    type: OEM
+    fit: exact
+    price:
+      amount: TODO
+      currency: USD
+    last_verified: TODO
+    status: unverified
+references:
+  - https://metacyclopedia.github.io/parts/
+  - https://metacyclopedia.github.io/removing-alarm-system/
+  - https://metacyclopedia.github.io/problems/
+  - https://electrek.co/2024/05/12/failed-sondors-metacycle-motorcycle-was-never-street-legal-reveals-employee/
