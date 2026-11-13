@@ -3,7 +3,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import SearchBox from '../components/SearchBox.astro';
 ---
 
-<BaseLayout title="Page not found" editPath="src/pages/404.astro">
+<BaseLayout
+  title="Page not found"
+  description="That page isn’t here. Search parts, guides and symptoms instead."
+  editPath="src/pages/404.astro"
+  noindex
+>
   <div class="wrap">
     <header class="page-head">
       <p class="label">404</p>

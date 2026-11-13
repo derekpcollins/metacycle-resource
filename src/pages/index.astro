@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
-import { site } from '../site.config';
+import { site, siteUrl } from '../site.config';
 import { SYSTEMS, keys } from '../lib/enums';
 import { community } from '../data/community';
 import SearchBox from '../components/SearchBox.astro';
@@ -22,7 +22,23 @@ const systemCounts = keys(SYSTEMS).map((s) => ({
 }));
 ---
 
-<BaseLayout title={site.name} editPath="src/pages/index.astro">
+<BaseLayout
+  title={site.name}
+  editPath="src/pages/index.astro"
+  structuredData={[
+    {
+      '@type': 'WebSite',
+      name: site.name,
+      url: `${siteUrl}/`,
+      description: site.description,
+      potentialAction: {
+        '@type': 'SearchAction',
+        target: `${siteUrl}/search?q={search_term_string}`,
+        'query-input': 'required name=search_term_string',
+      },
+    },
+  ]}
+>
   <section class="hero">
     <div class="wrap">
       <h1 class="visually-hidden">{site.name}</h1>
