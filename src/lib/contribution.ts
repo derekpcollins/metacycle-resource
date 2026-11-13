@@ -62,6 +62,7 @@ export const LABELS = {
     description: 'Published without a source, as community-reported',
   },
   'web-form': { color: 'ededed', description: 'Filed through the site’s no-account form' },
+  'link-check': { color: '6e7781', description: 'Rolling report from the weekly link checker' },
 } as const;
 export type Label = keyof typeof LABELS;
 

@@ -4,6 +4,8 @@ on:
   push:
     branches: [main]
   pull_request:
+  # Lets the link checker start CI on its dead-links branch (its pushes don't trigger runs).
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -18,6 +20,9 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Pull requests need the base branch's history to find the URLs they add.
+          fetch-depth: ${{ github.event_name == 'pull_request' && 0 || 1 }}
       - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
@@ -35,3 +40,11 @@ jobs:
         run: npm run test:validation
       - name: Web-form validation and issue formatting tests
         run: npm run test:contribution
+      - name: Link-check tests (classification and staleness rules)
+        run: npm run test:links
+      # docs/SPEC.md → "On every PR": check only URLs the pull request adds or changes in
+      # content files. Results go to the job summary. Fails only on clearly dead links
+      # (HTTP 404/410 or a missing domain); blocked stores and timeouts never fail it.
+      - name: Link check on changed content
+        if: github.event_name == 'pull_request'
+        run: npm run links:check -- --changed-since "origin/${{ github.base_ref }}" --summary

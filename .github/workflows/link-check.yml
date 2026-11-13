@@ -1,0 +1,142 @@
+# Weekly link checker (docs/SPEC.md → "Weekly link checker"; decisions in docs/PHASES.md → Phase 5).
+#
+# Visits every buy-option and vendor URL with scripts/link-check.ts, then:
+#   - opens or updates ONE rolling issue (label `link-check`) listing failures, and closes
+#     it when a run has none. Re-runs edit the same issue; they never open a second one.
+#   - if any buy option is provably dead (HTTP 404/410 or the domain is gone, on two tries),
+#     sets `status: dead` on a fixed branch and opens or updates ONE pull request.
+# It never sets `last_verified` or `status: live`, and never fetches AliExpress-style
+# bot-blocking hosts (src/lib/link-rules.ts); those are listed as "needs a human".
+#
+# Manual-only while the repo is private (scheduled runs would use paid Actions minutes).
+# Phase 6: uncomment the schedule when the repo goes public.
+name: Link check
+
+on:
+  workflow_dispatch:
+    inputs:
+      open_pr:
+        description: 'Open a pull request that sets provably dead buy links to status dead'
+        type: boolean
+        default: true
+  # schedule:
+  #   - cron: '17 9 * * 1' # Mondays 09:17 UTC
+
+permissions:
+  contents: write # push the dead-links branch
+  issues: write # the rolling issue
+  pull-requests: write # the dead-links pull request
+  actions: write # start CI on that branch (pushes made with GITHUB_TOKEN don't trigger workflows)
+
+concurrency:
+  group: link-check
+  cancel-in-progress: false
+
+env:
+  BRANCH: link-checker/dead-links
+  LABEL: link-check
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+
+      - name: Check every buy-option and vendor URL
+        run: >
+          npm run links:check -- --report link-report.md --json link-results.json --summary
+          ${{ (github.event_name == 'schedule' || inputs.open_pr) && '--apply' || '' }}
+
+      - name: Update the rolling issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const { owner, repo } = context.repo;
+            const label = process.env.LABEL;
+            const marker = '<!-- metacycle-link-checker -->';
+            const results = JSON.parse(fs.readFileSync('link-results.json', 'utf8'));
+            const body = fs.readFileSync('link-report.md', 'utf8');
+            const title = `Link check: ${results.failures} failing link${results.failures === 1 ? '' : 's'}`;
+
+            // The label may not exist yet (npm run labels:sync creates it too).
+            await github.rest.issues.getLabel({ owner, repo, name: label }).catch(() =>
+              github.rest.issues.createLabel({ owner, repo, name: label, color: '6e7781',
+                description: 'Rolling report from the weekly link checker' }));
+
+            // Find the one rolling issue: open issues with the label and the marker.
+            const open = await github.paginate(github.rest.issues.listForRepo,
+              { owner, repo, labels: label, state: 'open', per_page: 100 });
+            const mine = open.filter((i) => !i.pull_request && (i.body || '').includes(marker));
+            const [current, ...extra] = mine.sort((a, b) => a.number - b.number);
+
+            if (results.failures === 0) {
+              if (current) {
+                await github.rest.issues.update({ owner, repo, issue_number: current.number, body, title: 'Link check: all clear' });
+                await github.rest.issues.createComment({ owner, repo, issue_number: current.number,
+                  body: 'This run found no failing links, so the checker is closing this issue. It reopens a new one when something fails.' });
+                await github.rest.issues.update({ owner, repo, issue_number: current.number, state: 'closed', state_reason: 'completed' });
+                core.notice(`Closed #${current.number}: no failures.`);
+              } else core.notice('No failures and no open issue.');
+            } else if (current) {
+              await github.rest.issues.update({ owner, repo, issue_number: current.number, title, body });
+              core.notice(`Updated #${current.number}.`);
+            } else {
+              const { data } = await github.rest.issues.create({ owner, repo, title, body, labels: [label, 'broken-link'] });
+              core.notice(`Opened #${data.number}.`);
+            }
+            // Safety net: if duplicates ever exist, close all but the oldest.
+            for (const i of extra)
+              await github.rest.issues.update({ owner, repo, issue_number: i.number, state: 'closed', state_reason: 'not_planned' });
+
+      - name: Open or update the dead-links pull request
+        if: github.event_name == 'schedule' || inputs.open_pr
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if git diff --quiet -- src/content docs/VERIFICATION.md; then
+            echo "No provably dead buy links; no pull request."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -C "$BRANCH"
+          git add src/content docs/VERIFICATION.md
+          git commit -m "Mark provably dead buy links as dead (link checker)" \
+            -m "Set by the link checker after HTTP 404/410 or a missing domain on two tries. last_verified is unchanged." >/dev/null
+          git push --force origin "$BRANCH"
+
+          node -e '
+            const r = require("./link-results.json");
+            const rows = r.applied.map(a => `| ${a.label} | ${a.vendor ?? ""} | <${a.url}> | ${a.detail} | \`${a.file}\` sources[${a.index}] |`);
+            const run = `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`;
+            console.log([
+              "The weekly link checker found buy links whose pages are gone (HTTP 404/410 or the domain no longer exists, on two tries), and set them to `status: dead`.",
+              "",
+              "| Part | Vendor | URL | Result | File |", "| --- | --- | --- | --- | --- |", ...rows,
+              "",
+              "- `last_verified` is unchanged: a dead page isn’t a verification. Replace the link with a working listing if you can find one, or keep it as dead.",
+              "- `docs/VERIFICATION.md` is regenerated.",
+              `- [Run log](${run}) · see the rolling \`link-check\` issue for everything else.`,
+            ].join("\n"));
+          ' > pr-body.md
+
+          existing=$(gh api "repos/$GITHUB_REPOSITORY/pulls?state=open&head=${GITHUB_REPOSITORY_OWNER}:${BRANCH}" --jq '.[0].number // empty')
+          if [ -n "$existing" ]; then
+            gh api -X PATCH "repos/$GITHUB_REPOSITORY/pulls/$existing" -F body=@pr-body.md >/dev/null
+            echo "Updated pull request #$existing" >> "$GITHUB_STEP_SUMMARY"
+          else
+            n=$(gh api -X POST "repos/$GITHUB_REPOSITORY/pulls" -f title="Link checker: mark dead buy links" \
+              -f head="$BRANCH" -f base="${{ github.event.repository.default_branch }}" -F body=@pr-body.md --jq .number)
+            gh api -X POST "repos/$GITHUB_REPOSITORY/issues/$n/labels" -f "labels[]=broken-link" -f "labels[]=$LABEL" >/dev/null
+            echo "Opened pull request #$n" >> "$GITHUB_STEP_SUMMARY"
+          fi
+          # Pushes and PRs made with GITHUB_TOKEN don't trigger other workflows, so start CI
+          # on the branch explicitly; its result shows as a check on the pull request.
+          gh workflow run ci.yml --ref "$BRANCH"
