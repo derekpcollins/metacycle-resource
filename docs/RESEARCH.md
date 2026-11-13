@@ -17,7 +17,8 @@ _Compiled Nov 12, 2026. Every fact below has a source link. Items marked **UNVER
 | Display | "061 DKD" display unit | [Metacycle-pedia](https://sites.google.com/view/metacycle-pedia/parts) |
 | Rear shock | 310 mm eye-to-eye, 10 mm holes, 25 mm end widths (some run 320/330 mm for height) | same |
 | Rear brake pads | EBC FA266 (organic = quietest) | same |
-| Tires / rims / front brake / fork / torque specs | **GAP — not found in any source yet** | — |
+| Tires | Front 110/70 R17 @ 32 psi, rear 150/60 R17 @ 30 psi; factory brands vary (Michelin Pilot Road 5, CST CM-NK01, allegedly Kenda) — _added Phase 3_ | [Metacyclopedia – Parts](https://metacyclopedia.github.io/parts/) |
+| Rims / front brake / fork / torque specs | **GAP — not found in any source yet** | — |
 
 Note: the "removable" battery is really a bolted-in pack (T40/T50 fasteners). [Electrify News](https://electrifynews.com/news/sondors-metabeast-electric-motorcycles-announced), [Metacyclopedia – Battery](https://metacyclopedia.github.io/battery/)
 
@@ -61,9 +62,36 @@ Source: [Metacyclopedia – Community](https://metacyclopedia.github.io/communit
 - Storm Sondors bought the brand back; pre-sold an off-road "Meta AT" (2025) and teased a "001" e-bike (Aug–Sep 2026). No Metacycle support offered. [Electric Bike Report](https://electricbikereport.com/the-weekly-recharge-episode-34/), [Electrek](https://electrek.co/2026/08/27/storm-sondors-is-back-teasing-mysterious-new-electric-bike-photo/)
 
 ## 7. Open gaps to fill for the new site
-- Tire sizes/brand, rim sizes, front brake caliper + pads, fork model/oil spec
+- ~~Tire sizes/brand~~ (found in Phase 3, see §1 and §8), rim sizes, front brake caliper + pads, fork model/oil spec
 - Torque specs (axle nuts, caliper bolts, motor mount)
 - Maintenance schedule (none exists anywhere)
 - Exploded/parts diagrams with numbered callouts
 - Controller replacement alternatives (Fardriver etc.) beyond the stock Votol
 - Live verification of every purchase link + current prices
+
+## 8. Sources added in Phase 3 (Nov 12, 2026)
+Pages fetched and cited in the site's content. Metacyclopedia's source is public on GitHub ([metacyclopedia/metacyclopedia.github.io](https://github.com/metacyclopedia/metacyclopedia.github.io), MIT-licensed code; last commit May 3, 2026), which made every sub-page readable in full.
+
+**Metacyclopedia sub-pages** (facts used: parts, specs, pinouts, procedures)
+- [Parts](https://metacyclopedia.github.io/parts/) — all 37 categories, buy links, tire sizes/pressures, horn rating, seat bolts (M6 × 1.00 × 25), charging-connector part numbers (Chogori 24305131-01 / 24305635-01 / 24305636-01), FEFB-10009A-02, KTM RC 390 shock and KTM Duke 390 fender notes
+- [Problems](https://metacyclopedia.github.io/problems/) — all 6 troubleshooting entries, incl. the 9-step controller reset
+- [Battery](https://metacyclopedia.github.io/battery/) — 7-step removal procedure, 100 A cont./250 A peak, ASTM A2209-300 main fuse, 5 A blade fuse, storage and cold-charging rules
+- [Charger](https://metacyclopedia.github.io/charger/) — ~5 h full charge, plugs, charging procedure, red-red-green comm error, public J1772 charging, wake pins
+- [Battery Activator](https://metacyclopedia.github.io/battery-activator/) — what it does, two A23 batteries, wake pins (**conflict:** ground is pin 5 here, pin 6 on the Charger page)
+- [Controller](https://metacyclopedia.github.io/controller/) — ratings, IP67 vs IP65, factory limits; parts page calls the listing "EM200-2SM" (**conflict**, likely a typo)
+- [Programming](https://metacyclopedia.github.io/programming/), [Programming Cable](https://metacyclopedia.github.io/programming-cable/), [Connect through USB Port](https://metacyclopedia.github.io/connect-through-usb-port/), [Connect with 20-pin Cable](https://metacyclopedia.github.io/connect-with-20-pin-cable/), [Connect via Bluetooth](https://metacyclopedia.github.io/connect-via-bluetooth/), [Windows Software](https://metacyclopedia.github.io/windows-software/), [CAN Bus](https://metacyclopedia.github.io/can-bus/), [MetaHack](https://metacyclopedia.github.io/metahack/) — Votol reprogramming guide, 20-pin and USB pinouts, 115200 baud, CAN 250 kbit/s
+- [Display Unit](https://metacyclopedia.github.io/display-unit/) — 061 DKD, button codes (153 circumference, 974 units, 372 odometer reset), 80-vs-70 mph over-read
+- [Removing the Alarm System](https://metacyclopedia.github.io/removing-alarm-system/) — alarm test, wire colour map, replacement, switchable and total bypass, 20 mm key switch
+- [Motor](https://metacyclopedia.github.io/motor/), [Registration & VIN](https://metacyclopedia.github.io/registration/) — VIN/VECI/engine-number locations and VIN decoding
+- [Tools](https://metacyclopedia.github.io/tools/) — 5 mm Allen (seat), T40/T50 Torx (battery), roadside extras
+- [Tutorials](https://metacyclopedia.github.io/tutorials/), [Accessories](https://metacyclopedia.github.io/accessories/), [Files](https://metacyclopedia.github.io/files/) — tutorial links, display bracket/handlebar tube, downloads list for Phase 6
+- [Community](https://metacyclopedia.github.io/community/) — already cited in §5; all links re-checked Nov 12 (HTTP 200; Discord invites valid; Facebook behind login)
+
+**Vendor pages**
+- [cnqsmotor.com contact page](https://www.cnqsmotor.com/contact-us/) — Taizhou Quanshun Electric Drive Technology Co. (QS Motor), Taizhou, Zhejiang. All 19 cnqsmotor product links on the site returned HTTP 200 with matching titles on Nov 12 (not human-verified).
+- [E Smart Way shipping policy](https://e-smartway.com/policies/shipping-policy), [about](https://e-smartway.com/pages/about-us), [complete-bike listing](https://e-smartway.com/products/siaecosys-electric-motorcycle-72v-120kph-high-power-cast-aluminum-integrally-formed-frame-mt-with-4kwh-lithium-ion-battery) — sea freight 40–50 days to North America, some local-warehouse stock, duties/tax not included, bike listing "still under development"
+- [E-Bike Market Place rebuild service](https://ebikemarketplace.com/products/sondors-bullet-battery-rebuild-36v-14ah) — lists the Metacycle as supported; Las Vegas, NV; 90-day warranty; 2–3 week turnaround; continental US only
+- [CST CM-NK01](https://csttires.eu/cm-nk01/), [ASTM A2209 fuse](https://astml.com/product/a2209-seriesev-fuse150a350a150v200vdc), [Votol EM200-2](https://votol.cn/product/votol-em200-2/) — manufacturer pages linked from Metacyclopedia
+- Owner videos cited in guides: [battery removal](https://www.youtube.com/watch?v=rWQAdfNzzi8), [charging](https://www.youtube.com/watch?v=PDbgJK4OnP0), [wheel circumference](https://www.youtube.com/watch?v=vdKBwa3N2Kw), [read-only busbar/sport current fix](https://www.youtube.com/watch?v=Y6rSq_TIzTU), [alarm switch mod](https://www.youtube.com/watch?v=ps6psLgywKc), [Corbin seat install](https://www.youtube.com/watch?v=UJrRIZGzl2A)
+
+**Still not found:** the SiAECOSYS AliExpress store's own URL (individual listings only), rims, front brake, fork, torque specs, maintenance schedule, Metacycle battery-rebuild price.

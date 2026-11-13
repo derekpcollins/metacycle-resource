@@ -11,7 +11,8 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "ci": "npm run format:check && npm run check && npm run build && npm run test:validation",
-    "test:validation": "node scripts/test-validation.mjs"
+    "test:validation": "node scripts/test-validation.mjs",
+    "verify:list": "node scripts/verify-list.mjs"
   },
   "license": "SEE LICENSE IN LICENSE-CODE and LICENSE-CONTENT",
   "dependencies": {
@@ -23,7 +24,8 @@
     "pagefind": "^1.6.0",
     "prettier": "^3.10.1",
     "prettier-plugin-astro": "^1.1.2",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "yaml": "^2.9.1"
   },
   "private": true,
   "type": "module",
