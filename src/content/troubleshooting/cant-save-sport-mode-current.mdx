@@ -7,6 +7,7 @@ checks:
   - step: Change one setting, press Param Write, then reconnect and read the settings back.
     pass: The new value stuck. Settings are writable; no fix needed.
     fail: It reverted. The settings are read-only; follow the firmware fix.
+    most_likely: true
 fix:
   - guide: votol-reprogramming
     note: Step 13 links the video that writes the settings and flashes two firmware versions.

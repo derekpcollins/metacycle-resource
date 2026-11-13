@@ -1,8 +1,9 @@
 ---
 /**
  * Guide step card (spec: number, text, optional photo, optional torque value).
- * The "done" checkbox makes steps checkable on a phone; guide pages remember ticks per
- * device (localStorage) when JS is available. Without JS the checkbox still works.
+ * Same check pattern as the tools checklist: an unlabeled checkbox on the left (its
+ * accessible name is "Step N done"), content on the right. Guide pages remember ticks
+ * per device (localStorage) when JS is available. Without JS the checkbox still works.
  */
 interface Props {
   n: number;
@@ -12,66 +13,65 @@ interface Props {
 }
 const { n, photo, photoAlt = '', torque } = Astro.props;
 const id = `step-${n}`;
+const label = `step ${String(n).padStart(2, '0')}`;
 ---
 
 <section class="step" aria-labelledby={`${id}-h`} data-step={n}>
-  <div class="head">
+  <input
+    type="checkbox"
+    class="check"
+    id={`${id}-done`}
+    data-step-check={n}
+    aria-label={`Step ${n} done`}
+  />
+  <div class="content">
     <h3 id={`${id}-h`} class="num">
-      step {String(n).padStart(2, '0')}
+      <label for={`${id}-done`}>{label}</label>
     </h3>
-    <label class="done">
-      <input type="checkbox" data-step-check={n} />
-      <span>done</span>
-    </label>
+    <div class="body">
+      <slot />
+    </div>
+    {torque && (
+      <p class="torque">
+        <span class="k">torque</span> <span class="v">{torque}</span>
+      </p>
+    )}
+    {photo && (
+      <figure>
+        <img src={photo} alt={photoAlt} loading="lazy" decoding="async" />
+      </figure>
+    )}
   </div>
-  <div class="body">
-    <slot />
-  </div>
-  {torque && (
-    <p class="torque">
-      <span class="k">torque</span> <span class="v">{torque}</span>
-    </p>
-  )}
-  {photo && (
-    <figure>
-      <img src={photo} alt={photoAlt} loading="lazy" decoding="async" />
-    </figure>
-  )}
 </section>
 
 <style>
   .step {
+    display: grid;
+    grid-template-columns: 24px 1fr;
+    gap: var(--space-3);
+    align-items: start;
     border-top: var(--border) solid var(--color-rule-strong);
-    padding: var(--space-3) 0 var(--space-6);
+    padding: var(--space-4) var(--space-2) var(--space-6);
   }
-  .head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--space-4);
+  .check {
+    width: 24px;
+    height: 24px;
+    margin: 2px 0 0;
+    accent-color: var(--color-text);
+    cursor: pointer;
+  }
+  .content {
+    min-width: 0;
   }
   .num {
+    margin: 0 0 var(--space-2);
     font-size: var(--text-xs);
     font-weight: 600;
     letter-spacing: 0.02em;
+    line-height: 28px; /* centers the label on the 24px checkbox */
     color: var(--color-text-muted);
   }
-  .done {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-2);
-    min-height: var(--tap-target);
-    min-width: var(--tap-target);
-    justify-content: flex-end;
-    font-family: var(--font-mono);
-    font-size: var(--text-xs);
-    cursor: pointer;
-  }
-  .done input {
-    width: 24px;
-    height: 24px;
-    margin: 0;
-    accent-color: var(--color-text);
+  .num label {
     cursor: pointer;
   }
   .body {
@@ -83,6 +83,9 @@ const id = `step-${n}`;
   }
   .body :global(p:last-child) {
     margin-bottom: 0;
+  }
+  .body :global(ul) {
+    margin: var(--space-2) 0 var(--space-3);
   }
   .torque {
     display: inline-flex;
@@ -106,11 +109,11 @@ const id = `step-${n}`;
     display: block;
     border: var(--border) solid var(--color-rule);
   }
-  .step:has(input:checked) .body,
-  .step:has(input:checked) .torque {
+  .step:has(.check:checked) .body,
+  .step:has(.check:checked) .torque {
     color: var(--color-text-muted);
   }
-  .step:has(input:checked) .num {
+  .step:has(.check:checked) .num {
     text-decoration: line-through;
   }
 </style>

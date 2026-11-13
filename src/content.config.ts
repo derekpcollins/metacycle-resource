@@ -160,6 +160,8 @@ const check = z.strictObject({
   step: z.string().min(1),
   pass: z.string().min(1),
   fail: z.string().min(1),
+  // Tags the check "most likely" on the page. Set it only where a source supports it.
+  most_likely: z.boolean().default(false),
 });
 
 const fix = z

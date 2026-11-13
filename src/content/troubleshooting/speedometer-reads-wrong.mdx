@@ -7,6 +7,7 @@ checks:
   - step: Enter the display's programming mode (hold the left button on the back), enter code 153 and check the circumference.
     pass: It's already 1675 mm. TODO, no other cause is documented yet; ask in the community groups.
     fail: It's 1915 mm (factory). Change it to 1675 mm and leave pole pairs and offset alone.
+    most_likely: true
 fix:
   - note: Set the display's wheel circumference to 1675 mm (code 153).
   - part: display

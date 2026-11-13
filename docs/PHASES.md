@@ -78,6 +78,14 @@ Launch (beta invites, announcements) is non-development and happens after Phase 
 - **Template tweaks (no restyle):** optional photo figure under the part header; part fit notes keep line breaks (`white-space: pre-line`); Specs page built with existing tokens and table styles.
 - **Tool `buy_links` are empty** (affiliate off). Tools are only those a source or the spec names.
 
+### Phase 3 follow-up fixes (Derek's review, Nov 12)
+
+- **Search filter counts:** when the filter list loaded after a `?q=` search, Pagefind UI showed whole-index counts (e.g. "Part (42)" for 1 result). The search page now re-runs the query once the filter panel exists, so counts always match results. Reproduced and verified by delaying the filter files.
+- **Search styling:** our overrides lost to Pagefind's stylesheet (its selectors carry 2–3 classes and load later), which is why results had no side inset and Clear had no padding. Rules are now scoped with `#search`. Results inset like home rows; Clear and "Load more" use the shared `.btn` spec (padding, border, mono 600, yellow hover). **Rule:** any third-party UI must be restyled to the shared button and row specs.
+- **Right alignment:** the footer theme buttons had side padding, so "dark" sat 4px short of the content edge; padding removed (spacing comes from the gap). The header search icon was centred in its 48px tap target (14px short); it's now right-aligned within the target. A scripted scan of key pages at 375px and 1280px found no other misalignments. Rows (home, community, tools checklist) keep their deliberate 8px inset for the hover fill.
+- **Troubleshooting:** the likely-causes sidebar is gone; the page is one column. Checks have an optional `most_likely` flag that shows a "most likely" tag, set only where a source supports it (the alarm check on "Won't power on"; the single check on the other one-cause entries; none on "Lost key fobs"). **Spec deviation to confirm:** `likely_causes` is still a required field (spec data model) but is no longer displayed. Either drop it from the spec or decide where it should appear.
+- **Guides:** safety callouts run full width. Step cards use the tools-checklist pattern: an unlabeled checkbox on the left (accessible name "Step N done"), with the step number and text on the right.
+
 ## Phase 3 notes (deferred / learned)
 
 - **Verified:** `npm run ci` passes locally (format, `astro check`, build, validation tests). All 93 built routes return 200 locally; no horizontal scroll at 375px or 1280px in light or dark; axe (WCAG 2.0/2.1 A + AA) found 0 violations on home, a part, two guides, a troubleshooting page, Specs, a vendor and the parts index at both sizes and both themes. Pagefind returns the right entry for every guide title and every symptom, and for aliases such as "fob", "tyres", "chogori", "pegs" and "flasher".

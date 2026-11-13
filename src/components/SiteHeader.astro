@@ -72,7 +72,9 @@ const menuActive = menuNav.some((l) => isCurrent(path, l.href));
   .search-link {
     margin-left: auto;
     display: grid;
-    place-items: center;
+    /* Keep the 48px tap target but push the glyph to the right edge so it lines up
+       with right-aligned content below. */
+    place-items: center end;
     width: var(--tap-target);
     height: var(--tap-target);
     flex: none;

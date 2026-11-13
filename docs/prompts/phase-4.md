@@ -12,7 +12,7 @@ You are starting Phase 4 (Contribution flows) of an open-source, community-maint
 - What exists:
   - **Phase 1:** Astro (TypeScript strict, MDX), five content collections with strict Zod schemas (`src/content.config.ts`, enums in `src/lib/enums.ts`), build-time cross-reference validation (`src/lib/validate.ts`, `npm run test:validation`), CI (`.github/workflows/ci.yml`) and the Vercel deploy. Unknown values are the literal `TODO`.
   - **Phase 2:** the approved "minimal mono" design system (`src/styles/tokens.css`, `base.css`), components in `src/components/`, every page template, Pagefind search, footer theme switcher. Every page ends with `PageMeta` (sources, last verified, "edit this page", "report a problem"); non-content pages show "edit this page (coming soon)". Part pages have a "report broken link" link per buy row; "Help verify it" and "Share a fix" link to `/contribute`, which is still a stub.
-  - **Phase 3:** 42 parts, 14 vendors, 13 tools, 6 guides, 6 troubleshooting entries, a data-driven Specs page (`src/data/specs.ts`), and `npm run verify:list` → `docs/VERIFICATION.md`. Optional part `photo` / `photo_alt` / `photo_credit` fields exist.
+  - **Phase 3:** 42 parts, 14 vendors, 13 tools, 6 guides, 6 troubleshooting entries, a data-driven Specs page (`src/data/specs.ts`), and `npm run verify:list` → `docs/VERIFICATION.md`. Optional part `photo` / `photo_alt` / `photo_credit` fields exist. After review: search counts/styling fixed, troubleshooting checks carry an optional `most_likely` tag (the likely-causes sidebar was removed), guide steps use the tools-checklist checkbox pattern, and safety callouts run full width.
   - All site identity lives in `src/site.config.ts` (`repoUrl`, `editBranch`, `editUrl()`, `reportProblemUrl()`). Reference it everywhere and never hard-code the site name or repo URL.
 
 ## Step 0: confirm decisions before you start
@@ -31,8 +31,9 @@ Ask me these, and wait for answers, before building:
 3. **No-account web form** on the site for everyone else: the same fields, an optional name or handle for credit, Cloudflare Turnstile, and one Vercel serverless function that verifies Turnstile and files a labeled GitHub issue with the bot token. It must work without JS where possible (plain form POST with a result page), validate input on the server, rate-limit or otherwise resist spam, never expose the token to the client, and fail gracefully with a link to the GitHub form. Keep the rest of the site static.
 4. **Contribute page:** replace the stub with the four entry points (Edit this page, issue forms, web form, and what the link checker will do in Phase 5), the review rules from the spec (sources or photos required, otherwise published as _community-reported_; quick merges for price/dead-link fixes; closer look at new vendors; credit in the page and changelog), and trust levels. Point "Help verify it" / "Share a fix" links at the right forms.
 5. **CONTRIBUTING.md** for GitHub users: how content files are structured, `TODO` rules, how to run `npm run ci` and `npm run verify:list`, how buy-link verification works (`status`, `last_verified`, `price`), and the vendor-disclosure rule from Governance. Keep the code of conduct linked.
-6. **PR preview deploys:** confirm Vercel builds a preview for every pull request and that CI runs on PRs. Document how I review a contribution end to end (issue → PR → preview → merge).
-7. **Labels:** create (or document a script/`gh` commands for) the labels the forms and function use, by type (broken-link, new-part, new-vendor, fix, spec-correction) plus `community-reported` and `needs-source`.
+6. **Spec cleanup:** `likely_causes` is still required in the troubleshooting schema but no longer displayed (see `docs/PHASES.md`, Phase 3 follow-up). Ask me whether to drop it from the spec and schema, then apply the answer (spec, schema, content, `test:validation`).
+7. **PR preview deploys:** confirm Vercel builds a preview for every pull request and that CI runs on PRs. Document how I review a contribution end to end (issue → PR → preview → merge).
+8. **Labels:** create (or document a script/`gh` commands for) the labels the forms and function use, by type (broken-link, new-part, new-vendor, fix, spec-correction) plus `community-reported` and `needs-source`.
 
 Out of scope: the weekly link checker, staleness automation, Help Wanted page and changelog (Phase 5); downloads repo, analytics, SEO and making the repo public (Phase 6). Don't restyle the design system; small template tweaks are fine (note them in `docs/PHASES.md`). Don't change content facts except to fix errors you can source.
 
@@ -52,6 +53,7 @@ Out of scope: the weekly link checker, staleness automation, Help Wanted page an
 
 - Don't guess: if a fact about the Metacycle isn't in the spec, the research brief or a source you fetched and cite, leave it out or mark it TODO. Never invent part numbers, prices, specs or URLs.
 - Never commit secrets or tokens; ask me to set them in Vercel or GitHub.
+- Every button, including third-party UI (Pagefind, Turnstile wrappers, form controls), uses the shared `.btn` spec from `src/styles/base.css`; list rows use the shared row inset and hover. Check right-edge alignment against the content edge at 375px and desktop.
 - Commit in logical steps with clear messages.
 - Before finishing, run the build and CI locally and fix all errors.
 

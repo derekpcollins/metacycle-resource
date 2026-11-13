@@ -39,7 +39,24 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           translations: { placeholder: 'part, symptom or guide' },
         });
         var q = new URLSearchParams(location.search).get('q');
-        if (q) ui.triggerSearch(q);
+        if (q) {
+          ui.triggerSearch(q);
+          // Race fix: if the filter list finishes loading after this first search, Pagefind
+          // UI shows whole-index counts (e.g. "Part (42)" for 1 result). Re-run the search
+          // once the filter panel exists so the counts match the results.
+          var root = document.getElementById('search');
+          var mo = new MutationObserver(function () {
+            if (!root.querySelector('.pagefind-ui__filter-panel')) return;
+            mo.disconnect();
+            var input = root.querySelector('.pagefind-ui__search-input');
+            var term = (input && input.value) || q;
+            ui.triggerSearch(term + ' ');
+            setTimeout(function () {
+              ui.triggerSearch(term);
+            }, 0);
+          });
+          mo.observe(root, { childList: true, subtree: true });
+        }
         // Keep ?q= in sync so results can be shared or reloaded.
         document.addEventListener('input', function (e) {
           var t = e.target;
@@ -59,7 +76,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 </BaseLayout>
 
 <style is:global>
-  /* Pagefind default UI, mapped onto our tokens. */
+  /* Pagefind default UI, mapped onto our tokens. Rules are scoped with #search so they
+     beat Pagefind's own stylesheet (its selectors carry two or three classes and load
+     after ours). */
   .pf {
     --pagefind-ui-scale: 1;
     --pagefind-ui-primary: var(--color-text);
@@ -72,68 +91,88 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     --pagefind-ui-image-border-radius: 0;
     --pagefind-ui-font: var(--font-sans);
   }
-  .pf .pagefind-ui__search-input {
+  #search .pagefind-ui__search-input {
     font-family: var(--font-mono);
     font-size: var(--text-base);
     font-weight: 400;
     height: 56px;
+    padding-right: 7rem; /* room for the Clear button */
   }
-  .pf .pagefind-ui__search-input::placeholder {
+  #search .pagefind-ui__search-input::placeholder {
     color: var(--color-text-muted);
     opacity: 1;
   }
-  .pf .pagefind-ui__search-clear {
+  /* Clear uses the shared .btn spec (base.css). */
+  #search .pagefind-ui__search-clear {
+    top: 4px;
+    right: 4px;
+    height: 48px;
+    min-height: 0;
+    padding: 0 var(--space-5);
+    border: var(--border) solid var(--color-rule-strong);
+    border-radius: var(--radius-0);
     font-family: var(--font-mono);
-    font-size: var(--text-xs);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    background: transparent;
     color: var(--color-text);
-    min-height: var(--tap-target);
   }
-  .pf .pagefind-ui__message,
-  .pf .pagefind-ui__filter-name,
-  .pf .pagefind-ui__result-tag {
+  #search .pagefind-ui__button {
+    min-height: var(--tap-target);
+    padding: 0 var(--space-5);
+    border: var(--border) solid var(--color-rule-strong);
+    border-radius: var(--radius-0);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    background: transparent;
+    color: var(--color-text);
+  }
+  /* One hover for every button: safety-yellow fill, ink text. */
+  #search .pagefind-ui__search-clear:hover,
+  #search .pagefind-ui__button:hover {
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+    border-color: var(--color-rule-strong);
+  }
+  #search .pagefind-ui__message,
+  #search .pagefind-ui__filter-name,
+  #search .pagefind-ui__result-tag {
     font-family: var(--font-mono);
     font-size: var(--text-xs);
   }
-  .pf .pagefind-ui__result {
+  /* Results match the home page rows: inset text so the hover fill has side margins. */
+  #search .pagefind-ui__result {
     position: relative;
-    border-top: var(--border) solid var(--color-rule);
     padding: var(--space-4) var(--space-2);
+    border-top: var(--border) solid var(--color-rule);
   }
-  .pf .pagefind-ui__result:hover {
+  #search .pagefind-ui__result:hover {
     background: var(--color-surface);
   }
-  .pf .pagefind-ui__result-link::after {
+  #search .pagefind-ui__result-link::after {
     content: '';
     position: absolute;
     inset: 0;
   }
-  .pf .pagefind-ui__result-title {
+  #search .pagefind-ui__result-title {
     font-family: var(--font-sans);
     font-size: var(--text-lg);
   }
-  .pf .pagefind-ui__result-link {
+  #search .pagefind-ui__result-link {
     color: var(--color-text);
     text-decoration: underline;
     text-underline-offset: 3px;
   }
-  .pf .pagefind-ui__result-excerpt {
+  #search .pagefind-ui__result-excerpt {
     font-size: var(--text-sm);
     color: var(--color-text-muted);
   }
-  .pf mark {
+  #search mark {
     background: var(--color-mark);
     color: var(--color-text);
   }
-  .pf .pagefind-ui__button {
-    font-family: var(--font-mono);
-    border-radius: 0;
-    min-height: var(--tap-target);
-  }
-  .pf .pagefind-ui__button:hover {
-    background: var(--color-accent);
-    color: var(--color-on-accent);
-  }
-  .pf .pagefind-ui__filter-checkbox {
+  #search .pagefind-ui__filter-checkbox {
     width: 20px;
     height: 20px;
   }

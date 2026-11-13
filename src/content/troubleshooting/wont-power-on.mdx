@@ -27,6 +27,7 @@ checks:
   - step: If the alarm still doesn't chirp when you press the fob buttons, unplug it and bridge the harness's red/white and yellow wires (the alarm's red and orange) under the seat.
     pass: The bike turns on. The alarm is the fault; replace or bypass it.
     fail: The bike stays off. The problem isn't the alarm. TODO, next step not documented; ask in the community groups.
+    most_likely: true
 fix:
   - part: fuse-5a
     note: If the fuse was blown.
@@ -43,4 +44,4 @@ sources:
   - https://metacyclopedia.github.io/battery-activator/
 ---
 
-Work through the checks in order; most owners find the cause in the first few. The alarm module is the bike's most troublesome part.
+Work through the checks in order. The check marked _most likely_ is the alarm module, which Metacyclopedia calls extremely troublesome and a frequent source of problems.

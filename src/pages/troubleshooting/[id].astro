@@ -4,6 +4,7 @@ import { getCollection, getEntry, render, type CollectionEntry } from 'astro:con
 import { SYSTEMS } from '../../lib/enums';
 import { repoPath } from '../../lib/content';
 import ConfidenceLabel from '../../components/ConfidenceLabel.astro';
+import Badge from '../../components/Badge.astro';
 
 export async function getStaticPaths() {
   return (await getCollection('troubleshooting')).map((entry) => ({
@@ -59,7 +60,7 @@ const pad = (i: number) => String(i + 1).padStart(2, '0');
       </dl>
     </header>
 
-    <div class="layout">
+    <div class="body">
       <div>
         <div class="prose intro">
           <Content />
@@ -80,7 +81,14 @@ const pad = (i: number) => String(i + 1).padStart(2, '0');
                     <span class="num" aria-hidden="true">
                       {pad(i)}
                     </span>
-                    <span>{c.step}</span>
+                    <span class="step-text">
+                      {c.most_likely && (
+                        <span class="likely">
+                          <Badge tone="outline">most likely</Badge>
+                        </span>
+                      )}
+                      <span>{c.step}</span>
+                    </span>
                   </p>
                   <dl class="branches">
                     <div class="pass">
@@ -132,18 +140,6 @@ const pad = (i: number) => String(i + 1).padStart(2, '0');
           </section>
         )}
       </div>
-
-      <aside class="side" aria-label="Likely causes">
-        <section>
-          <h2>Likely causes</h2>
-          <p class="label">most likely first</p>
-          <ol class="causes">
-            {d.likely_causes.map((c) => (
-              <li>{c}</li>
-            ))}
-          </ol>
-        </section>
-      </aside>
     </div>
   </article>
 </BaseLayout>
@@ -170,6 +166,12 @@ const pad = (i: number) => String(i + 1).padStart(2, '0');
     margin: 0 0 var(--space-3);
     font-size: var(--text-lg);
     font-weight: 500;
+  }
+  .step-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-1);
   }
   .num {
     font-family: var(--font-mono);
@@ -224,24 +226,5 @@ const pad = (i: number) => String(i + 1).padStart(2, '0');
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-2);
-  }
-  .causes {
-    margin: var(--space-2) 0 0;
-    padding-left: 1.4em;
-  }
-  .causes li + li {
-    margin-top: var(--space-2);
-  }
-  /* Phones: show likely causes before the checks. */
-  .side {
-    order: -1;
-  }
-  .side > section:first-child {
-    margin-top: 0;
-  }
-  @media (min-width: 60rem) {
-    .side {
-      order: 0;
-    }
   }
 </style>

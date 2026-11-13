@@ -183,8 +183,9 @@ const verifiedDate = d.last_verified instanceof Date ? isoDate(d.last_verified) 
 </BaseLayout>
 
 <style>
+  /* Safety callouts run the full content width so they can't be missed. */
   .safety-list {
-    max-width: var(--measure);
+    max-width: none;
   }
   .prep {
     display: grid;
