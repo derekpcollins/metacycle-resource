@@ -21,7 +21,9 @@
     "test:contribution": "tsx scripts/test-contribution.ts",
     "test:links": "tsx scripts/test-link-check.ts",
     "serve:local": "tsx scripts/serve-local.ts",
-    "test:a11y": "tsx scripts/test-a11y.ts"
+    "test:a11y": "tsx scripts/test-a11y.ts",
+    "downloads:hash": "tsx scripts/downloads.ts hash",
+    "downloads:check": "tsx scripts/downloads.ts check"
   },
   "license": "SEE LICENSE IN LICENSE-CODE and LICENSE-CONTENT",
   "dependencies": {

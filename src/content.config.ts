@@ -9,10 +9,11 @@
  * `reference()` and hard-checked by src/lib/validate.ts during the build.
  */
 import { defineCollection, reference } from 'astro:content';
-import { glob } from 'astro/loaders';
+import { file, glob } from 'astro/loaders';
 import { z } from 'astro/zod';
 import {
   CONFIDENCE,
+  DOWNLOAD_GROUPS,
   DIFFICULTIES,
   FAILURE_RATES,
   FITS,
@@ -203,4 +204,36 @@ const troubleshooting = defineCollection({
   }),
 });
 
-export const collections = { vendors, parts, tools, guides, troubleshooting };
+// ---------- downloads ----------
+// One YAML file, src/data/downloads.yaml. The files themselves are GitHub Release assets in
+// the separate downloads repo (site.downloadsRepoUrl), never committed to either repo.
+// Spec, "Downloads & copyright": origin, date, checksum, link to the original where one exists.
+
+const downloads = defineCollection({
+  loader: file('src/data/downloads.yaml'),
+  schema: z.strictObject({
+    id: slug,
+    name: z.string().min(1),
+    group: z.enum(keys(DOWNLOAD_GROUPS)),
+    description: z.string().min(1),
+    /** Release tag in the downloads repo. */
+    release: z.string().regex(/^[\w.-]+$/, 'A Release tag, e.g. 2026-11-13'),
+    /** Asset file name in that Release (kebab-case, no spaces). */
+    asset: z
+      .string()
+      .regex(/^[a-z0-9][a-z0-9.-]*\.[a-z0-9]+$/, 'kebab-case file name with an extension'),
+    size_bytes: z.number().int().positive(),
+    sha256: z.string().regex(/^[0-9a-f]{64}$/, 'Lowercase hex SHA-256 (npm run downloads:hash)'),
+    /** Who made or published it, as far as the file or its source says. Never guessed. */
+    origin: z.string().min(1),
+    /** Where this copy was downloaded from. */
+    retrieved_from: url,
+    retrieved: z.coerce.date(),
+    /** The publisher's own link, if one still exists. */
+    original_url: urlOrTodo,
+    rights: z.string().min(1),
+    notes: z.string().optional(),
+  }),
+});
+
+export const collections = { vendors, parts, tools, guides, troubleshooting, downloads };

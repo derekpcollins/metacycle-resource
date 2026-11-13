@@ -1,0 +1,213 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import { downloadUrl, reportProblemUrl, site } from '../site.config';
+import { DOWNLOAD_GROUPS, keys } from '../lib/enums';
+import { isoDate } from '../lib/format';
+import { downloadsSource, notMirrored } from '../data/specs';
+import EmptyState from '../components/EmptyState.astro';
+
+const files = await getCollection('downloads');
+const groups = keys(DOWNLOAD_GROUPS)
+  .map((g) => ({
+    id: g,
+    label: DOWNLOAD_GROUPS[g],
+    files: files.filter((f) => f.data.group === g),
+  }))
+  .filter((g) => g.files.length);
+const sources = [...new Set([downloadsSource, ...files.map((f) => f.data.retrieved_from)])];
+
+const size = (b: number) =>
+  b >= 1e6 ? `${(b / 1e6).toFixed(1)} MB` : b >= 1e3 ? `${Math.round(b / 1e3)} KB` : `${b} B`;
+const ext = (asset: string) => asset.split('.').pop()!.toUpperCase();
+const pad = (n: number) => String(n).padStart(2, '0');
+let n = 1;
+const num = () => pad(n++);
+---
+
+<BaseLayout
+  title="Downloads"
+  description="Mirrored Sondors Metacycle manuals, wiring diagrams and Votol controller software, each with its origin, date and SHA-256 checksum."
+  editPath="src/data/downloads.yaml"
+  sources={sources}
+>
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <ol>
+        <li>
+          <a href="/specs">specs</a>
+        </li>
+        <li aria-current="page">downloads</li>
+      </ol>
+    </nav>
+    <header class="page-head">
+      <h1>Downloads</h1>
+      <p class="lede">
+        Mirrored manuals, wiring diagrams and controller software, so they stay available if the
+        original links disappear. Each file lists where it came from, when, and its SHA-256
+        checksum.
+      </p>
+    </header>
+
+    <div class="prose intro">
+      <p>
+        Files are hosted as releases in a <a href={site.downloadsRepoUrl}>separate repository</a>,
+        not on this site. To check a download, compare its checksum with the one listed: run{' '}
+        <code>shasum -a 256 file</code> on macOS or Linux, or{' '}
+        <code>certutil -hashfile file SHA256</code> on Windows. Rights stay with each publisher; see{' '}
+        <a href="/disclaimer#downloads">downloads &amp; copyright</a> and{' '}
+        <a href="/disclaimer#takedown">takedown requests</a>.
+      </p>
+    </div>
+
+    {groups.map((g) => (
+      <section class="block" id={g.id} aria-labelledby={`h-${g.id}`}>
+        <h2 class="block-title" id={`h-${g.id}`}>
+          <span class="n">{num()}</span> {g.label}
+        </h2>
+        {g.files.map((f) => {
+          const d = f.data;
+          const href = downloadUrl(d.release, d.asset);
+          return (
+            <div class="file" id={f.id}>
+              <h3 class="file-title" id={`f-${f.id}`}>
+                {d.name}
+              </h3>
+              <p class="what">{d.description}</p>
+              <p class="get">
+                <a class="btn" href={href} download>
+                  download
+                  <span class="visually-hidden">{d.name}</span>
+                </a>
+                <span class="meta">
+                  {ext(d.asset)} · {size(d.size_bytes)}
+                </span>
+              </p>
+              <table class="data-table sheet" aria-labelledby={`f-${f.id}`}>
+                <tbody>
+                  <tr>
+                    <th scope="row">file</th>
+                    <td class="wrapish">{d.asset}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">origin</th>
+                    <td class="sans">{d.origin}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">retrieved</th>
+                    <td>
+                      {isoDate(d.retrieved)} from{' '}
+                      <a href={d.retrieved_from}>
+                        {new URL(d.retrieved_from).hostname.replace(/^www\./, '')}
+                      </a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th scope="row">original</th>
+                    <td>
+                      {d.original_url === 'TODO' ? (
+                        <span class="todo">not known</span>
+                      ) : (
+                        <a href={d.original_url}>{new URL(d.original_url).hostname}</a>
+                      )}
+                    </td>
+                  </tr>
+                  <tr>
+                    <th scope="row">sha-256</th>
+                    <td class="hash">{d.sha256}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">rights</th>
+                    <td class="sans">{d.rights}</td>
+                  </tr>
+                  {d.notes && (
+                    <tr>
+                      <th scope="row">note</th>
+                      <td class="sans">{d.notes}</td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          );
+        })}
+      </section>
+    ))}
+
+    <section class="block" id="not-mirrored" aria-labelledby="h-not-mirrored">
+      <h2 class="block-title" id="h-not-mirrored">
+        <span class="n">{num()}</span> Not mirrored here yet
+      </h2>
+      <EmptyState title="on metacyclopedia for now">
+        <p>
+          These are still only on <a href={downloadsSource}>Metacyclopedia’s Files page</a>.
+          Sondors-authored manuals are held back while the brand is active again.
+        </p>
+      </EmptyState>
+      <ul class="later">
+        {notMirrored.map((f) => (
+          <li>{f}</li>
+        ))}
+      </ul>
+      <p class="caption">
+        Know where a publisher still hosts one of these files, or have a manual that isn’t listed?{' '}
+        <a href={reportProblemUrl({ type: 'fix', page: '/downloads' })}>Tell us</a>.
+      </p>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .intro {
+    margin-bottom: var(--space-2);
+  }
+  .file {
+    padding-top: var(--space-6);
+  }
+  .file + .file {
+    margin-top: var(--space-4);
+  }
+  .file-title {
+    margin: 0;
+    font-size: var(--text-lg);
+  }
+  .what {
+    margin: var(--space-2) 0 var(--space-3);
+    max-width: var(--measure);
+  }
+  .get {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2) var(--space-4);
+    margin: 0 0 var(--space-2);
+  }
+  .meta {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+  .sheet {
+    width: 100%;
+  }
+  .sheet th {
+    width: 7.5rem;
+  }
+  .sheet td {
+    color: var(--color-text);
+  }
+  .sans {
+    font-family: var(--font-sans);
+  }
+  .hash,
+  .wrapish {
+    overflow-wrap: anywhere;
+  }
+  .later {
+    margin: var(--space-2) 0 var(--space-4);
+    padding-left: 1.2em;
+  }
+  .later li {
+    padding: var(--space-1) 0;
+  }
+</style>

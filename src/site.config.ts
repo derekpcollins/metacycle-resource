@@ -11,6 +11,11 @@ export const site = {
     'An independent, community-maintained reference for Sondors Metacycle owners: what each part is, where to buy it, and how to fix common failures.',
   /** GitHub repo (no trailing slash). */
   repoUrl: 'https://github.com/derekpcollins/metacycle-resource',
+  /**
+   * Separate repo for mirrored manuals and software (spec, "Downloads & copyright"). Files
+   * are GitHub Release assets there, never committed, so a takedown hits that repo only.
+   */
+  downloadsRepoUrl: 'https://github.com/derekpcollins/metacycle-resource-downloads',
   /** Branch used for "Edit this page" links. */
   editBranch: 'main',
   /** Bare domain without protocol, e.g. "example.org". null until chosen. */
@@ -94,3 +99,7 @@ export const issueFormUrl = (template: string, fields: Record<string, string | u
   for (const [k, v] of Object.entries(fields)) if (v) url.searchParams.set(k, v);
   return url.toString();
 };
+
+/** Direct link to a mirrored file (a GitHub Release asset in the downloads repo). */
+export const downloadUrl = (release: string, asset: string) =>
+  `${site.downloadsRepoUrl}/releases/download/${encodeURIComponent(release)}/${encodeURIComponent(asset)}`;

@@ -54,6 +54,15 @@ export const TOOL_CATEGORIES = {
   consumable: 'Consumable',
 } as const;
 
+/** Groups on the Downloads page, in display order. */
+export const DOWNLOAD_GROUPS = {
+  sondors: 'Sondors Metacycle',
+  display: 'Display',
+  'controller-docs': 'Controller manuals & specs',
+  'controller-software': 'Controller software',
+  other: 'Other',
+} as const;
+
 export const GUIDE_TYPES = {
   'how-to': 'How-to',
   reference: 'Reference',
