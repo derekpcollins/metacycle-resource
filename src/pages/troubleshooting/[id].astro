@@ -31,7 +31,7 @@ const pad = (i: number) => String(i + 1).padStart(2, '0');
   sources={d.sources}
 >
   <article class="wrap" data-pagefind-body data-pagefind-filter="type:Symptom">
-    <nav class="crumbs" aria-label="Breadcrumb">
+    <nav class="crumbs" aria-label="Breadcrumb" data-pagefind-ignore>
       <ol>
         <li>
           <a href="/troubleshooting">troubleshoot</a>
@@ -41,7 +41,9 @@ const pad = (i: number) => String(i + 1).padStart(2, '0');
     </nav>
 
     <header class="page-head">
-      <p class="label kicker">symptom</p>
+      <p class="label kicker" data-pagefind-ignore>
+        symptom
+      </p>
       <h1>{d.symptom}</h1>
       <dl class="kv" data-pagefind-ignore>
         <div>
@@ -66,7 +68,10 @@ const pad = (i: number) => String(i + 1).padStart(2, '0');
         {d.checks.length > 0 && (
           <section class="block" aria-labelledby="h-checks">
             <h2 class="block-title" id="h-checks">
-              <span class="n">01</span>Checks, in order
+              <span class="n" data-pagefind-ignore>
+                01
+              </span>
+              Checks, in order
             </h2>
             <ol class="checks">
               {d.checks.map((c, i) => (
@@ -100,7 +105,10 @@ const pad = (i: number) => String(i + 1).padStart(2, '0');
         {fixes.length > 0 && (
           <section class="block" aria-labelledby="h-fix">
             <h2 class="block-title" id="h-fix">
-              <span class="n">02</span>Fix
+              <span class="n" data-pagefind-ignore>
+                02
+              </span>
+              Fix
             </h2>
             <ul class="fixes">
               {fixes.map((f) => (

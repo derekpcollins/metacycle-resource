@@ -42,7 +42,7 @@ const verifiedDate = d.last_verified instanceof Date ? isoDate(d.last_verified) 
   lastVerified={verifiedDate ?? 'never'}
 >
   <article class="wrap" data-pagefind-body data-pagefind-filter="type:Guide">
-    <nav class="crumbs" aria-label="Breadcrumb">
+    <nav class="crumbs" aria-label="Breadcrumb" data-pagefind-ignore>
       <ol>
         <li>
           <a href="/guides">guides</a>
@@ -112,7 +112,10 @@ const verifiedDate = d.last_verified instanceof Date ? isoDate(d.last_verified) 
     <div class="prep">
       <section class="block" aria-labelledby="h-tools">
         <h2 class="block-title" id="h-tools">
-          <span class="n">01</span>Tools you’ll need
+          <span class="n" data-pagefind-ignore>
+            01
+          </span>
+          Tools you’ll need
           <a class="more" href="/tools">
             all tools →
           </a>
@@ -124,7 +127,10 @@ const verifiedDate = d.last_verified instanceof Date ? isoDate(d.last_verified) 
 
       <section class="block" aria-labelledby="h-parts">
         <h2 class="block-title" id="h-parts">
-          <span class="n">02</span>Parts
+          <span class="n" data-pagefind-ignore>
+            02
+          </span>
+          Parts
         </h2>
         {parts.length === 0 ? (
           <p class="muted none">No parts needed.</p>
@@ -161,7 +167,10 @@ const verifiedDate = d.last_verified instanceof Date ? isoDate(d.last_verified) 
 
     <section class="block steps" aria-labelledby="h-steps">
       <h2 class="block-title" id="h-steps">
-        <span class="n">03</span>Steps
+        <span class="n" data-pagefind-ignore>
+          03
+        </span>
+        Steps
       </h2>
       <div class="steps-body">
         <Content />

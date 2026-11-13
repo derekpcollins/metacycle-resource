@@ -95,8 +95,17 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     font-size: var(--text-xs);
   }
   .pf .pagefind-ui__result {
+    position: relative;
     border-top: var(--border) solid var(--color-rule);
-    padding: var(--space-4) 0;
+    padding: var(--space-4) var(--space-2);
+  }
+  .pf .pagefind-ui__result:hover {
+    background: var(--color-surface);
+  }
+  .pf .pagefind-ui__result-link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
   }
   .pf .pagefind-ui__result-title {
     font-family: var(--font-sans);

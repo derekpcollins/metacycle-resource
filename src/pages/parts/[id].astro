@@ -32,7 +32,7 @@ const num = () => String(n++).padStart(2, '0');
   lastVerified={verified ? isoDate(verified) : 'never'}
 >
   <article class="wrap" data-pagefind-body data-pagefind-filter="type:Part">
-    <nav class="crumbs" aria-label="Breadcrumb">
+    <nav class="crumbs" aria-label="Breadcrumb" data-pagefind-ignore>
       <ol>
         <li>
           <a href="/parts">parts</a>
@@ -51,7 +51,7 @@ const num = () => String(n++).padStart(2, '0');
           Also called {d.aliases.join(', ')}.
         </p>
       )}
-      <dl class="kv">
+      <dl class="kv" data-pagefind-ignore>
         <div>
           <dt>system</dt>
           <dd>
@@ -89,7 +89,10 @@ const num = () => String(n++).padStart(2, '0');
 
     <section class="block" aria-labelledby="h-buy">
       <h2 class="block-title" id="h-buy">
-        <span class="n">{num()}</span>Where to buy
+        <span class="n" data-pagefind-ignore>
+          {num()}
+        </span>
+        Where to buy
       </h2>
       <div data-pagefind-ignore>
         <BuyOptions part={entry} />
@@ -101,7 +104,10 @@ const num = () => String(n++).padStart(2, '0');
         {hasSpecs && (
           <section class="block" aria-labelledby="h-specs">
             <h2 class="block-title" id="h-specs">
-              <span class="n">{num()}</span>Specs
+              <span class="n" data-pagefind-ignore>
+                {num()}
+              </span>
+              Specs
             </h2>
             <SpecsTable specs={d.specs} caption={`${d.name} specs`} />
           </section>
@@ -109,7 +115,10 @@ const num = () => String(n++).padStart(2, '0');
         {d.fits_notes && (
           <section class="block" aria-labelledby="h-fit">
             <h2 class="block-title" id="h-fit">
-              <span class="n">{num()}</span>Fit notes
+              <span class="n" data-pagefind-ignore>
+                {num()}
+              </span>
+              Fit notes
             </h2>
             <p class="note">{d.fits_notes}</p>
           </section>

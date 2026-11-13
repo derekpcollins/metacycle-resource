@@ -34,11 +34,15 @@ const { tools } = Astro.props;
     padding: 0;
   }
   li {
+    padding: 0 var(--space-2);
     display: flex;
     align-items: center;
     gap: var(--space-3);
     border-bottom: var(--border) solid var(--color-rule);
     min-height: 56px;
+  }
+  li:hover {
+    background: var(--color-surface);
   }
   input {
     flex: none;

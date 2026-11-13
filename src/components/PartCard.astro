@@ -52,9 +52,19 @@ const H = headingLevel;
 </article>
 
 <style>
+  /* The whole card is the link (stretched from the name), with a full-row hover. */
   .part-card {
-    padding: var(--space-4) 0;
+    position: relative;
+    padding: var(--space-4) var(--space-2);
     border-bottom: var(--border) solid var(--color-rule);
+  }
+  .part-card:hover {
+    background: var(--color-surface);
+  }
+  .name a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
   }
   .name {
     font-family: var(--font-sans);
