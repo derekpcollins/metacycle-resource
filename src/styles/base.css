@@ -346,19 +346,19 @@ main {
   color: var(--color-text);
   cursor: pointer;
 }
-.btn:hover {
-  background: var(--color-surface);
-}
 .btn-primary {
   background: var(--color-text);
   color: var(--color-bg);
 }
+/* One hover for every button: safety-yellow fill, ink text. */
+.btn:hover,
 .btn-primary:hover {
   background: var(--color-accent);
   color: var(--color-on-accent);
-  border-color: var(--color-text);
+  border-color: var(--color-rule-strong);
 }
-.btn[aria-disabled='true'] {
+.btn[aria-disabled='true'],
+.btn[aria-disabled='true']:hover {
   background: transparent;
   color: var(--color-text-muted);
   border-style: dashed;

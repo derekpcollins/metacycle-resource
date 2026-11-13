@@ -72,10 +72,7 @@ const systemCounts = keys(SYSTEMS).map((s) => ({
           <li>
             <a href={c.url ?? '/community'}>
               <span class="ext">{c.name}</span>
-              <span class="k">
-                {c.kind}
-                {c.note && ` · ${c.note}`}
-              </span>
+              <span class="k">{c.kind}</span>
             </a>
           </li>
         ))}

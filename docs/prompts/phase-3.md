@@ -11,7 +11,7 @@ You are starting Phase 3 (Content seed) of an open-source, community-maintained 
 - If anything in this prompt conflicts with the spec, the spec wins. Flag the conflict to me.
 - What exists:
   - **Phase 1:** Astro (TypeScript strict, MDX), five content collections with strict Zod schemas (`src/content.config.ts`, enums in `src/lib/enums.ts`), build-time cross-reference validation (`src/lib/validate.ts`, `npm run test:validation`), CI and the Vercel deploy. Unknown values are the literal `TODO` (allowed for URLs, prices, `last_verified`, `time_minutes`); anything else unknown is omitted.
-  - **Phase 2:** the approved "minimal mono" design system (`src/styles/tokens.css`, `base.css`), components in `src/components/`, and every page template. The Specs and Contribute pages are still stubs. Pagefind search over parts (incl. aliases), guides and symptoms is built by every `astro build`. There's a footer theme switcher (system/light/dark), and the Community page already links to all 9 groups.
+  - **Phase 2:** the approved "minimal mono" design system (`src/styles/tokens.css`, `base.css`), components in `src/components/`, and every page template. The Specs and Contribute pages are still stubs. Pagefind search over parts (incl. aliases), guides and symptoms is built by every `astro build`. There's a footer theme switcher (system/light/dark), and the Community page already links to all 8 groups.
   - All site identity lives in `src/site.config.ts`. Reference it everywhere and never hard-code the site name.
 
 ## Step 0: confirm two decisions before you start

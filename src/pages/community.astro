@@ -17,10 +17,7 @@ import { community, communitySource } from '../data/community';
           {c.url ? (
             <a href={c.url}>
               <span class="t">{c.name}</span>
-              <span class="meta">
-                {c.kind}
-                {c.note && ` · ${c.note}`}
-              </span>
+              <span class="meta">{c.kind}</span>
               <span class="go" aria-hidden="true">
                 ↗
               </span>
