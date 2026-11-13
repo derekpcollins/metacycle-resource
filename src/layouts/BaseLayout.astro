@@ -9,15 +9,24 @@ import PageMeta from '../components/PageMeta.astro';
 interface Props {
   title: string;
   description?: string;
-  /** Repo-relative file to open in GitHub's editor; defaults to none ("coming soon"). */
+  /** Repo-relative file to open in GitHub's editor ("edit this page"). */
   editPath?: string;
+  /** Prefill for the "report a problem" form (contribution type, part id, system slug). */
+  report?: { type?: string; part?: string; system?: string };
   /** Links backing the page's facts. */
   sources?: string[];
   /** Last-verified line in the page meta block ('never' or an ISO date). */
   lastVerified?: string;
 }
 
-const { title, description = site.description, editPath, sources = [], lastVerified } = Astro.props;
+const {
+  title,
+  description = site.description,
+  editPath,
+  report,
+  sources = [],
+  lastVerified,
+} = Astro.props;
 const pageTitle = title === site.name ? site.name : `${title} · ${site.name}`;
 ---
 
@@ -54,7 +63,7 @@ const pageTitle = title === site.name ? site.name : `${title} · ${site.name}`;
     <main id="main" tabindex="-1">
       <slot />
     </main>
-    <PageMeta title={title} sources={sources} lastVerified={lastVerified} editPath={editPath} />
+    <PageMeta sources={sources} lastVerified={lastVerified} editPath={editPath} report={report} />
     <SiteFooter />
     <TabBar />
     <script>

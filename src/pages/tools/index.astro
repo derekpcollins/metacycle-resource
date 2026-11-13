@@ -1,6 +1,7 @@
 ---
 /** Tools page: starter kit + diagnostic gear; `used in` is derived from guides (spec). */
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { reportProblemUrl } from '../../site.config';
 import { getCollection } from 'astro:content';
 import { TOOL_CATEGORIES } from '../../lib/enums';
 import EmptyState from '../../components/EmptyState.astro';
@@ -51,7 +52,8 @@ const groups = [
         {g.items.length === 0 ? (
           <EmptyState title="nothing listed yet">
             <p>
-              Know what belongs here? <a href="/contribute">Suggest a tool</a>.
+              Know what belongs here?{' '}
+              <a href={reportProblemUrl({ type: 'suggest', page: '/tools' })}>Suggest a tool</a>.
             </p>
           </EmptyState>
         ) : (

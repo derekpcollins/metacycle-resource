@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { reportProblemUrl } from '../site.config';
 import EmptyState from '../components/EmptyState.astro';
 import {
   buses,
@@ -119,7 +120,12 @@ const num = () => pad(n++);
       </table>
       <p class="caption">
         No full fuse map exists yet: only these two fuses are documented. Know where others are?{' '}
-        <a href="/contribute">Share it</a>.
+        <a
+          href={reportProblemUrl({ type: 'spec-correction', system: 'electrical', page: '/specs' })}
+        >
+          Share it
+        </a>
+        .
       </p>
     </section>
 
@@ -212,7 +218,10 @@ const num = () => pad(n++);
       </ul>
       <p class="caption">
         No source documents these yet. Have the manual page, a measurement or a photo?{' '}
-        <a href="/contribute">Help fill the gap</a>.
+        <a href={reportProblemUrl({ type: 'spec-correction', page: '/specs' })}>
+          Help fill the gap
+        </a>
+        .
       </p>
     </section>
   </div>

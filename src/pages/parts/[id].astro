@@ -8,6 +8,7 @@ import BuyOptions from '../../components/BuyOptions.astro';
 import SpecsTable from '../../components/SpecsTable.astro';
 import SystemChip from '../../components/SystemChip.astro';
 import DifficultyMeter from '../../components/DifficultyMeter.astro';
+import { reportProblemUrl } from '../../site.config';
 
 export async function getStaticPaths() {
   return (await getCollection('parts')).map((entry) => ({
@@ -28,6 +29,7 @@ const num = () => String(n++).padStart(2, '0');
   title={d.name}
   description={`${d.name}: specs, where to buy, and fit notes for the Sondors Metacycle.`}
   editPath={repoPath(entry)}
+  report={{ part: entry.id, system: d.system }}
   sources={d.references}
   lastVerified={verified ? isoDate(verified) : 'never'}
 >
@@ -144,7 +146,11 @@ const num = () => String(n++).padStart(2, '0');
             </ul>
           ) : (
             <p class="muted">
-              None yet. <a href="/contribute">Share a fix</a>.
+              None yet.{' '}
+              <a href={reportProblemUrl({ type: 'fix', part: entry.id, system: d.system })}>
+                Share a fix
+              </a>
+              .
             </p>
           )}
         </section>

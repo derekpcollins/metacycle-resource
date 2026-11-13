@@ -1,0 +1,693 @@
+---
+/**
+ * The no-account web form (docs/SPEC.md → "Contribution flows"). A plain HTML form that
+ * POSTs to /api/contribute; a script adds prefill from the URL, per-type fields, inline
+ * errors and an in-page success state. Fields come from src/lib/contribution.ts, the same
+ * definitions as the GitHub issue forms.
+ *
+ * Prefill: /contribute/form?type=broken-link&part=<part id>&system=<slug>&page=/parts/x
+ *          &vendor=<name>&url=<link>
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import {
+  CONTRIBUTION_TYPES,
+  FIELDS,
+  labelOf,
+  descriptionOf,
+  type ContributionType,
+} from '../../lib/contribution';
+import { SYSTEMS } from '../../lib/enums';
+import { PART_OPTIONS } from '../../data/part-options';
+import { site } from '../../site.config';
+import { githubOpen } from '../../lib/github-open';
+
+/** Cloudflare's always-pass test site key until a real one is set (see CONTRIBUTING.md). */
+const siteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || '1x00000000000000000000AA';
+const types = Object.entries(CONTRIBUTION_TYPES) as [
+  ContributionType,
+  (typeof CONTRIBUTION_TYPES)[ContributionType],
+][];
+const allTypes = types.map(([t]) => t);
+/** Per-type label/description text for the script to swap in. */
+const perType = (fn: (t: ContributionType) => string | undefined) =>
+  JSON.stringify(Object.fromEntries(allTypes.map((t) => [t, fn(t) ?? ''])));
+// Data the script needs to map URL params (ids, slugs) to dropdown text.
+const prefillData = JSON.stringify({
+  parts: Object.fromEntries(PART_OPTIONS.map((p) => [p.id, `${p.name} · ${p.id}`])),
+  systems: SYSTEMS,
+  templates: Object.fromEntries(types.map(([t, v]) => [t, v.template])),
+  repoUrl: site.repoUrl,
+  githubOpen,
+});
+---
+
+<BaseLayout
+  title="Send a fix or report"
+  description="Report a broken link, suggest a part or vendor, share a fix or correct a spec. No account needed."
+  editPath="src/pages/contribute/form.astro"
+  report={{ type: 'spec-correction' }}
+>
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <ol>
+        <li>
+          <a href="/contribute">contribute</a>
+        </li>
+        <li aria-current="page">form</li>
+      </ol>
+    </nav>
+    <header class="page-head">
+      <h1>Send a fix or report</h1>
+      <p class="lede">
+        No account needed. The editor reads every message before anything changes on the site.
+        Fields marked <span class="req-mark">required</span> must be filled in.
+      </p>
+    </header>
+
+    <noscript>
+      <div class="notice">
+        <p>
+          This form’s spam check needs JavaScript. Turn it on and reload,
+          {githubOpen ? (
+            <>
+              or use the <a href={`${site.repoUrl}/issues/new/choose`}>GitHub issue forms</a>{' '}
+              (GitHub account needed).
+            </>
+          ) : (
+            <>or try again from another browser.</>
+          )}
+        </p>
+      </div>
+    </noscript>
+
+    <div id="form-status" class="status" tabindex="-1" hidden>
+      <h2 class="status-title"></h2>
+      <p class="status-text"></p>
+      <ul class="status-list"></ul>
+    </div>
+
+    <section id="form-done" class="done" hidden aria-labelledby="done-title">
+      <h2 id="done-title" tabindex="-1">
+        Thanks. It’s in the review queue.
+      </h2>
+      <p>
+        The editor reviews every report. Changes with a source link or photo go live first; others
+        are published as <em>community-reported</em>.
+      </p>
+      <p class="done-issue" hidden>
+        Follow it on GitHub:{' '}
+        <a class="done-link" href="#">
+          issue
+        </a>
+        .
+      </p>
+      <p class="done-actions">
+        <a class="btn" href="/contribute/form">
+          send another
+        </a>
+        <a class="text-link done-back" href="/" hidden>
+          back to the page
+        </a>
+      </p>
+    </section>
+
+    <form
+      id="contribute-form"
+      class="form"
+      method="post"
+      action="/api/contribute"
+      data-prefill={prefillData}
+    >
+      <fieldset class="types">
+        <legend>
+          What is this? <span class="req-mark">required</span>
+        </legend>
+        <ul>
+          {types.map(([t, v], i) => (
+            <li>
+              <label class="choice">
+                <input type="radio" name="type" value={t} required checked={i === 0} />
+                <span>
+                  <span class="choice-t">{v.label}</span>
+                  <span class="choice-sub">{v.blurb}</span>
+                </span>
+              </label>
+            </li>
+          ))}
+        </ul>
+        <p class="err" id="e-type" hidden></p>
+      </fieldset>
+
+      <div class="fields">
+        {FIELDS.map((f) => {
+          const desc = descriptionOf(f, 'fix');
+          const common = {
+            'data-field': f.id,
+            'data-types': f.types.join(' '),
+            'data-required-for': (f.requiredFor ?? []).join(' '),
+            'data-labels': perType((t) => (f.types.includes(t) ? labelOf(f, t) : undefined)),
+            'data-descs': perType((t) => (f.types.includes(t) ? descriptionOf(f, t) : undefined)),
+          };
+          const describedBy = `d-${f.id} e-${f.id}`;
+          const requiredAll = (f.requiredFor ?? []).length === allTypes.length;
+          if (f.kind === 'checkbox')
+            return (
+              <div class="field check" {...common}>
+                <label class="choice">
+                  <input
+                    type="checkbox"
+                    id={`f-${f.id}`}
+                    name={f.id}
+                    required={requiredAll}
+                    aria-describedby={`e-${f.id}`}
+                  />
+                  <span class="choice-t">
+                    {f.text} {requiredAll && <span class="req-mark">required</span>}
+                  </span>
+                </label>
+                <p class="err" id={`e-${f.id}`} hidden />
+              </div>
+            );
+          return (
+            <div class="field" {...common}>
+              <label for={`f-${f.id}`}>
+                <span class="lbl">{labelOf(f, 'fix')}</span>{' '}
+                <span class="req-mark" hidden={!requiredAll}>
+                  required
+                </span>
+              </label>
+              <p class="desc" id={`d-${f.id}`} hidden={!desc}>
+                {desc}
+              </p>
+              {f.kind === 'dropdown' ? (
+                <span class="select">
+                  <select
+                    id={`f-${f.id}`}
+                    name={f.id}
+                    aria-describedby={describedBy}
+                    required={requiredAll}
+                  >
+                    <option value="">Choose…</option>
+                    {f.options().map((o) => (
+                      <option value={o}>{o}</option>
+                    ))}
+                  </select>
+                </span>
+              ) : f.kind === 'textarea' ? (
+                <textarea
+                  id={`f-${f.id}`}
+                  name={f.id}
+                  rows={f.id === 'details' ? 7 : 3}
+                  maxlength={f.maxLength}
+                  aria-describedby={describedBy}
+                  required={requiredAll}
+                />
+              ) : (
+                <input
+                  id={`f-${f.id}`}
+                  name={f.id}
+                  type={f.inputType ?? 'text'}
+                  maxlength={f.maxLength}
+                  placeholder={f.placeholder}
+                  aria-describedby={describedBy}
+                  required={requiredAll}
+                  autocomplete={f.id === 'credit' ? 'nickname' : 'off'}
+                  inputmode={f.inputType === 'url' ? 'url' : undefined}
+                />
+              )}
+              <p class="err" id={`e-${f.id}`} hidden />
+            </div>
+          );
+        })}
+      </div>
+
+      <!-- Honeypot for bots: people never see or reach this field. -->
+      <div class="hp" aria-hidden="true">
+        <label for="f-website">Leave this empty</label>
+        <input id="f-website" name="website" type="text" tabindex="-1" autocomplete="off" />
+      </div>
+
+      <div class="turnstile">
+        <div
+          class="cf-turnstile"
+          data-sitekey={siteKey}
+          data-theme="auto"
+          data-size="flexible"
+        ></div>
+        <p class="caption">Spam check by Cloudflare Turnstile.</p>
+      </div>
+
+      <div class="submit">
+        <button class="btn btn-primary" type="submit">
+          send
+        </button>
+        {githubOpen && (
+          <a class="text-link gh-link" href={`${site.repoUrl}/issues/new/choose`}>
+            have a GitHub account? use the GitHub form
+          </a>
+        )}
+      </div>
+    </form>
+  </div>
+</BaseLayout>
+
+<script
+  is:inline
+  src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+  async
+  defer
+  crossorigin="anonymous"
+></script>
+
+<script>
+  type Prefill = {
+    parts: Record<string, string>;
+    systems: Record<string, string>;
+    templates: Record<string, string>;
+    repoUrl: string;
+    githubOpen: boolean;
+  };
+  declare global {
+    interface Window {
+      turnstile?: { reset: (el?: string | HTMLElement) => void };
+    }
+  }
+
+  const form = document.querySelector<HTMLFormElement>('#contribute-form')!;
+  const data = JSON.parse(form.dataset.prefill ?? '{}') as Prefill;
+  const status = document.querySelector<HTMLElement>('#form-status')!;
+  const done = document.querySelector<HTMLElement>('#form-done')!;
+  const params = new URLSearchParams(location.search);
+  const fields = [...form.querySelectorAll<HTMLElement>('[data-field]')];
+  const control = (id: string) =>
+    form.querySelector<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>(
+      `[name="${id}"]`,
+    );
+  const currentType = () =>
+    form.querySelector<HTMLInputElement>('input[name="type"]:checked')?.value ?? '';
+
+  // ---------- prefill from the URL ----------
+  const type = params.get('type');
+  const typeInput =
+    type && form.querySelector<HTMLInputElement>(`input[name="type"][value="${CSS.escape(type)}"]`);
+  if (typeInput) typeInput.checked = true;
+  const setIf = (id: string, value: string | null | undefined) => {
+    const el = control(id);
+    if (!el || !value) return;
+    if (el instanceof HTMLSelectElement && ![...el.options].some((o) => o.value === value)) return;
+    el.value = value;
+  };
+  setIf('part', data.parts[params.get('part') ?? '']);
+  setIf('system', data.systems[params.get('system') ?? '']);
+  setIf('page', params.get('page'));
+  setIf('vendor', params.get('vendor'));
+  setIf('url', params.get('url'));
+  const page = params.get('page');
+  if (page?.startsWith('/')) {
+    const back = done.querySelector<HTMLAnchorElement>('.done-back')!;
+    back.href = page;
+    back.hidden = false;
+  }
+
+  // ---------- per-type fields ----------
+  function applyType() {
+    const t = currentType();
+    for (const el of fields) {
+      const show = el.dataset.types!.split(' ').includes(t);
+      const required = el.dataset.requiredFor!.split(' ').includes(t);
+      el.hidden = !show;
+      const input = el.querySelector<HTMLInputElement>('input, select, textarea')!;
+      input.required = show && required;
+      input.disabled = !show; // hidden fields aren't sent
+      const label = el.querySelector('.lbl');
+      const labels = JSON.parse(el.dataset.labels ?? '{}') as Record<string, string>;
+      if (label && labels[t]) label.textContent = labels[t];
+      const desc = el.querySelector<HTMLElement>('.desc');
+      const descs = JSON.parse(el.dataset.descs ?? '{}') as Record<string, string>;
+      if (desc) {
+        desc.textContent = descs[t] ?? '';
+        desc.hidden = !descs[t];
+      }
+      const mark = el.querySelector<HTMLElement>('label > .req-mark');
+      if (mark) mark.hidden = !required;
+    }
+    updateGithubLink();
+  }
+
+  function updateGithubLink() {
+    const link = form.querySelector<HTMLAnchorElement>('.gh-link');
+    const t = currentType();
+    if (!link || !data.templates[t]) return;
+    const url = new URL(`${data.repoUrl}/issues/new`);
+    url.searchParams.set('template', data.templates[t]);
+    for (const id of ['part', 'system', 'vendor', 'url', 'page']) {
+      const el = control(id);
+      if (el && !el.disabled && el.value) url.searchParams.set(id, el.value);
+    }
+    link.href = url.toString();
+  }
+
+  form.addEventListener('change', (e) => {
+    if ((e.target as HTMLInputElement).name === 'type') applyType();
+    else updateGithubLink();
+  });
+  applyType();
+
+  // ---------- errors ----------
+  const MESSAGES: Record<string, [string, string]> = {
+    invalid: ['Some fields need fixing', 'Check the fields listed below.'],
+    turnstile: [
+      'The spam check didn’t go through',
+      'Wait for the check above the send button to finish, then send again. If it keeps failing, reload the page.',
+    ],
+    rate: ['Too many messages for now', 'Please try again in an hour. Your text is still here.'],
+    'too-large': ['That’s too long to send', 'Shorten the details and try again.'],
+    origin: ['That didn’t come from this site', 'Reload this page and send again.'],
+    unavailable: [
+      'The form can’t send right now',
+      'Nothing was lost: your text is still here. Try again in a few minutes.',
+    ],
+  };
+
+  function clearErrors() {
+    status.hidden = true;
+    for (const e of form.querySelectorAll<HTMLElement>('.err')) {
+      e.hidden = true;
+      e.textContent = '';
+    }
+    for (const c of form.querySelectorAll('[aria-invalid]')) c.removeAttribute('aria-invalid');
+  }
+
+  function showStatus(reason: string, errors: Record<string, string> = {}) {
+    const [title, text] = MESSAGES[reason] ?? MESSAGES.unavailable;
+    status.querySelector('.status-title')!.textContent = title;
+    const p = status.querySelector<HTMLElement>('.status-text')!;
+    p.textContent = text;
+    if (reason === 'unavailable' && data.githubOpen) {
+      p.append(' Or use the ');
+      const a = document.createElement('a');
+      a.href =
+        form.querySelector<HTMLAnchorElement>('.gh-link')?.href ??
+        `${data.repoUrl}/issues/new/choose`;
+      a.textContent = 'GitHub form';
+      p.append(a, ' (GitHub account needed).');
+    }
+    const list = status.querySelector<HTMLElement>('.status-list')!;
+    list.replaceChildren();
+    for (const [id, msg] of Object.entries(errors)) {
+      const err = form.querySelector<HTMLElement>(`#e-${CSS.escape(id)}`);
+      const input = id === 'type' ? form.querySelector('input[name="type"]') : control(id);
+      if (err) {
+        err.textContent = msg;
+        err.hidden = false;
+      }
+      input?.setAttribute('aria-invalid', 'true');
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = `#${input?.id || 'contribute-form'}`;
+      a.textContent = msg;
+      li.append(a);
+      list.append(li);
+    }
+    list.hidden = list.children.length === 0;
+    status.hidden = false;
+    status.focus();
+  }
+
+  // An error code from a plain (no-fetch) POST that redirected back here.
+  const errorParam = params.get('error');
+  if (errorParam) showStatus(errorParam);
+
+  // ---------- submit ----------
+  form.noValidate = true;
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    clearErrors();
+    const errors: Record<string, string> = {};
+    for (const el of form.querySelectorAll<HTMLInputElement>('input, select, textarea')) {
+      if (el.disabled || el.name === 'website' || el.validity.valid || errors[el.name]) continue;
+      const label = el.closest('[data-field]')?.querySelector('.lbl')?.textContent ?? 'This field';
+      errors[el.name] = el.validity.valueMissing
+        ? el.type === 'checkbox'
+          ? 'Tick the license box to continue.'
+          : `${label} is required.`
+        : el.validity.typeMismatch
+          ? 'Enter a full link starting with https://'
+          : el.validationMessage;
+    }
+    if (Object.keys(errors).length) return showStatus('invalid', errors);
+
+    const button = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+    button.disabled = true;
+    button.textContent = 'sending…';
+    try {
+      const res = await fetch(form.action, {
+        method: 'POST',
+        headers: { Accept: 'application/json' },
+        body: new URLSearchParams(new FormData(form) as unknown as Record<string, string>),
+      });
+      const body = (await res.json().catch(() => ({}))) as {
+        ok?: boolean;
+        reason?: string;
+        errors?: Record<string, string>;
+        issue?: { number: number; url: string };
+      };
+      if (body.ok) {
+        form.hidden = true;
+        if (body.issue && data.githubOpen) {
+          const link = done.querySelector<HTMLAnchorElement>('.done-link')!;
+          link.href = body.issue.url;
+          link.textContent = `#${body.issue.number}`;
+          done.querySelector<HTMLElement>('.done-issue')!.hidden = false;
+        }
+        done.hidden = false;
+        done.querySelector<HTMLElement>('h2')!.focus();
+        return;
+      }
+      showStatus(body.reason ?? 'unavailable', body.errors);
+    } catch {
+      showStatus('unavailable');
+    } finally {
+      button.disabled = false;
+      button.textContent = 'send';
+      window.turnstile?.reset();
+    }
+  });
+</script>
+
+<style>
+  .notice,
+  .status {
+    border-left: var(--border-accent) solid var(--color-accent);
+    background: var(--color-surface);
+    padding: var(--space-4);
+    margin: 0 0 var(--space-6);
+    max-width: var(--measure);
+  }
+  .status {
+    border-left-color: var(--color-bad);
+  }
+  .notice p,
+  .status p {
+    margin: 0;
+  }
+  .status-title {
+    font-size: var(--text-sm);
+    margin: 0 0 var(--space-1);
+  }
+  .status-list {
+    margin: var(--space-3) 0 0;
+    padding-left: 1.2em;
+    font-size: var(--text-sm);
+  }
+  .status-list li {
+    padding: var(--space-1) 0;
+  }
+  .done {
+    max-width: var(--measure);
+    border-top: var(--border) solid var(--color-rule-strong);
+    padding-top: var(--space-4);
+  }
+  .done h2 {
+    font-family: var(--font-sans);
+    font-size: var(--text-xl);
+    font-weight: 700;
+    margin: 0 0 var(--space-3);
+  }
+  .done-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-6);
+    align-items: center;
+  }
+  .form {
+    max-width: 42rem;
+  }
+  .types {
+    border: 0;
+    margin: 0 0 var(--space-6);
+    padding: 0;
+    min-width: 0;
+  }
+  legend,
+  .field label:not(.choice) {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    padding: 0;
+  }
+  legend {
+    margin-bottom: var(--space-3);
+  }
+  .types ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: var(--border) solid var(--color-rule);
+  }
+  .choice {
+    display: flex;
+    gap: var(--space-3);
+    align-items: flex-start;
+    min-height: var(--tap-target);
+    padding: var(--space-3) var(--space-2);
+    cursor: pointer;
+  }
+  .types .choice {
+    border-bottom: var(--border) solid var(--color-rule);
+  }
+  .choice:hover {
+    background: var(--color-surface);
+  }
+  .choice input {
+    flex: none;
+    width: 1.25rem;
+    height: 1.25rem;
+    margin: 0.15rem 0 0;
+    accent-color: var(--color-text);
+  }
+  .choice-t {
+    display: block;
+    font-weight: 500;
+  }
+  .choice-sub {
+    display: block;
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+  .req-mark {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: 400;
+    color: var(--color-text-muted);
+  }
+  .req-mark::before {
+    content: '· ';
+  }
+  .lede .req-mark::before {
+    content: '';
+  }
+  .fields {
+    display: grid;
+    gap: var(--space-5);
+  }
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    min-width: 0;
+  }
+  .field[hidden] {
+    display: none;
+  }
+  .field.check .choice {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .desc {
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+  input[type='text'],
+  input[type='url'],
+  textarea,
+  select {
+    width: 100%;
+    min-width: 0;
+    border: var(--border) solid var(--color-rule-strong);
+    border-radius: 0;
+    background: var(--color-bg);
+    color: var(--color-text);
+    font: inherit;
+    font-size: var(--text-base);
+  }
+  input[type='text'],
+  input[type='url'] {
+    height: var(--tap-target);
+    padding: 0 var(--space-3);
+  }
+  textarea {
+    padding: var(--space-3);
+    line-height: var(--leading);
+    resize: vertical;
+  }
+  /* Native look varies (Safari ignores min-height), so draw our own box + chevron. */
+  .select {
+    position: relative;
+    display: block;
+  }
+  .select::after {
+    content: '▾';
+    position: absolute;
+    right: var(--space-3);
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+  select {
+    appearance: none;
+    -webkit-appearance: none;
+    height: var(--tap-target);
+    padding: 0 calc(var(--space-3) + 1.25em) 0 var(--space-3);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    line-height: 1;
+    cursor: pointer;
+  }
+  [aria-invalid='true'] {
+    border-color: var(--color-bad);
+    box-shadow: inset var(--border-accent) 0 0 var(--color-bad);
+  }
+  .err {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-bad);
+  }
+  .hp {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+  .turnstile {
+    margin: var(--space-6) 0 0;
+  }
+  .turnstile .caption {
+    margin-top: var(--space-1);
+  }
+  .submit {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-6);
+    align-items: center;
+    margin: var(--space-6) 0 0;
+  }
+  .submit .btn[disabled] {
+    cursor: progress;
+  }
+</style>

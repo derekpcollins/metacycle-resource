@@ -16,7 +16,8 @@
     "forms:sync": "tsx scripts/sync-issue-forms.ts",
     "forms:check": "tsx scripts/sync-issue-forms.ts --check",
     "labels:sync": "tsx scripts/sync-labels.ts",
-    "test:contribution": "tsx scripts/test-contribution.ts"
+    "test:contribution": "tsx scripts/test-contribution.ts",
+    "serve:local": "tsx scripts/serve-local.ts"
   },
   "license": "SEE LICENSE IN LICENSE-CODE and LICENSE-CONTENT",
   "dependencies": {
@@ -25,6 +26,7 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.12",
+    "@types/node": "^22.20.5",
     "pagefind": "^1.6.0",
     "prettier": "^3.10.1",
     "prettier-plugin-astro": "^1.1.2",

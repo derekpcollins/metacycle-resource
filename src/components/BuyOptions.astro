@@ -75,7 +75,14 @@ const rows = await Promise.all(
                 )}
                 <a
                   class="text-link"
-                  href={reportProblemUrl(`Broken link: ${part.data.name} — ${vendorName}`)}
+                  href={reportProblemUrl({
+                    type: 'broken-link',
+                    part: part.id,
+                    system: part.data.system,
+                    vendor: vendorName,
+                    url: s.url === 'TODO' ? undefined : s.url,
+                    page: `/parts/${part.id}`,
+                  })}
                 >
                   report broken link<span class="visually-hidden"> for {vendorName}</span>
                 </a>

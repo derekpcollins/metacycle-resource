@@ -27,8 +27,9 @@ const pad = (i: number) => String(i + 1).padStart(2, '0');
 
 <BaseLayout
   title={d.symptom}
-  description={`Diagnose "${d.symptom}" on a Sondors Metacycle: likely causes, checks and fixes.`}
+  description={`Diagnose "${d.symptom}" on a Sondors Metacycle: checks and fixes.`}
   editPath={repoPath(entry)}
+  report={{ type: 'fix', system: d.system }}
   sources={d.sources}
 >
   <article class="wrap" data-pagefind-body data-pagefind-filter="type:Symptom">
