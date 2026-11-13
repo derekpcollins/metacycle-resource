@@ -12,7 +12,7 @@
     "format:check": "prettier --check .",
     "ci": "npm run format:check && npm run forms:check && npm run check && npm run build && npm run test:validation && npm run test:contribution",
     "test:validation": "node scripts/test-validation.mjs",
-    "verify:list": "node scripts/verify-list.mjs",
+    "verify:list": "tsx scripts/verify-list.ts",
     "forms:sync": "tsx scripts/sync-issue-forms.ts",
     "forms:check": "tsx scripts/sync-issue-forms.ts --check",
     "labels:sync": "tsx scripts/sync-labels.ts",

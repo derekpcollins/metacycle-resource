@@ -1,5 +1,4 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
-import { site } from '../site.config';
 
 export type Part = CollectionEntry<'parts'>;
 export type Guide = CollectionEntry<'guides'>;
@@ -11,8 +10,8 @@ export const repoPath = (entry: { filePath?: string }) =>
 export const formatDate = (d: Date | 'TODO' | undefined) =>
   d === undefined ? '—' : d === 'TODO' ? 'TODO' : d.toISOString().slice(0, 10);
 
-export const isStale = (d: Date | 'TODO') =>
-  d === 'TODO' || Date.now() - d.getTime() > site.staleAfterDays * 86_400_000;
+/** The staleness rule lives in src/lib/staleness.ts (one helper for every consumer). */
+export { isStale } from './staleness';
 
 /** `used_in` for tools — derived from guides, never typed (spec). */
 export async function guidesUsingTool(toolId: string) {
