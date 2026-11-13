@@ -169,7 +169,7 @@ Six templates cover v1, plus a Tools page. Every content page ends with the same
 
 | Template | Job | Key elements |
 | --- | --- | --- |
-| **Home** | Get a stranded owner to a fix fast | Search bar first; "What's wrong?" symptom shortcuts; browse by system; recently verified parts; community links |
+| **Home** | Get a stranded owner to a fix fast | Search bar first; "What's wrong?" symptom shortcuts; browse by system; community links |
 | **Parts index** | Find a part | Filter by system, source type, fit, status; sort by name or last verified; optional exploded-diagram view with clickable callouts |
 | **Part detail** | Decide what to buy | Name, photo, specs table, failure rate, difficulty; buy-options table (vendor, type, fit, price, status, verified date) with stale rows dimmed; fit notes; related guides; "Report broken link" per row |
 | **Guide** | Do the job | Difficulty, time, tools, parts (with buy links), safety callouts up top; step cards with photos and torque values; verified-by badge |
