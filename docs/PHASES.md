@@ -6,7 +6,7 @@ Each phase runs in its own chat. Every phase ends by updating this file and writ
 | --- | -------------------------------------------------------------------------------------------------- | ----------- |
 | 1   | Foundation: repo, schemas, base layout, legal pages, sample content, CI, deploy                    | Done        |
 | 2   | Design system & page templates (+ Pagefind search, tools page)                                     | Done        |
-| 3   | Content seed (parts, vendors, tools, troubleshooting, guides, spec sheet)                          | Not started |
+| 3   | Content seed (parts, vendors, tools, troubleshooting, guides, spec sheet)                          | Done        |
 | 4   | Contribution flows (edit links, GitHub issue forms, no-account web form w/ serverless + Turnstile) | Not started |
 | 5   | Automation & trust (weekly link checker, staleness badges, Help Wanted, changelog)                 | Not started |
 | 6   | Downloads repo, polish (a11y/perf/SEO, analytics), make repo public                                | Not started |
@@ -63,6 +63,28 @@ Launch (beta invites, announcements) is non-development and happens after Phase 
 
 - **Part photos:** add optional `photo`, `photo_alt` and `photo_credit` fields to the part schema and Part detail template now. `photo_alt` is required whenever `photo` is set. No photos are seeded unless they're sourced and licensed for reuse.
 - **Sources beyond the research brief:** facts may come from pages actually fetched (Metacyclopedia sub-pages, vendor listings), as long as each fact is cited in the entry's `references` / `sources` and every new source is added to `docs/RESEARCH.md`.
+
+### Phase 3 implementation decisions
+
+- **Counts:** 42 parts (Metacyclopedia's 37 categories plus battery activator, 5 A fuse, 300 A main fuse, key switch and alarm plug, which guides and fixes link to), 14 vendors, 13 tools, 6 guides, 6 troubleshooting entries. 59 buy options, all `status: unverified`, `last_verified: TODO`, `price.amount: TODO`.
+- **More vendors than the five named in the prompt.** Every buy option needs a vendor id, so each seller a source links (Amazon, Alibaba, BMS Battery, Jnicon, Wagner, Renhotec, Corbin-Pacific, Tapia's) has a file. AliExpress links that Metacyclopedia doesn't attribute to SiAECOSYS are filed under a separate `aliexpress` vendor ("seller not confirmed"); only listings a source names as SiAECOSYS's own use `siaecosys-aliexpress`. `cnqsmotor.com` is its own vendor (QS Motor's site; Metacyclopedia labels the links "SiAECOSYS"). The SiAECOSYS store URL stays `TODO`: no source gives it.
+- **Unsourced values removed, flagged:** the spec's rear-shock example sets `failure_rate: occasional` and `difficulty: 2`, but no source supports either, so the seeded file omits them (spec example left as-is; it's illustrative). No part has a `difficulty`; only the controller and alarm module have a `failure_rate` (common), both sourced.
+- **Guide `difficulty` is required by the schema but no source rates it.** The six guides carry editor estimates (storage 1, cold charging 1, seat 2, battery 3, alarm 3, Votol 4). Treat them as placeholders; consider making the field optional or adding a "not rated" value.
+- **`fit` has no "unknown" value.** One aftermarket shock with undocumented fit uses `fit: adapt` plus a note saying so. Consider adding `unknown` to `FITS`.
+- **Source conflicts kept visible, not resolved:** battery-activator ground pin (pin 5 on Metacyclopedia's activator page, pin 6 on its charger page); controller listing named "EM200-2SM" on the parts page vs EM200-2SP elsewhere; battery maker stated as Greenway on Metacyclopedia's parts page but "believed" on its battery page (shown as unconfirmed). Each is noted in the part's fit notes and on the Specs page.
+- **Tire gap partly filled:** sizes and pressures (110/70 R17 @ 32 psi front, 150/60 R17 @ 30 psi rear) come from Metacyclopedia's parts page. Rims, front brake, fork, torque specs and the maintenance schedule are still gaps.
+- **Specs page** is data-driven from `src/data/specs.ts` (one source URL per row): spec sheet, the two documented fuses, four pinout tables, bus speeds, the downloads list (names only, "coming in Phase 6", interim link to Metacyclopedia's Files page) and a "not yet known" list. Its edit link points at `src/data/specs.ts`.
+- **Verification checklist:** `npm run verify:list` writes `docs/VERIFICATION.md` (vendors, then pending buy links by vendor, then a by-part index), each item with status, date, price and a GitHub edit link to the YAML file. Output has no timestamp, so it only changes when content does. Re-run it after editing parts or vendors. `yaml` is now an explicit devDependency.
+- **Template tweaks (no restyle):** optional photo figure under the part header; part fit notes keep line breaks (`white-space: pre-line`); Specs page built with existing tokens and table styles.
+- **Tool `buy_links` are empty** (affiliate off). Tools are only those a source or the spec names.
+
+## Phase 3 notes (deferred / learned)
+
+- **Verified:** `npm run ci` passes locally (format, `astro check`, build, validation tests). All 93 built routes return 200 locally; no horizontal scroll at 375px or 1280px in light or dark; axe (WCAG 2.0/2.1 A + AA) found 0 violations on home, a part, two guides, a troubleshooting page, Specs, a vendor and the parts index at both sizes and both themes. Pagefind returns the right entry for every guide title and every symptom, and for aliases such as "fob", "tyres", "chogori", "pegs" and "flasher".
+- **Link sweep (automated, not human-verified, Nov 12):** all 19 cnqsmotor.com product links returned 200 with matching page titles. The BMS Battery connector link returned 404 (noted on the entry). Wagner returned 403 to the bot. AliExpress returned 200/302, which proves nothing because it serves bot pages. Statuses were left `unverified` for Derek.
+- **Community:** all 8 links re-checked: 200; both Discord invites valid; Facebook groups sit behind login.
+- **Deferred:** human verification of 59 buy links and 1 vendor URL (`docs/VERIFICATION.md`); a Metacycle-specific rebuild price from E-Bike Market Place; part photos (fields exist, none licensed yet); torque values in guides (marked TODO); Sun Coast Cycle Sports stock (still UNVERIFIED; no parts link to it).
+- **Learned:** Metacyclopedia's source is on GitHub (`metacyclopedia/metacyclopedia.github.io`), which makes every page readable in full; use it for future imports. The workspace shell can reach most vendor sites directly. `npm run test:validation` leaves `dist/` from a failed build, so run `npm run build` again before previewing.
 
 ## Phase 2 notes (deferred / learned)
 
