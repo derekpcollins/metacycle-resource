@@ -10,7 +10,6 @@ const menuActive = menuNav.some((l) => isCurrent(path, l.href));
 <header class="site-header">
   <div class="wrap bar">
     <a class="brand" href="/">
-      <span class="mark" aria-hidden="true"></span>
       <span>{site.name.toLowerCase()}</span>
     </a>
     <nav class="topnav" aria-label="Primary">
@@ -69,14 +68,6 @@ const menuActive = menuNav.some((l) => isCurrent(path, l.href));
     font-weight: 600;
     font-size: var(--text-sm);
     text-decoration: none;
-  }
-  .mark {
-    flex: none;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: var(--color-accent);
-    box-shadow: 0 0 0 1.5px var(--color-text);
   }
   .search-link {
     margin-left: auto;

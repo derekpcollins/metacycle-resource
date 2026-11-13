@@ -3,18 +3,67 @@ import { site } from '../site.config';
 ---
 
 <footer class="site-footer">
-  <div class="wrap">
-    <p>
-      Independent, community-maintained resource — not affiliated with SONDORS Inc. or any seller
-      listed here. Use at your own risk. <a href="/disclaimer">Full disclaimer</a>.
-    </p>
-    <p class="mono">
-      content <a href={site.license.content.url}>{site.license.content.name}</a> · code{' '}
-      <a href={site.license.code.url}>{site.license.code.name}</a> ·{' '}
-      <a href="/about">about &amp; license</a> · <a href={site.repoUrl}>source</a>
-    </p>
+  <div class="wrap grid">
+    <div class="info">
+      <p>
+        Independent, community-maintained resource — not affiliated with SONDORS Inc. or any seller
+        listed here. Use at your own risk. <a href="/disclaimer">Full disclaimer</a>.
+      </p>
+
+      <p class="mono">
+        content <a href={site.license.content.url}>{site.license.content.name}</a> · code{' '}
+        <a href={site.license.code.url}>{site.license.code.name}</a> ·{' '}
+        <a href="/about">about &amp; license</a> · <a href={site.repoUrl}>source</a>
+      </p>
+    </div>
+    <div class="theme" role="group" aria-label="Color theme">
+      <span class="lbl" aria-hidden="true">
+        theme:
+      </span>
+      <button type="button" data-theme-set="system" aria-pressed="true">
+        system
+      </button>
+      <span class="sep" aria-hidden="true">
+        ·
+      </span>
+      <button type="button" data-theme-set="light" aria-pressed="false">
+        light
+      </button>
+      <span class="sep" aria-hidden="true">
+        ·
+      </span>
+      <button type="button" data-theme-set="dark" aria-pressed="false">
+        dark
+      </button>
+    </div>
   </div>
 </footer>
+
+<script>
+  // Footer theme switcher: system (follow device) / light / dark, saved per device.
+  const root = document.documentElement;
+  const buttons = document.querySelectorAll<HTMLButtonElement>('[data-theme-set]');
+  const current = () => root.dataset.theme ?? 'system';
+  const sync = () =>
+    buttons.forEach((b) =>
+      b.setAttribute('aria-pressed', String(b.dataset.themeSet === current())),
+    );
+  buttons.forEach((b) =>
+    b.addEventListener('click', () => {
+      const choice = b.dataset.themeSet;
+      if (choice === 'light' || choice === 'dark') root.dataset.theme = choice;
+      else delete root.dataset.theme;
+      try {
+        if (choice === 'system') localStorage.removeItem('theme');
+        else localStorage.setItem('theme', choice ?? '');
+      } catch {
+        /* storage unavailable: choice lasts for this page only */
+      }
+      sync();
+    }),
+  );
+  sync();
+</script>
 
 <style>
   .site-footer {
@@ -27,8 +76,54 @@ import { site } from '../site.config';
     margin: 0 0 var(--space-2);
     max-width: 72ch;
   }
+  .info p:last-child {
+    margin-bottom: 0;
+  }
+  .grid {
+    display: grid;
+    gap: var(--space-2) var(--space-8);
+  }
+  @media (min-width: 60rem) {
+    /* Theme switcher sits bottom-right, on the same baseline as the license line. */
+    .grid {
+      grid-template-columns: 1fr auto;
+      align-items: last baseline;
+    }
+  }
   a {
     display: inline-block;
     padding: var(--space-1) 0;
+  }
+  /* JS-only control: hidden when scripts are off. */
+  .theme {
+    display: none;
+    align-items: center;
+    gap: var(--space-1);
+    flex-wrap: wrap;
+    margin: 0;
+    font-family: var(--font-mono);
+  }
+  :global(.js) .theme {
+    display: flex;
+  }
+  .theme button {
+    min-height: var(--tap-target);
+    padding: 0 var(--space-1);
+    border: 0;
+    background: none;
+    color: var(--color-text-muted);
+    font: inherit;
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+  .theme button:hover {
+    color: var(--color-text);
+  }
+  .theme button[aria-pressed='true'] {
+    color: var(--color-text);
+    font-weight: 700;
+    text-decoration: none;
   }
 </style>

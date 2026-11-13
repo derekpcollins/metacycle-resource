@@ -2,7 +2,8 @@
  * Design tokens — "minimal mono" direction (v2), approved Nov 12, 2026 (see docs/PHASES.md).
  * Paper + ink with thin rules; monospace for headings, labels and data; system sans for
  * body text. One safety-yellow accent used sparingly and only ever behind ink-coloured
- * text. Light and dark both follow the device setting. No web fonts.
+ * text. Light and dark follow the device setting unless the visitor picks one in the footer
+ * (stored as html[data-theme]). No web fonts.
  */
 :root {
   color-scheme: light dark;
@@ -74,8 +75,11 @@
   --duration-fast: 120ms;
 }
 
+/* Dark palette. Applied when the device prefers dark (unless the visitor picked light in
+   the footer), or when the visitor picked dark. Keep the two copies identical. */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
     --color-bg: #111110;
     --color-surface: #1a1a18;
     --color-text: #edede8;
@@ -95,6 +99,32 @@
     --focus-halo: #111110;
     --shadow-menu: 0 8px 24px rgb(0 0 0 / 0.6);
   }
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --color-bg: #111110;
+  --color-surface: #1a1a18;
+  --color-text: #edede8;
+  --color-text-muted: #a6a59e;
+  --color-rule: #2e2e2a;
+  --color-rule-strong: #edede8;
+  --color-accent: #ffc93c;
+  --color-on-accent: #111110;
+  --color-mark: #4a3a0c;
+
+  --color-ok: #7fd69b;
+  --color-warn: #f3c567;
+  --color-bad: #ff9a92;
+  --color-off: #a6a59e;
+
+  --focus-ring: #ffc93c;
+  --focus-halo: #111110;
+  --shadow-menu: 0 8px 24px rgb(0 0 0 / 0.6);
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
 }
 
 @media (prefers-reduced-motion: reduce) {

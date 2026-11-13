@@ -30,9 +30,17 @@ const pageTitle = title === site.name ? site.name : `${title} · ${site.name}`;
     <meta name="description" content={description} />
     <meta name="theme-color" content="#fafaf7" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#111110" media="(prefers-color-scheme: dark)" />
-    <!-- Lets CSS show JS-only controls before first paint (no layout shift). -->
+    <!-- Before first paint: JS-only controls + saved theme (no flash, no layout shift). -->
     <script is:inline>
-      document.documentElement.classList.add('js');
+      // Runs before first paint: reveal JS-only controls and apply a saved theme choice.
+      (function () {
+        var d = document.documentElement;
+        d.classList.add('js');
+        try {
+          var t = localStorage.getItem('theme');
+          if (t === 'light' || t === 'dark') d.dataset.theme = t;
+        } catch (e) {}
+      })();
     </script>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <!-- Private pre-launch: keep out of search engines until Phase 6. -->

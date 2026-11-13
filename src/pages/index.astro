@@ -4,7 +4,7 @@ import { getCollection } from 'astro:content';
 import { site } from '../site.config';
 import { SYSTEMS, keys } from '../lib/enums';
 import { isoDate, latestVerified } from '../lib/format';
-import { community, communitySource } from '../data/community';
+import { community } from '../data/community';
 import SearchBox from '../components/SearchBox.astro';
 import SymptomShortcuts from '../components/SymptomShortcuts.astro';
 import PartCard from '../components/PartCard.astro';
@@ -96,26 +96,23 @@ const recentlyVerified = parts
       <section class="block" aria-labelledby="h-community">
         <h2 class="block-title" id="h-community">
           <span class="n">04</span>Community
+          <a class="more" href="/community">
+            all groups →
+          </a>
         </h2>
         <ul class="community">
           {community.map((c) => (
             <li>
-              {c.url ? (
-                <a class="ext" href={c.url}>
-                  {c.name}
-                </a>
-              ) : (
-                <span>{c.name}</span>
-              )}
+              <a href={c.url ?? '/community'}>
+                <span class="ext">{c.name}</span>
+                <span class="k">
+                  {c.kind}
+                  {c.note && ` · ${c.note}`}
+                </span>
+              </a>
             </li>
           ))}
         </ul>
-        <p class="caption">
-          Links to every group: <a href="/community">community page</a> ·{' '}
-          <a class="ext" href={communitySource}>
-            Metacyclopedia’s list
-          </a>
-        </p>
       </section>
     </div>
   </div>
@@ -178,14 +175,21 @@ const recentlyVerified = parts
     border-bottom: var(--border) solid var(--color-rule);
   }
   .community a {
+    flex: 1;
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
     min-height: var(--tap-target);
+    text-decoration: none;
   }
-  .community .caption a,
-  .caption a {
-    display: inline-block;
-    padding: var(--space-2) 0;
+  .community a:hover .ext {
+    text-decoration: underline;
+  }
+  .community .k {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    white-space: nowrap;
   }
   @media (min-width: 60rem) {
     .hero {

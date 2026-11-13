@@ -15,18 +15,16 @@ const display = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '');
 
 <aside class="page-meta" aria-label="About this page">
   <div class="wrap grid">
-    <div>
+    {sources.length > 0 && <h2 class="label head">sources</h2>}
+    <div class="srcs">
       {sources.length > 0 && (
-        <>
-          <h2 class="label">sources</h2>
-          <ol>
-            {sources.map((s) => (
-              <li>
-                <a href={s}>{display(s)}</a>
-              </li>
-            ))}
-          </ol>
-        </>
+        <ol>
+          {sources.map((s) => (
+            <li>
+              <a href={s}>{display(s)}</a>
+            </li>
+          ))}
+        </ol>
       )}
       {lastVerified && <p class="label lv">last verified: {lastVerified}</p>}
     </div>
@@ -57,11 +55,12 @@ const display = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '');
   }
   .grid {
     display: grid;
-    gap: var(--space-4);
+    gap: 0 var(--space-6);
   }
-  h2 {
+  .head {
     font-weight: 400;
     letter-spacing: 0.02em;
+    margin: 0;
   }
   ol {
     margin: var(--space-2) 0 0;
@@ -78,19 +77,31 @@ const display = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '');
   }
   .acts {
     list-style: none;
-    margin: 0;
+    margin: var(--space-4) 0 0;
     padding: 0;
     display: flex;
     flex-wrap: wrap;
-    align-items: flex-start;
     gap: 0 var(--space-6);
   }
   @media (min-width: 60rem) {
+    /* Row 1: "sources" label. Row 2: source list beside the actions, sharing a baseline
+       so the links line up with the first source. */
     .grid {
       grid-template-columns: 2fr 1fr;
+      align-items: baseline;
+    }
+    .head {
+      grid-column: 1;
+    }
+    .srcs {
+      grid-column: 1;
+      grid-row: 2;
     }
     .acts {
+      grid-column: 2;
+      grid-row: 2;
       justify-content: flex-end;
+      margin-top: 0;
     }
   }
 </style>
