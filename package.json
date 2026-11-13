@@ -14,6 +14,7 @@
     "test:validation": "node scripts/test-validation.mjs",
     "verify:list": "tsx scripts/verify-list.ts",
     "links:check": "tsx scripts/link-check.ts",
+    "changelog": "tsx scripts/changelog.ts",
     "forms:sync": "tsx scripts/sync-issue-forms.ts",
     "forms:check": "tsx scripts/sync-issue-forms.ts --check",
     "labels:sync": "tsx scripts/sync-labels.ts",

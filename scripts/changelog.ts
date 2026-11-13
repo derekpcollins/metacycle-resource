@@ -1,0 +1,191 @@
+/**
+ * Builds src/data/changelog.json from merged pull requests (docs/SPEC.md → Changelog,
+ * "auto-generated from merged changes"; decision in docs/PHASES.md → Phase 5).
+ *
+ *   npm run changelog -- --pr 12     add or refresh one merged pull request
+ *   npm run changelog -- --backfill  rebuild entries for every merged pull request
+ *
+ * Runs in .github/workflows/changelog.yml after each merge, and locally. Uses the `gh` CLI
+ * (GH_TOKEN in Actions). Committing the data file means the site build needs no token and
+ * forks keep the history.
+ *
+ * Credit for each entry comes from, in order:
+ *   1. `Credit: Name, @handle` lines in the pull request description (how the editor credits
+ *      a web-form or issue contributor),
+ *   2. names newly added to a content file's `contributors` field in that pull request,
+ *   3. the pull request's author, unless they're a maintainer (site.maintainers) or a bot.
+ */
+import { execFileSync } from 'node:child_process';
+import { readFileSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { parse } from 'yaml';
+import * as prettier from 'prettier';
+import { repoSlug, site } from '../src/site.config.js';
+import { ROOT } from './lib/content-files.js';
+
+const OUT = join(ROOT, 'src/data/changelog.json');
+
+export interface ChangelogEntry {
+  pr: number;
+  title: string;
+  /** Merge date, YYYY-MM-DD (UTC). */
+  merged: string;
+  labels: string[];
+  /** Issues the pull request closes. */
+  issues: number[];
+  contributors: string[];
+  /** Repo paths the pull request changed. */
+  files: string[];
+}
+
+const gh = (path: string, accept?: string): string =>
+  execFileSync('gh', ['api', ...(accept ? ['-H', `Accept: ${accept}`] : []), path], {
+    encoding: 'utf8',
+    maxBuffer: 32 * 1024 * 1024,
+  });
+const ghJson = <T>(path: string): T => JSON.parse(gh(path)) as T;
+
+interface Pr {
+  number: number;
+  title: string;
+  body: string | null;
+  merged_at: string | null;
+  merge_commit_sha: string | null;
+  base: { sha: string; ref: string };
+  user: { login: string; type: string };
+  labels: { name: string }[];
+}
+
+/** `contributors` from a YAML file or an MDX file's frontmatter. */
+function contributorsIn(text: string | undefined, path: string): string[] {
+  if (!text) return [];
+  try {
+    const yaml = path.endsWith('.mdx') ? text.match(/^---\n([\s\S]*?)\n---/)?.[1] : text;
+    const data = yaml ? (parse(yaml) as { contributors?: unknown }) : undefined;
+    return Array.isArray(data?.contributors) ? data.contributors.map(String) : [];
+  } catch {
+    return [];
+  }
+}
+
+const fileAt = (path: string, ref: string) => {
+  try {
+    return gh(
+      `repos/${repoSlug}/contents/${encodeURI(path)}?ref=${ref}`,
+      'application/vnd.github.raw',
+    );
+  } catch {
+    return undefined; // added or deleted file
+  }
+};
+
+const clean = (name: string) => name.replace(/^@/, '').trim();
+const unique = (xs: string[]) => [...new Set(xs.filter(Boolean))];
+
+export function creditLines(body: string | null): string[] {
+  return [...(body ?? '').matchAll(/^\s*credit:\s*(.+)$/gim)].flatMap((m) =>
+    m[1]
+      .replace(/\*\*/g, '')
+      .split(/,|\band\b/)
+      .map(clean)
+      .filter((n) => n && !/^anonymous$/i.test(n)),
+  );
+}
+
+export function closedIssues(body: string | null): number[] {
+  return unique(
+    [...(body ?? '').matchAll(/\b(?:close[sd]?|fix(?:e[sd])?|resolve[sd]?)\s+#(\d+)/gi)].map(
+      (m) => m[1],
+    ),
+  ).map(Number);
+}
+
+function entryFor(pr: Pr): ChangelogEntry {
+  const files = ghJson<{ filename: string; status: string }[]>(
+    `repos/${repoSlug}/pulls/${pr.number}/files?per_page=100`,
+  );
+  const content = files.filter((f) => /^src\/content\/.+\.(ya?ml|mdx)$/.test(f.filename));
+  const added: string[] = [];
+  for (const f of content) {
+    const before = new Set(contributorsIn(fileAt(f.filename, pr.base.sha), f.filename));
+    const after = contributorsIn(fileAt(f.filename, pr.merge_commit_sha!), f.filename);
+    added.push(...after.filter((n) => !before.has(n)));
+  }
+  const author = pr.user.login;
+  const authorCredit =
+    pr.user.type === 'Bot' ||
+    author.endsWith('[bot]') ||
+    (site.maintainers as readonly string[]).includes(author)
+      ? []
+      : [author];
+  return {
+    pr: pr.number,
+    title: pr.title.trim(),
+    merged: pr.merged_at!.slice(0, 10),
+    labels: pr.labels.map((l) => l.name).sort(),
+    issues: closedIssues(pr.body),
+    contributors: unique([...creditLines(pr.body), ...added.map(clean), ...authorCredit]),
+    files: files.map((f) => f.filename).sort(),
+  };
+}
+
+function load(): ChangelogEntry[] {
+  try {
+    return (JSON.parse(readFileSync(OUT, 'utf8')) as { entries: ChangelogEntry[] }).entries;
+  } catch {
+    return [];
+  }
+}
+
+async function save(entries: ChangelogEntry[]) {
+  entries.sort((a, b) => b.merged.localeCompare(a.merged) || b.pr - a.pr);
+  const json = JSON.stringify(
+    {
+      $comment:
+        'Generated by `npm run changelog` from merged pull requests (.github/workflows/changelog.yml). Don’t edit by hand.',
+      entries,
+    },
+    null,
+    2,
+  );
+  writeFileSync(
+    OUT,
+    await prettier.format(json, { ...(await prettier.resolveConfig(OUT)), filepath: OUT }),
+  );
+}
+
+const argv = process.argv.slice(2);
+const prArg = argv.indexOf('--pr');
+const entries = load();
+const upsert = (e: ChangelogEntry) => {
+  const i = entries.findIndex((x) => x.pr === e.pr);
+  if (i >= 0) entries[i] = e;
+  else entries.push(e);
+  console.log(`#${e.pr} ${e.title} (${e.merged}) credit: ${e.contributors.join(', ') || '—'}`);
+};
+
+if (prArg >= 0) {
+  const pr = ghJson<Pr>(`repos/${repoSlug}/pulls/${argv[prArg + 1]}`);
+  if (!pr.merged_at || !pr.merge_commit_sha) {
+    console.log(`#${pr.number} isn’t merged; nothing to add.`);
+    process.exit(0);
+  }
+  upsert(entryFor(pr));
+} else if (argv.includes('--backfill')) {
+  const prs = JSON.parse(
+    execFileSync(
+      'gh',
+      [
+        'api',
+        '--paginate',
+        `repos/${repoSlug}/pulls?state=closed&base=${site.editBranch}&per_page=100`,
+      ],
+      { encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 },
+    ).replace(/\]\s*\[/g, ','),
+  ) as Pr[];
+  for (const pr of prs.filter((p) => p.merged_at && p.merge_commit_sha)) upsert(entryFor(pr));
+} else {
+  console.error('Usage: npm run changelog -- --pr <number> | --backfill');
+  process.exit(2);
+}
+await save(entries);

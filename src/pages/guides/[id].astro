@@ -36,6 +36,7 @@ const verifiedDate = d.last_verified instanceof Date ? isoDate(d.last_verified) 
 ---
 
 <BaseLayout
+  contributors={d.contributors}
   title={d.title}
   description={d.summary}
   editPath={repoPath(entry)}

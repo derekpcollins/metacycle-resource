@@ -1,0 +1,152 @@
+---
+/**
+ * Changelog (docs/SPEC.md → supporting pages: "auto-generated from merged changes").
+ * Rendered from src/data/changelog.json, which .github/workflows/changelog.yml updates
+ * after every merged pull request (scripts/changelog.ts). Newest first; each entry links
+ * the pages it changed and credits its contributors.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Badge from '../../components/Badge.astro';
+import { site } from '../../site.config';
+import { githubOpen } from '../../lib/github-open';
+import { changelog } from '../../lib/changelog';
+import { LABELS } from '../../lib/contribution';
+
+const entries = await changelog();
+const MAX_PAGES = 8;
+const known = new Set(Object.keys(LABELS));
+---
+
+<BaseLayout
+  title="Changelog"
+  description="Every change merged into the site, newest first, with the pages it touched and who to thank."
+  editPath="scripts/changelog.ts"
+>
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <ol>
+        <li>
+          <a href="/contribute">contribute</a>
+        </li>
+        <li aria-current="page">changelog</li>
+      </ol>
+    </nav>
+    <header class="page-head">
+      <h1>Changelog</h1>
+      <p class="lede">
+        Every change that went live, newest first, built automatically from approved changes.
+        Contributors are credited here and on the page they improved.
+      </p>
+    </header>
+
+    {entries.length === 0 ? (
+      <p>No changes recorded yet.</p>
+    ) : (
+      <ol class="log">
+        {entries.map((e) => (
+          <li class="entry">
+            <p class="when label">
+              <time datetime={e.merged}>{e.merged}</time>
+              {githubOpen ? (
+                <>
+                  {' · '}
+                  <a href={`${site.repoUrl}/pull/${e.pr}`}>#{e.pr}</a>
+                </>
+              ) : (
+                ` · #${e.pr}`
+              )}
+            </p>
+            <h2 class="title">{e.title}</h2>
+            {e.labels.filter((l) => known.has(l)).length > 0 && (
+              <p class="tags">
+                {e.labels
+                  .filter((l) => known.has(l))
+                  .map((l) => (
+                    <Badge tone="outline">{l}</Badge>
+                  ))}
+              </p>
+            )}
+            <dl class="kv">
+              {e.contributors.length > 0 && (
+                <div>
+                  <dt>thanks to</dt>
+                  <dd>{e.contributors.join(', ')}</dd>
+                </div>
+              )}
+              {e.pages.length > 0 && (
+                <div>
+                  <dt>pages</dt>
+                  <dd>
+                    <ul class="pages">
+                      {e.pages.slice(0, MAX_PAGES).map((p) => (
+                        <li>
+                          <a href={p.href}>{p.label}</a>
+                        </li>
+                      ))}
+                      {e.pages.length > MAX_PAGES && <li>+{e.pages.length - MAX_PAGES} more</li>}
+                    </ul>
+                  </dd>
+                </div>
+              )}
+              {e.otherFiles > 0 && (
+                <div>
+                  <dt>site code</dt>
+                  <dd>
+                    {e.otherFiles} file{e.otherFiles === 1 ? '' : 's'}
+                  </dd>
+                </div>
+              )}
+              {e.issues.length > 0 && (
+                <div>
+                  <dt>closes</dt>
+                  <dd>
+                    {e.issues.map((n, i) => (
+                      <>
+                        {i > 0 && ', '}
+                        {githubOpen ? <a href={`${site.repoUrl}/issues/${n}`}>#{n}</a> : `#${n}`}
+                      </>
+                    ))}
+                  </dd>
+                </div>
+              )}
+            </dl>
+          </li>
+        ))}
+      </ol>
+    )}
+  </div>
+</BaseLayout>
+
+<style>
+  .log {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: var(--border) solid var(--color-rule-strong);
+  }
+  .entry {
+    padding: var(--space-5) 0;
+    border-bottom: var(--border) solid var(--color-rule);
+  }
+  .when {
+    margin: 0 0 var(--space-1);
+  }
+  .title {
+    font-size: var(--text-lg);
+    margin: 0 0 var(--space-3);
+  }
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin: 0 0 var(--space-3);
+  }
+  .pages {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1) var(--space-4);
+  }
+</style>
