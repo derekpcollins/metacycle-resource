@@ -60,6 +60,15 @@
       ]
     },
     {
+      "pr": 8,
+      "title": "Link checker: mark dead buy links",
+      "merged": "2026-11-13",
+      "labels": ["broken-link", "link-check"],
+      "issues": [],
+      "contributors": [],
+      "files": ["docs/VERIFICATION.md", "src/content/parts/charging-port.yaml"]
+    },
+    {
       "pr": 5,
       "title": "Phase 5: automation & trust",
       "merged": "2026-11-13",
