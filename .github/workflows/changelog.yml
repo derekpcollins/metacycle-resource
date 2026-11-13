@@ -3,10 +3,15 @@
 # labels, closed issues, credited contributors, files) and commits that file to main.
 # The commit deploys the site (Vercel), which renders /contribute/changelog from it.
 # Pushes made with GITHUB_TOKEN don't start other workflows, so this can't loop.
+#
+# pull_request_target, not pull_request: a pull request from a fork gets a read-only token
+# under pull_request, so the commit to main would fail. pull_request_target runs in this
+# repo's context with this repo's workflow file. It's safe here because the job checks out
+# main (never the pull request's code) and only reads the pull request through the API.
 name: Changelog
 
 on:
-  pull_request:
+  pull_request_target:
     types: [closed]
     branches: [main]
   workflow_dispatch:
