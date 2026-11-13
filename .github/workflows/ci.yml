@@ -21,8 +21,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          # Pull requests need the base branch's history to find the URLs they add.
-          fetch-depth: ${{ github.event_name == 'pull_request' && 0 || 1 }}
+          # Full history so pull requests can diff against their base (small repo).
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
@@ -47,4 +47,4 @@ jobs:
       # (HTTP 404/410 or a missing domain); blocked stores and timeouts never fail it.
       - name: Link check on changed content
         if: github.event_name == 'pull_request'
-        run: npm run links:check -- --changed-since "origin/${{ github.base_ref }}" --summary
+        run: npm run links:check -- --changed-since "${{ github.event.pull_request.base.sha }}" --summary
