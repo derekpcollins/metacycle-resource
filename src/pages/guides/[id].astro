@@ -1,0 +1,45 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Labeled from '../../components/Labeled.astro';
+import { getCollection, getEntries, render, type CollectionEntry } from 'astro:content';
+import { CONFIDENCE, GUIDE_TYPES, SYSTEMS } from '../../lib/enums';
+import { formatDate, repoPath } from '../../lib/content';
+
+export async function getStaticPaths() {
+  return (await getCollection('guides')).map((entry) => ({ params: { id: entry.id }, props: { entry } }));
+}
+const { entry } = Astro.props as { entry: CollectionEntry<'guides'> };
+const d = entry.data;
+const tools = await getEntries(d.tools);
+const parts = await getEntries(d.parts);
+const { Content } = await render(entry);
+---
+
+<BaseLayout
+  title={d.title}
+  description={d.summary}
+  editPath={repoPath(entry)}
+  sources={d.sources}
+  lastVerified={d.last_verified ? formatDate(d.last_verified) : undefined}
+>
+  <h1>{d.title}</h1>
+  <p>{d.summary}</p>
+  {d.safety.map((s) => <p class="callout" role="note"><strong>Safety:</strong> {s}</p>)}
+  <Labeled items={[
+    ['Type', GUIDE_TYPES[d.type]],
+    ['System', SYSTEMS[d.system]],
+    ['Difficulty', `${d.difficulty} / 5`],
+    ['Time', d.time_minutes === 'TODO' ? 'TODO' : `${d.time_minutes} min`],
+    ['Confidence', CONFIDENCE[d.confidence]],
+    ['Verified by', d.verified_by],
+  ]} />
+
+  <h2>Tools you'll need</h2>
+  {tools.length ? <ul>{tools.map((t) => <li><a href={`/tools/${t.id}`}>{t.data.name}</a> <span class="muted">({t.data.spec})</span></li>)}</ul> : <p class="muted">None listed.</p>}
+
+  <h2>Parts</h2>
+  {parts.length ? <ul>{parts.map((p) => <li><a href={`/parts/${p.id}`}>{p.data.name}</a></li>)}</ul> : <p class="muted">None listed.</p>}
+
+  <h2>Steps</h2>
+  <Content />
+</BaseLayout>

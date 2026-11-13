@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import { SYSTEMS } from '../../lib/enums';
+
+const parts = (await getCollection('parts')).sort((a, b) => a.data.name.localeCompare(b.data.name));
+---
+
+<BaseLayout title="Parts">
+  <h1>Parts</h1>
+  <table>
+    <thead><tr><th>Part</th><th>System</th><th>Buy options</th></tr></thead>
+    <tbody>
+      {parts.map((p) => (
+        <tr>
+          <td><a href={`/parts/${p.id}`}>{p.data.name}</a></td>
+          <td>{SYSTEMS[p.data.system]}</td>
+          <td>{p.data.sources.length}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</BaseLayout>

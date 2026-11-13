@@ -1,0 +1,100 @@
+---
+import '../styles/base.css';
+import { site, editUrl, reportProblemUrl } from '../site.config';
+
+interface Props {
+  title: string;
+  description?: string;
+  /** Repo-relative file to open in GitHub's editor; defaults to this page's source. */
+  editPath?: string;
+  /** Links backing the page's facts. */
+  sources?: string[];
+  /** Last-verified date shown in the page footer. */
+  lastVerified?: string;
+}
+
+const { title, description = site.description, editPath, sources = [], lastVerified } = Astro.props;
+const pageTitle = title === site.name ? site.name : `${title} · ${site.name}`;
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+
+const primary = [
+  { href: '/parts', label: 'Parts' },
+  { href: '/troubleshooting', label: 'Troubleshoot' },
+  { href: '/guides', label: 'Guides' },
+  { href: '/specs', label: 'Specs' },
+];
+const menu = [
+  { href: '/tools', label: 'Tools' },
+  { href: '/community', label: 'Community' },
+  { href: '/contribute', label: 'Contribute' },
+];
+const isCurrent = (href: string) => (path === href || path.startsWith(`${href}/`) ? 'page' : undefined);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <!-- Private pre-launch: keep out of search engines until Phase 6. -->
+    <meta name="robots" content="noindex" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <div class="wrap">
+        <a class="site-title" href="/">{site.name}</a>
+        <nav aria-label="Primary">
+          <ul class="nav-list">
+            {primary.map((l) => <li><a href={l.href} aria-current={isCurrent(l.href)}>{l.label}</a></li>)}
+            <li>
+              <details class="menu">
+                <summary>Menu</summary>
+                <ul>
+                  {menu.map((l) => <li><a href={l.href} aria-current={isCurrent(l.href)}>{l.label}</a></li>)}
+                </ul>
+              </details>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main" class="wrap">
+      <slot />
+
+      <aside class="page-meta" aria-label="About this page">
+        {sources.length > 0 && (
+          <>
+            <h2 class="muted">Sources</h2>
+            <ol>{sources.map((s) => <li><a href={s}>{s}</a></li>)}</ol>
+          </>
+        )}
+        {lastVerified && <p>Last verified: {lastVerified}</p>}
+        <ul>
+          <li>
+            {editPath ? <a href={editUrl(editPath)}>Edit this page</a> : <span class="muted">Edit this page (coming soon)</span>}
+          </li>
+          <li><a href={reportProblemUrl(title)}>Report a problem</a></li>
+        </ul>
+      </aside>
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap">
+        <p>
+          Independent, community-maintained resource — not affiliated with SONDORS Inc. or any seller listed here.
+          Use at your own risk. <a href="/disclaimer">Full disclaimer</a>.
+        </p>
+        <p>
+          Content: <a href={site.license.content.url}>{site.license.content.name}</a> · Code:
+          <a href={site.license.code.url}>{site.license.code.name}</a> · <a href="/about">About &amp; license</a> ·
+          <a href={site.repoUrl}>Source on GitHub</a>
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>

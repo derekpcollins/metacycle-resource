@@ -1,0 +1,31 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import { site } from '../site.config';
+import { SYSTEMS } from '../lib/enums';
+
+const symptoms = await getCollection('troubleshooting');
+---
+
+<BaseLayout title={site.name} editPath="src/pages/index.astro">
+  <h1>{site.name}</h1>
+  <p>{site.tagline}</p>
+  <p class="muted">Phase 1 stub. Search and the full home page arrive in Phase 2.</p>
+
+  <h2>What's wrong?</h2>
+  <ul>
+    {symptoms.map((t) => <li><a href={`/troubleshooting/${t.id}`}>{t.data.symptom}</a></li>)}
+  </ul>
+
+  <h2>Browse</h2>
+  <ul>
+    <li><a href="/parts">Parts</a></li>
+    <li><a href="/troubleshooting">Troubleshoot</a></li>
+    <li><a href="/guides">Guides</a></li>
+    <li><a href="/specs">Specs</a></li>
+    <li><a href="/tools">Tools</a> · <a href="/vendors">Vendors</a></li>
+  </ul>
+
+  <h2>Systems</h2>
+  <p class="muted">{Object.values(SYSTEMS).join(' · ')}</p>
+</BaseLayout>

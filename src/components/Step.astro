@@ -1,0 +1,17 @@
+---
+/** Guide step card (spec: number, text, optional photo, optional torque value). Styled in Phase 2. */
+interface Props {
+  n: number;
+  photo?: string;
+  photoAlt?: string;
+  torque?: string;
+}
+const { n, photo, photoAlt = '', torque } = Astro.props;
+---
+
+<section class="step" aria-label={`Step ${n}`}>
+  <h3>Step {n}</h3>
+  <slot />
+  {torque && <p><strong>Torque:</strong> {torque}</p>}
+  {photo && <img src={photo} alt={photoAlt} loading="lazy" />}
+</section>

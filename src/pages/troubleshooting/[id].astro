@@ -1,0 +1,58 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection, getEntry, render, type CollectionEntry } from 'astro:content';
+import { CONFIDENCE, SYSTEMS } from '../../lib/enums';
+import { repoPath } from '../../lib/content';
+
+export async function getStaticPaths() {
+  return (await getCollection('troubleshooting')).map((entry) => ({ params: { id: entry.id }, props: { entry } }));
+}
+const { entry } = Astro.props as { entry: CollectionEntry<'troubleshooting'> };
+const d = entry.data;
+const fixes = await Promise.all(
+  d.fix.map(async (f) => ({
+    note: f.note,
+    guide: f.guide ? await getEntry(f.guide) : undefined,
+    part: f.part ? await getEntry(f.part) : undefined,
+  })),
+);
+const { Content } = await render(entry);
+---
+
+<BaseLayout title={d.symptom} editPath={repoPath(entry)} sources={d.sources}>
+  <h1>{d.symptom}</h1>
+  <p><strong>System:</strong> {SYSTEMS[d.system]} · <strong>Confidence:</strong> {CONFIDENCE[d.confidence]}</p>
+  <Content />
+
+  <h2>Likely causes</h2>
+  <ol>{d.likely_causes.map((c) => <li>{c}</li>)}</ol>
+
+  {d.checks.length > 0 && (
+    <>
+      <h2>Checks</h2>
+      <ol>
+        {d.checks.map((c) => (
+          <li>
+            {c.step}
+            <ul><li><strong>Pass:</strong> {c.pass}</li><li><strong>Fail:</strong> {c.fail}</li></ul>
+          </li>
+        ))}
+      </ol>
+    </>
+  )}
+
+  {fixes.length > 0 && (
+    <>
+      <h2>Fix</h2>
+      <ul>
+        {fixes.map((f) => (
+          <li>
+            {f.note}
+            {f.guide && <> Guide: <a href={`/guides/${f.guide.id}`}>{f.guide.data.title}</a>.</>}
+            {f.part && <> Part: <a href={`/parts/${f.part.id}`}>{f.part.data.name}</a>.</>}
+          </li>
+        ))}
+      </ul>
+    </>
+  )}
+</BaseLayout>

@@ -1,0 +1,28 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../site.config';
+---
+
+<BaseLayout title="About & license" editPath="src/pages/about.astro">
+  <h1>About &amp; license</h1>
+  <p>
+    {site.name} is an open-source, community-maintained reference that keeps every Sondors Metacycle on the road: what
+    each part is, where to buy it today, and how to fix the common failures. Sondors went out of business, so owners
+    depend on each other for parts and service knowledge.
+  </p>
+  <p>
+    Every fact should have a source and a date. Content lives as plain files in a
+    <a href={site.repoUrl}>GitHub repository</a> so anyone can fork it. {site.editor} is the editor and reviews every change.
+  </p>
+  <p>
+    This site builds on the community's existing work, especially
+    <a href="https://metacyclopedia.github.io/">Metacyclopedia</a>.
+  </p>
+
+  <h2>License</h2>
+  <ul>
+    <li>Content (parts data, guides, troubleshooting): <a href={site.license.content.url}>{site.license.content.name}</a>. Reuse and adapt it; changes stay open.</li>
+    <li>Code: <a href={site.license.code.url}>{site.license.code.name}</a>.</li>
+    <li>Third-party material (manuals, diagrams, photos) keeps its original rights; see the <a href="/disclaimer">Disclaimer</a>.</li>
+  </ul>
+</BaseLayout>

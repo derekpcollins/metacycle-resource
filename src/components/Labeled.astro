@@ -1,0 +1,9 @@
+---
+/** Definition list from label/value pairs; skips empty values. */
+interface Props { items: [string, unknown][] }
+const items = Astro.props.items.filter(([, v]) => v !== undefined && v !== null && v !== '');
+---
+
+<dl>
+  {items.map(([k, v]) => (<><dt>{k}</dt><dd>{String(v)}</dd></>))}
+</dl>

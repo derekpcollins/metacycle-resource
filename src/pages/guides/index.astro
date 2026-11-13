@@ -1,0 +1,18 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import { GUIDE_TYPES, SYSTEMS } from '../../lib/enums';
+const guides = (await getCollection('guides')).sort((a, b) => a.data.title.localeCompare(b.data.title));
+---
+
+<BaseLayout title="Guides">
+  <h1>Guides</h1>
+  <ul>
+    {guides.map((g) => (
+      <li>
+        <a href={`/guides/${g.id}`}>{g.data.title}</a> <span class="muted">— {GUIDE_TYPES[g.data.type]} · {SYSTEMS[g.data.system]}</span>
+        <br />{g.data.summary}
+      </li>
+    ))}
+  </ul>
+</BaseLayout>

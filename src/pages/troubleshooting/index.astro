@@ -1,0 +1,12 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import { SYSTEMS } from '../../lib/enums';
+const entries = (await getCollection('troubleshooting')).sort((a, b) => a.data.symptom.localeCompare(b.data.symptom));
+---
+
+<BaseLayout title="Troubleshoot">
+  <h1>Troubleshoot</h1>
+  <p>Pick what you're seeing.</p>
+  <ul>{entries.map((t) => <li><a href={`/troubleshooting/${t.id}`}>{t.data.symptom}</a> <span class="muted">— {SYSTEMS[t.data.system]}</span></li>)}</ul>
+</BaseLayout>
