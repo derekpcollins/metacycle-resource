@@ -93,16 +93,16 @@ The GitHub issue forms in `.github/ISSUE_TEMPLATE/` and `src/data/part-options.t
 
 The form's function (`api/contribute.ts`) needs these Vercel environment variables. Never commit them.
 
-| Variable                      | Needed | What                                                                                 |
-| ----------------------------- | ------ | ------------------------------------------------------------------------------------ |
-| `GITHUB_APP_ID`               | yes    | The GitHub App that files issues (Issues: read & write on this repo only)            |
-| `GITHUB_APP_PRIVATE_KEY`      | yes    | The App's private key (`.pem` contents). Mark as sensitive.                          |
-| `GITHUB_APP_INSTALLATION_ID`  | no     | Saves one API call; looked up from the repo if unset                                 |
-| `TURNSTILE_SECRET_KEY`        | one of | Cloudflare Turnstile secret key (sensitive)                                          |
-| `TURNSTILE_TEST_MODE`         | one of | `pass` or `fail`: use Cloudflare's public test secret instead (testing only)         |
-| `PUBLIC_TURNSTILE_SITE_KEY`   | no     | Turnstile site key, read at build time; defaults to the always-pass test key         |
-| `WEBFORM_HOURLY_CAP`          | no     | Max web-form issues per hour across the site (default 20)                            |
-| `PUBLIC_GITHUB_CONTRIBUTIONS` | no     | `true` turns on "edit this page" and issue-form links in that build (set on Preview) |
+| Variable                     | Needed | What                                                                                 |
+| ---------------------------- | ------ | ------------------------------------------------------------------------------------ |
+| `GITHUB_APP_ID`              | yes    | The GitHub App that files issues (Issues: read & write on this repo only)            |
+| `GITHUB_APP_PRIVATE_KEY`     | yes    | The App's private key (`.pem` contents). Mark as sensitive.                          |
+| `GITHUB_APP_INSTALLATION_ID` | no     | Saves one API call; looked up from the repo if unset                                 |
+| `TURNSTILE_SECRET_KEY`       | one of | Cloudflare Turnstile secret key (sensitive)                                          |
+| `TURNSTILE_TEST_MODE`        | one of | `pass` or `fail`: use Cloudflare's public test secret instead (testing only)         |
+| `TURNSTILE_SITE_KEY`         | no     | Turnstile site key, read at build time; defaults to the always-pass test key         |
+| `WEBFORM_HOURLY_CAP`         | no     | Max web-form issues per hour across the site (default 20)                            |
+| `GITHUB_CONTRIBUTIONS`       | no     | `true` turns on "edit this page" and issue-form links in that build (set on Preview) |
 
 Spam defenses: Turnstile, a hidden honeypot field, a same-origin check, a size cap, a per-IP limit (per function instance) and the hourly cap. If anything fails, the form keeps what was typed and says so.
 

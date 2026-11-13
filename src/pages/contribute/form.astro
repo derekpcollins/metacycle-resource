@@ -22,7 +22,10 @@ import { site } from '../../site.config';
 import { githubOpen } from '../../lib/github-open';
 
 /** Cloudflare's always-pass test site key until a real one is set (see CONTRIBUTING.md). */
-const siteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || '1x00000000000000000000AA';
+const siteKey =
+  import.meta.env.TURNSTILE_SITE_KEY ||
+  process.env.TURNSTILE_SITE_KEY ||
+  '1x00000000000000000000AA';
 const types = Object.entries(CONTRIBUTION_TYPES) as [
   ContributionType,
   (typeof CONTRIBUTION_TYPES)[ContributionType],

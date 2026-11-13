@@ -20,7 +20,7 @@ export const site = {
   /**
    * GitHub-side contribution paths ("edit this page", issue forms). The repo is private
    * until Phase 6, so these show "opens at launch" until this is true. Preview builds can
-   * turn them on with PUBLIC_GITHUB_CONTRIBUTIONS=true (see src/lib/contribution.ts).
+   * turn them on with GITHUB_CONTRIBUTIONS=true (see src/lib/github-open.ts).
    * The no-account web form works either way.
    */
   githubContributionsOpen: false,
