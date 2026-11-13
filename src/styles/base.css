@@ -373,7 +373,7 @@ main {
   min-height: var(--tap-target);
 }
 .ext::after {
-  content: ' ↗';
+  content: '\00a0↗'; /* non-breaking space keeps the arrow with the last word */
   color: var(--color-text-muted);
 }
 

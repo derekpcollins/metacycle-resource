@@ -103,6 +103,12 @@ const systemCounts = keys(SYSTEMS).map((s) => ({
     padding-left: var(--space-2);
     padding-right: var(--space-2);
   }
+  /* Room above and below when a long name wraps. */
+  .community a {
+    padding-top: var(--space-2);
+    padding-bottom: var(--space-2);
+    line-height: 1.4;
+  }
   .systems a:hover,
   .community a:hover {
     background: var(--color-surface);
