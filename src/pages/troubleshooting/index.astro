@@ -12,7 +12,11 @@ const groups = keys(SYSTEMS)
   .filter((g) => g.items.length > 0);
 ---
 
-<BaseLayout title="Troubleshoot" editPath="src/pages/troubleshooting/index.astro">
+<BaseLayout
+  title="Troubleshoot"
+  description="Sondors Metacycle problems by symptom. Each page walks through checks in order, most likely first."
+  editPath="src/pages/troubleshooting/index.astro"
+>
   <div class="wrap">
     <header class="page-head">
       <h1>What’s wrong?</h1>

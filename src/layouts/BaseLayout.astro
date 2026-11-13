@@ -1,6 +1,6 @@
 ---
 import '../styles/base.css';
-import { site } from '../site.config';
+import { site, siteUrl } from '../site.config';
 import SiteHeader from '../components/SiteHeader.astro';
 import TabBar from '../components/TabBar.astro';
 import SiteFooter from '../components/SiteFooter.astro';
@@ -19,6 +19,10 @@ interface Props {
   lastVerified?: string;
   /** Contributors credited on this page (content `contributors` field). */
   contributors?: string[];
+  /** Keep this page out of search engines even after launch (404, form results). */
+  noindex?: boolean;
+  /** schema.org objects to emit as JSON-LD. Only facts the page actually shows. */
+  structuredData?: Record<string, unknown>[];
 }
 
 const {
@@ -29,8 +33,17 @@ const {
   sources = [],
   lastVerified,
   contributors = [],
+  noindex = false,
+  structuredData = [],
 } = Astro.props;
 const pageTitle = title === site.name ? site.name : `${title} · ${site.name}`;
+// One canonical URL per page: the chosen domain, no trailing slash (matches internal links).
+const path = Astro.url.pathname.replace(/\/index\.html$|\.html$/, '').replace(/(.)\/$/, '$1');
+const canonical = `${siteUrl}${path === '/' ? '/' : path}`;
+// Production is the only build that may be indexed or counted; previews and local builds never.
+const isProduction = process.env.VERCEL_ENV === 'production';
+const robots = site.indexable && isProduction && !noindex ? 'index, follow' : 'noindex';
+const analytics = isProduction ? site.analytics : null;
 ---
 
 <!doctype html>
@@ -55,8 +68,43 @@ const pageTitle = title === site.name ? site.name : `${title} · ${site.name}`;
       })();
     </script>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <!-- Private pre-launch: keep out of search engines until Phase 6. -->
-    <meta name="robots" content="noindex" />
+    <link rel="canonical" href={canonical} />
+    <!-- site.indexable is false until the public launch (private beta): noindex everywhere. -->
+    <meta name="robots" content={robots} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content="en_US" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    {structuredData.map((data) => (
+      <script
+        is:inline
+        type="application/ld+json"
+        set:html={JSON.stringify({ '@context': 'https://schema.org', ...data })}
+      />
+    ))}
+    {analytics && (
+      <>
+        <script is:inline async src={analytics.scriptUrl} />
+        <script is:inline>
+          ((window.plausible =
+            window.plausible ||
+            function () {
+              (plausible.q = plausible.q || []).push(arguments);
+            }),
+            (plausible.init =
+              plausible.init ||
+              function (i) {
+                plausible.o = i || {};
+              }));
+          plausible.init();
+        </script>
+      </>
+    )}
   </head>
   <body>
     <a class="skip-link" href="#main">

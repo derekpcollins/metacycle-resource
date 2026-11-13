@@ -1,22 +1,16 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import { DOWNLOAD_GROUPS, keys } from '../lib/enums';
 import { reportProblemUrl } from '../site.config';
-import EmptyState from '../components/EmptyState.astro';
-import {
-  buses,
-  downloads,
-  downloadsSource,
-  fuses,
-  gaps,
-  pinouts,
-  specSections,
-  type SpecRow,
-} from '../data/specs';
+import { buses, fuses, gaps, pinouts, specSections, type SpecRow } from '../data/specs';
 
 const allRows: SpecRow[] = [...specSections.flatMap((x) => x.rows), ...fuses, ...buses];
-const sources = [
-  ...new Set([...allRows.map((r) => r.source), ...pinouts.map((p) => p.source), downloadsSource]),
-];
+const sources = [...new Set([...allRows.map((r) => r.source), ...pinouts.map((p) => p.source)])];
+const files = await getCollection('downloads');
+const downloadGroups = keys(DOWNLOAD_GROUPS)
+  .map((g) => ({ label: DOWNLOAD_GROUPS[g], files: files.filter((f) => f.data.group === g) }))
+  .filter((g) => g.files.length);
 const pad = (n: number) => String(n).padStart(2, '0');
 let n = 1;
 const num = () => pad(n++);
@@ -186,25 +180,27 @@ const num = () => pad(n++);
       <h2 class="block-title" id="h-downloads">
         <span class="n">{num()}</span> Downloads
       </h2>
-      <EmptyState title="coming in phase 6">
-        <p>
-          Mirrored copies (with origin, date and checksum) will live in a separate downloads
-          repository. Until then, the files below are on{' '}
-          <a href={downloadsSource}>Metacyclopedia’s Files page</a>.
-        </p>
-      </EmptyState>
+      <p class="pin-note">
+        Mirrored manuals and software, each with its origin, date and SHA-256 checksum, are on the{' '}
+        <a href="/downloads">downloads page</a>.
+      </p>
       <div class="dl">
-        {downloads.map((g) => (
+        {downloadGroups.map((g) => (
           <div>
-            <h3 class="label group-title">{g.group.toLowerCase()}</h3>
+            <h3 class="label group-title">{g.label.toLowerCase()}</h3>
             <ul>
               {g.files.map((f) => (
-                <li>{f}</li>
+                <li>
+                  <a href={`/downloads#${f.id}`}>{f.data.name}</a>
+                </li>
               ))}
             </ul>
           </div>
         ))}
       </div>
+      <p class="caption">
+        <a href="/downloads">all downloads →</a>
+      </p>
     </section>
 
     <section class="block" id="gaps" aria-labelledby="h-gaps">

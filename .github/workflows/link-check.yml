@@ -8,8 +8,9 @@
 # It never sets `last_verified` or `status: live`, and never fetches AliExpress-style
 # bot-blocking hosts (src/lib/link-rules.ts); those are listed as "needs a human".
 #
-# Manual-only while the repo is private (scheduled runs would use paid Actions minutes).
-# Phase 6: uncomment the schedule when the repo goes public.
+# Weekly on a schedule since the repo went public (Actions minutes are free on public repos).
+# Scheduled runs also trigger a Vercel production deploy (secret VERCEL_DEPLOY_HOOK_URL), so
+# "needs re-check" flags, which are computed at build time, age even without a content change.
 name: Link check
 
 on:
@@ -19,8 +20,8 @@ on:
         description: 'Open a pull request that sets provably dead buy links to status dead'
         type: boolean
         default: true
-  # schedule:
-  #   - cron: '17 9 * * 1' # Mondays 09:17 UTC
+  schedule:
+    - cron: '17 9 * * 1' # Mondays 09:17 UTC
 
 permissions:
   contents: write # push the dead-links branch
@@ -94,6 +95,18 @@ jobs:
             // Safety net: if duplicates ever exist, close all but the oldest.
             for (const i of extra)
               await github.rest.issues.update({ owner, repo, issue_number: i.number, state: 'closed', state_reason: 'not_planned' });
+
+      # Staleness is computed at build time; a weekly rebuild keeps the flags current.
+      - name: Rebuild production (scheduled runs)
+        if: github.event_name == 'schedule'
+        env:
+          HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK_URL }}
+        run: |
+          if [ -z "$HOOK" ]; then
+            echo "::warning::VERCEL_DEPLOY_HOOK_URL isn't set, so production wasn't rebuilt. Create a deploy hook for main in Vercel (Settings → Git → Deploy Hooks) and add it as a repository secret."
+            exit 0
+          fi
+          curl -fsS -X POST "$HOOK" >/dev/null && echo "Triggered a production rebuild." >> "$GITHUB_STEP_SUMMARY"
 
       - name: Open or update the dead-links pull request
         if: github.event_name == 'schedule' || inputs.open_pr

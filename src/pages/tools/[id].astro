@@ -15,7 +15,12 @@ const d = entry.data;
 const usedIn = await guidesUsingTool(entry.id);
 ---
 
-<BaseLayout title={d.name} editPath={repoPath(entry)} contributors={d.contributors}>
+<BaseLayout
+  title={d.name}
+  description={`${d.name} (${d.spec}) for Sondors Metacycle work${usedIn.length ? `, used in ${usedIn.length} guide${usedIn.length === 1 ? '' : 's'}` : ''}.`}
+  editPath={repoPath(entry)}
+  contributors={d.contributors}
+>
   <div class="wrap">
     <nav class="crumbs" aria-label="Breadcrumb">
       <ol>

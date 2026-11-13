@@ -4,7 +4,12 @@ import { reportProblemUrl } from '../site.config';
 import { community, communitySource } from '../data/community';
 ---
 
-<BaseLayout title="Community" editPath="src/pages/community.astro" sources={[communitySource]}>
+<BaseLayout
+  title="Community"
+  description="Where Sondors Metacycle owners talk: the subreddit, Discord servers and Facebook groups, with links to each."
+  editPath="src/pages/community.astro"
+  sources={[communitySource]}
+>
   <div class="wrap">
     <header class="page-head">
       <h1>Community</h1>

@@ -82,7 +82,7 @@ sources:
 | Couldn't reach             | Timeouts, 5xx, connection errors, on two tries                                                                                                                   | Listed in the issue; usually temporary                                     |
 | Needs a human              | Bot-blocking stores (`NEEDS_HUMAN_HOSTS` in `src/lib/link-rules.ts`: AliExpress, Alibaba, Amazon) are never fetched; 401/403/429 and captcha pages land here too | Never marked dead; stays `unverified`; listed on Help wanted               |
 
-**In GitHub Actions:** Actions → **Link check** → **Run workflow** (manual only while the repo is private; the weekly schedule is commented out in `.github/workflows/link-check.yml`). A run opens or updates **one** issue labeled `link-check` (re-runs edit it; it closes itself when a run has no failures) and, if anything is provably dead and "open pull request" is ticked, force-pushes `link-checker/dead-links` and opens or updates **one** pull request. Pushes made by the workflow don't trigger CI on their own, so the workflow starts CI on that branch; its result shows on the pull request.
+**In GitHub Actions:** it runs every Monday at 09:17 UTC, or on demand from Actions → **Link check** → **Run workflow**. Scheduled runs also rebuild production through a Vercel deploy hook (repository secret `VERCEL_DEPLOY_HOOK_URL`), because "needs re-check" flags are worked out at build time and would otherwise only age when content changes. A run opens or updates **one** issue labeled `link-check` (re-runs edit it; it closes itself when a run has no failures) and, if anything is provably dead and "open pull request" is ticked, force-pushes `link-checker/dead-links` and opens or updates **one** pull request. Pushes made by the workflow don't trigger CI on their own, so the workflow starts CI on that branch; its result shows on the pull request.
 
 **On every pull request:** CI checks only the URLs the pull request adds or changes in content files and writes the result to the job summary. It fails only on a clearly dead link (404/410 or a missing domain); blocked stores and timeouts never fail it. No content changes, no check.
 
@@ -108,6 +108,29 @@ Contributors are credited in two places:
 
 `npm run changelog -- --backfill` rebuilds every entry from GitHub (needs the `gh` CLI).
 
+## Contributing from a fork
+
+The repository is public, so anyone can propose changes:
+
+1. **Fork** the repo on GitHub (the "edit this page" link does this for you on its first use), make your change on a branch, and open a pull request against `main`.
+2. **Checks on your pull request:** CI runs `npm run ci` (formatting, generated issue forms, type check, build, the accessibility check and the tests) plus the link check on any URLs you added. It needs no secrets, so it works the same from a fork. If this is your first contribution, GitHub waits for a maintainer to approve the run; that's normal.
+3. **Preview:** Vercel builds a preview of every pull request. For pull requests from forks, Vercel waits for a maintainer to authorize the preview first.
+4. **After merge**, the changelog workflow credits you (see [Credit](#credit)). It runs from `main`'s own workflow file, never from the fork's code.
+
+Keep pull requests small and about one thing. Fixing a buy link, a price or one spec is the ideal first contribution; [Help wanted](https://metacycle.guide/contribute/help-wanted) lists them.
+
+## Adding a download (maintainers)
+
+Manuals, wiring diagrams and software are mirrored in a separate repo, [`metacycle-resource-downloads`](https://github.com/derekpcollins/metacycle-resource-downloads) (`downloadsRepoUrl` in `src/site.config.ts`), as **GitHub Release assets**. Never commit the files themselves, here or there: a takedown then only touches that repo.
+
+1. Get the file from its original link if one still exists; otherwise from the best public copy. Note where and when.
+2. Give it a kebab-case name with no spaces (`votol-controller-programming-manual.pdf`), then run `npm run downloads:hash -- path/to/file` for its `size_bytes` and `sha256`.
+3. Attach it to a Release in the downloads repo (a new Release tagged with the date, e.g. `2026-12-01`, or an existing one). Its release notes should list each file with its origin and SHA-256.
+4. Add an entry to [`src/data/downloads.yaml`](src/data/downloads.yaml): `name`, `group`, `description`, `release`, `asset`, `size_bytes`, `sha256`, `origin` (who made it, only as far as the file or its source says), `retrieved_from`, `retrieved`, `original_url` (or `TODO`) and `rights`. The schema rejects a missing field or a malformed checksum.
+5. Run `npm run downloads:check -- --sha` to confirm every listed asset exists in its Release with the same size and checksum.
+
+Sondors-authored manuals are held back for now (spec, "Downloads & copyright"). A takedown request: remove the asset from its Release, delete its entry, note it in the pull request.
+
 ## Working from a clone
 
 Requires Node 22.12+.
@@ -115,11 +138,14 @@ Requires Node 22.12+.
 ```sh
 npm install
 npm run dev            # http://localhost:4321 (no search, no web form)
-npm run ci             # everything CI runs: format, issue forms, type check, build, tests
+npm run ci             # everything CI runs: format, issue forms, type check, build, axe, tests
+npm run test:a11y      # just the accessibility check (after npm run build)
 npm run verify:list    # rebuild docs/VERIFICATION.md
 npm run links:check    # link checker dry run (see below)
 npm run format         # fix formatting
 ```
+
+`npm run test:a11y` needs Chromium for Playwright once: `npx playwright install chromium`. It runs axe (WCAG 2.1 A and AA) on a representative set of pages at 375px and 1280px, in light and dark, and fails on horizontal scrolling too. Add a route to `DEFAULT_ROUTES` in `scripts/test-a11y.ts` when you add a new kind of page.
 
 `npm run ci` must pass before a pull request can be merged. It also runs on every pull request in GitHub Actions, and Vercel builds a preview of every pull request.
 
@@ -147,6 +173,14 @@ The form's function (`api/contribute.ts`) needs these Vercel environment variabl
 | `GITHUB_CONTRIBUTIONS`       | no     | `true` turns on "edit this page" and issue-form links in that build (set on Preview) |
 
 Spam defenses: Turnstile, a hidden honeypot field, a same-origin check, a size cap, a per-IP limit (per function instance) and the hourly cap. If anything fails, the form keeps what was typed and says so.
+
+## Repository secrets (maintainers)
+
+| Secret                   | Where          | What                                                                                                     |
+| ------------------------ | -------------- | -------------------------------------------------------------------------------------------------------- |
+| `VERCEL_DEPLOY_HOOK_URL` | GitHub Actions | A Vercel deploy hook for `main` (Vercel → Settings → Git → Deploy Hooks). The weekly link check uses it. |
+
+Analytics (Plausible) needs no secret: its script URL is public and lives in `src/site.config.ts`. It loads only on production builds.
 
 ## Reviewing a contribution (maintainers)
 

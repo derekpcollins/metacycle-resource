@@ -1,16 +1,21 @@
 /**
- * Single source for site identity. The name and domain are still TBD (see docs/SPEC.md,
- * "Still open"), so change them here and nowhere else.
+ * Single source for site identity. Change the name, domain and launch switches here and
+ * nowhere else.
  */
 export const site = {
-  /** Placeholder until a name is chosen. */
-  name: 'Metacycle Owner Resource',
-  shortName: 'Metacycle Resource',
+  /** Chosen by Derek, Nov 13, 2026 (Phase 6). */
+  name: 'Metacycle Owner Guide',
+  shortName: 'Metacycle Guide',
   tagline: 'Parts, fixes and specs to keep every Sondors Metacycle on the road.',
   description:
     'An independent, community-maintained reference for Sondors Metacycle owners: what each part is, where to buy it, and how to fix common failures.',
   /** GitHub repo (no trailing slash). */
   repoUrl: 'https://github.com/derekpcollins/metacycle-resource',
+  /**
+   * Separate repo for mirrored manuals and software (spec, "Downloads & copyright"). Files
+   * are GitHub Release assets there, never committed, so a takedown hits that repo only.
+   */
+  downloadsRepoUrl: 'https://github.com/derekpcollins/metacycle-resource-downloads',
   /** Branch used for "Edit this page" links. */
   editBranch: 'main',
   /** Bare domain without protocol, e.g. "example.org". null until chosen. */
@@ -18,12 +23,12 @@ export const site = {
   /** Where the site is served until a domain is chosen (Vercel production URL). */
   productionUrl: 'https://metacycle-resource.vercel.app',
   /**
-   * GitHub-side contribution paths ("edit this page", issue forms). The repo is private
-   * until Phase 6, so these show "opens at launch" until this is true. Preview builds can
-   * turn them on with GITHUB_CONTRIBUTIONS=true (see src/lib/github-open.ts).
+   * GitHub-side contribution paths ("edit this page", issue forms). On since the repo went
+   * public (Phase 6). Set false to show "opens at launch" again; preview builds can force
+   * them on with GITHUB_CONTRIBUTIONS=true (see src/lib/github-open.ts).
    * The no-account web form works either way.
    */
-  githubContributionsOpen: false,
+  githubContributionsOpen: true,
   /** Editor/maintainer credited on the About page. */
   editor: 'Derek',
   /**
@@ -35,6 +40,21 @@ export const site = {
     content: { name: 'CC BY-SA 4.0', url: 'https://creativecommons.org/licenses/by-sa/4.0/' },
     code: { name: 'MIT', url: 'https://opensource.org/license/mit' },
   },
+  /**
+   * Search-engine indexing. false = every page carries `noindex` and robots.txt disallows
+   * crawling (private beta). Flip to true only at the public launch.
+   */
+  indexable: false,
+  /**
+   * Cookieless, privacy-friendly analytics (Plausible, hosted). The script is site-specific
+   * but public, not a secret. It loads only on production builds (VERCEL_ENV=production),
+   * so previews and local builds send nothing. Disclosed on the Disclaimer and About pages.
+   */
+  analytics: {
+    provider: 'Plausible',
+    scriptUrl: 'https://plausible.io/js/pa-p_ev-ovjIh50JX0BOA2kd.js',
+    privacyUrl: 'https://plausible.io/data-policy',
+  } as { provider: string; scriptUrl: string; privacyUrl: string } | null,
   /** Days after which a source's last_verified date counts as stale (spec: 90). */
   staleAfterDays: 90,
 } as const;
@@ -79,3 +99,7 @@ export const issueFormUrl = (template: string, fields: Record<string, string | u
   for (const [k, v] of Object.entries(fields)) if (v) url.searchParams.set(k, v);
   return url.toString();
 };
+
+/** Direct link to a mirrored file (a GitHub Release asset in the downloads repo). */
+export const downloadUrl = (release: string, asset: string) =>
+  `${site.downloadsRepoUrl}/releases/download/${encodeURIComponent(release)}/${encodeURIComponent(asset)}`;

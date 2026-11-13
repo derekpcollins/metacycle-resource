@@ -250,38 +250,17 @@ export const buses: SpecRow[] = [
   row('Programming cable serial speed', '115200 baud', s.cable),
 ];
 
-/** Files to mirror in Phase 6 (names as Metacyclopedia lists them). Not hosted here yet. */
-export const downloads: { group: string; files: string[] }[] = [
-  {
-    group: 'Sondors Metacycle',
-    files: ['User Manual', 'Operations Manual', 'Metacycle Warranty'],
-  },
-  {
-    group: 'Display',
-    files: [
-      'DKD Programming Codes',
-      'DKD Adjustable Speedometer User Manual',
-      'SiAECOSYS DKD Display User Manual',
-    ],
-  },
-  {
-    group: 'Controller manuals & specs',
-    files: [
-      'EM200-2SP Wiring Diagram',
-      'EM200 Wiring Diagram',
-      'Votol Controller Debugging Manual',
-      'Controller Interface (pin image)',
-      'Votol Controller Programming Manual',
-      'Controller Self-Learning Manual',
-      'Controller Fault Codes',
-      'Farasis battery brochure',
-      'Throttle Manual',
-    ],
-  },
-  {
-    group: 'Controller software',
-    files: ['Votol EM_V3-40', 'Votol EM_V3-50', 'Factory 2021 Metacycle Settings (.ini)'],
-  },
+/**
+ * Files on Metacyclopedia's Files page that aren't mirrored on /downloads yet (names as
+ * Metacyclopedia lists them). Mirrored files live in src/data/downloads.yaml.
+ */
+export const notMirrored = [
+  'Sondors Metacycle User Manual (Sondors-authored)',
+  'Sondors Metacycle Operations Manual (Sondors-authored)',
+  'Metacycle Warranty (Sondors-authored)',
+  'Farasis battery brochure (the battery maker isn’t confirmed)',
+  'Votol EM_V3-sport-9 XY-03-P (unknown series)',
+  'Vino: third-party Votol software, several versions (Metacyclopedia notes virus-scanner flags on some)',
 ];
 export const downloadsSource = s.files[0];
 

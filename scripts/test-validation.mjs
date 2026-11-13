@@ -5,7 +5,7 @@
  * slips through. Run with `npm run test:validation`.
  */
 import { execSync } from 'node:child_process';
-import { rmSync, writeFileSync } from 'node:fs';
+import { readFileSync, rmSync, writeFileSync } from 'node:fs';
 
 const cases = [
   {
@@ -95,11 +95,32 @@ category: hand-tool
 contributors: [someone@example.com]
 `,
   },
+  {
+    // Phase 6: every download needs a well-formed SHA-256 (appended to the one data file).
+    name: 'download with a malformed checksum',
+    file: 'src/data/downloads.yaml',
+    append: `
+- id: zz-test-bad-sha
+  name: Test
+  group: other
+  description: Test
+  release: '2026-11-13'
+  asset: test.pdf
+  size_bytes: 1
+  sha256: not-a-checksum
+  origin: Test
+  retrieved_from: https://example.com/test.pdf
+  retrieved: 2026-11-13
+  original_url: TODO
+  rights: Test
+`,
+  },
 ];
 
 let failures = 0;
 for (const c of cases) {
-  writeFileSync(c.file, c.body);
+  const original = c.append ? readFileSync(c.file, 'utf8') : null;
+  writeFileSync(c.file, c.append ? original + c.append : c.body);
   let built = false;
   try {
     execSync('npx astro build', { stdio: 'pipe' });
@@ -107,7 +128,8 @@ for (const c of cases) {
   } catch {
     // expected
   } finally {
-    rmSync(c.file, { force: true });
+    if (original !== null) writeFileSync(c.file, original);
+    else rmSync(c.file, { force: true });
   }
   console.log(`${built ? '✗ NOT CAUGHT' : '✓ caught'}  ${c.name}`);
   if (built) failures++;

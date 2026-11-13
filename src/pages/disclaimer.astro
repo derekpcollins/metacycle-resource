@@ -1,8 +1,13 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../site.config';
 ---
 
-<BaseLayout title="Disclaimer" editPath="src/pages/disclaimer.astro">
+<BaseLayout
+  title="Disclaimer"
+  description="Not affiliated with SONDORS or any seller. Safety, liability, downloads and takedown requests, and analytics."
+  editPath="src/pages/disclaimer.astro"
+>
   <div class="wrap">
     <header class="page-head">
       <h1>Disclaimer</h1>
@@ -27,11 +32,35 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         of this site.
       </p>
 
-      <h2>Takedown requests</h2>
+      <h2 id="downloads">Downloads &amp; copyright</h2>
       <p>
-        If you hold rights to material on this site or in its downloads and want it removed, contact
-        <strong>TODO: takedown contact</strong>. We honor requests promptly.
+        The <a href="/downloads">downloads page</a> lists mirrored copies of manuals and controller
+        software so they stay available if the original links disappear. Each file keeps its
+        original rights; we don't claim them. Every file is listed with where it came from, the date
+        it was retrieved, a SHA-256 checksum and a link to the original where one still exists. The
+        files are hosted in a separate repository, not in this site.
       </p>
+
+      <h2 id="takedown">Takedown requests</h2>
+      <p>
+        If you hold rights to material on this site or in its downloads and want it removed, contact{' '}
+        <strong>TODO: takedown contact</strong>. Tell us which file or page, and how you hold the
+        rights. We honor requests promptly. Until that address exists, you can also open an issue in
+        the <a href={site.repoUrl}>site's repository</a>.
+      </p>
+
+      <h2 id="analytics">Analytics</h2>
+      {site.analytics ? (
+        <p>
+          We count page views with <a href={site.analytics.privacyUrl}>{site.analytics.provider}</a>
+          , which sets no cookies and stores no personal data. It records the page address, the
+          referring site, browser, operating system and device type, and an approximate location
+          (country, region, city). Your IP address is used only to make a daily visitor count and is
+          not stored. There are no ads and no accounts on this site.
+        </p>
+      ) : (
+        <p>This site doesn't use analytics.</p>
+      )}
 
       <h2>Affiliate disclosure</h2>
       <p>

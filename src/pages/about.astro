@@ -3,7 +3,11 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { site } from '../site.config';
 ---
 
-<BaseLayout title="About & license" editPath="src/pages/about.astro">
+<BaseLayout
+  title="About & license"
+  description={`Who runs ${site.name}, how content is sourced and reviewed, licenses, and what the analytics collect.`}
+  editPath="src/pages/about.astro"
+>
   <div class="wrap">
     <header class="page-head">
       <h1>About &amp; license</h1>
@@ -16,13 +20,26 @@ import { site } from '../site.config';
         knowledge.
       </p>
       <p>
-        Every fact should have a source and a date. Content lives as plain files in a
+        Every fact should have a source and a date. Content lives as plain files in a{' '}
         <a href={site.repoUrl}>GitHub repository</a> so anyone can fork it. {site.editor} is the
         editor and reviews every change.
       </p>
       <p>
-        This site builds on the community's existing work, especially
+        This site builds on the community's existing work, especially{' '}
         <a href="https://metacyclopedia.github.io/">Metacyclopedia</a>.
+      </p>
+
+      <h2>Privacy</h2>
+      <p>
+        No accounts and no ads, and this site sets no cookies. Your theme choice and guide
+        checkboxes are saved only in your own browser. The web form's spam check (Cloudflare
+        Turnstile) runs only on the form page.{' '}
+        {site.analytics
+          ? `Page views are counted with ${site.analytics.provider}, which is cookieless and stores no personal data.`
+          : 'No analytics.'}{' '}
+        See the <a href="/disclaimer#analytics">Disclaimer</a> for exactly what's collected. The web
+        form's optional name or handle is published with your report, so leave it blank if you'd
+        rather not be credited.
       </p>
 
       <h2>License</h2>

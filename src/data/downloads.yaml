@@ -1,0 +1,217 @@
+# Mirrored downloads, shown on /downloads. Files live in the separate downloads repo as
+# GitHub Release assets (never committed to git): see CONTRIBUTING.md → "Adding a download".
+# Schema: src/content.config.ts (downloads). sha256 and size_bytes come from
+# `npm run downloads:hash -- <files>`; `npm run downloads:check` confirms each asset exists
+# in its Release with the same size. Unknown values are TODO, never guessed.
+
+- id: dkd-programming-codes
+  name: 'DKD Programming Codes'
+  group: display
+  description: 'Button codes for setting up the 061 DKD display directly, without software.'
+  release: '2026-11-13'
+  asset: dkd-programming-codes.pdf
+  size_bytes: 48682
+  sha256: 517800bcb74e70c07e68d9343e85b27f751a51d8d3a27bbb53c4752f69749439
+  origin: 'Not named in the file (titled “061(DKD) function setting explanation”).'
+  retrieved_from: 'https://metacyclopedia.github.io/Downloads/DKD%20Programming%20Codes.pdf'
+  retrieved: 2026-11-13
+  original_url: TODO
+  rights: "Rights stay with the original publisher. Mirrored so owners can still find it; not covered by this site's licenses."
+
+- id: dkd-speedometer-manual
+  name: 'DKD Adjustable Speedometer User Manual'
+  group: display
+  description: "The 061 DKD display's settings, including the programming codes. Chinese and English."
+  release: '2026-11-13'
+  asset: dkd-adjustable-speedometer-manual.pdf
+  size_bytes: 94711
+  sha256: f7e5de8c24eacd5a4cc85dcacdd4c6b5990a114ea614fa0af1e46d4c9f8e9e11
+  origin: 'Not named in the file.'
+  retrieved_from: 'https://metacyclopedia.github.io/Downloads/061%20DKD%20adjustable%20speedometer%20user%20manual%2020210429.pdf'
+  retrieved: 2026-11-13
+  original_url: TODO
+  rights: "Rights stay with the original publisher. Mirrored so owners can still find it; not covered by this site's licenses."
+
+- id: siaecosys-dkd-display-manual
+  name: 'SiAECOSYS DKD Display User Manual'
+  group: display
+  description: 'FAQ, measurements, pinouts and diagrams for the display.'
+  release: '2026-11-13'
+  asset: siaecosys-dkd-display-manual.pdf
+  size_bytes: 488983
+  sha256: 032f2a3555e2c32037d303dadb6d31370fc3a27e6889b261d5d56ce816d2c883
+  origin: 'SiAECOSYS (named in the title).'
+  retrieved_from: 'https://metacyclopedia.github.io/Downloads/SiAECOSYS%20DKD%20Display%20User%20Manual.pdf'
+  retrieved: 2026-11-13
+  original_url: TODO
+  rights: "Rights stay with the original publisher. Mirrored so owners can still find it; not covered by this site's licenses."
+
+- id: em200-2sp-wiring-diagram
+  name: 'EM200-2SP Wiring Diagram'
+  group: controller-docs
+  description: "Wiring diagram for the Metacycle's controller model. A scanned drawing, mostly in Chinese."
+  release: '2026-11-13'
+  asset: em200-2sp-wiring-diagram.pdf
+  size_bytes: 711325
+  sha256: 30d6af2d6ce2ec69f1d7e96a2f89a88c1b15fc1dd5e09819733253338e8ebab0
+  origin: "The drawing's title block names 台州蓝德电子科技有限公司."
+  retrieved_from: 'https://metacyclopedia.github.io/Downloads/EM200-2SP%20Wiring%20Diagram.pdf'
+  retrieved: 2026-11-13
+  original_url: TODO
+  rights: "Rights stay with the original publisher. Mirrored so owners can still find it; not covered by this site's licenses."
+
+- id: em200-wiring-diagram
+  name: 'EM200 Wiring Diagram'
+  group: controller-docs
+  description: 'Wiring diagram for the plain EM200, a similar unit. Useful for comparison, not an exact match.'
+  release: '2026-11-13'
+  asset: em200-wiring-diagram.pdf
+  size_bytes: 1639386
+  sha256: cfaf248c70b575bbf9b80ed5b35379f89e94e905dabda1a0454f407085467a24
+  origin: 'Not named in the file (dated 2021.02.26).'
+  retrieved_from: 'https://metacyclopedia.github.io/Downloads/EM-200%20Wiring%20Diagram.pdf'
+  retrieved: 2026-11-13
+  original_url: TODO
+  rights: "Rights stay with the original publisher. Mirrored so owners can still find it; not covered by this site's licenses."
+
+- id: votol-debugging-manual
+  name: 'Votol Controller Debugging Manual'
+  group: controller-docs
+  description: 'Pinouts, wiring diagrams and what each software setting does.'
+  release: '2026-11-13'
+  asset: votol-controller-debugging-manual.pdf
+  size_bytes: 5257339
+  sha256: fb4ce1ac83c097497118bd106acfc7fb1a795443403f4900eba60d96badba43a
+  origin: "Votol, per Metacyclopedia's listing (the file is titled “Controller Debugging Manual”, 2023.05.01)."
+  retrieved_from: 'https://metacyclopedia.github.io/Downloads/Votol%20Controller%20Debugging%20Manual.pdf'
+  retrieved: 2026-11-13
+  original_url: TODO
+  rights: "Rights stay with the original publisher. Mirrored so owners can still find it; not covered by this site's licenses."
+
+- id: votol-programming-manual
+  name: 'Votol Controller Programming Manual'
+  group: controller-docs
+  description: 'A page-by-page walkthrough of the Windows programming software.'
+  release: '2026-11-13'
+  asset: votol-controller-programming-manual.pdf
+  size_bytes: 2975978
+  sha256: a0ec9dab9c0439fc5332be5225a793287fe9e7066008dbc262b18bae56b9a7a5
+  origin: 'Votol (named in the title).'
+  retrieved_from: 'https://metacyclopedia.github.io/Downloads/Controller-programming-manual---20221125%281%29.pdf'
+  retrieved: 2026-11-13
+  original_url: TODO
+  rights: "Rights stay with the original publisher. Mirrored so owners can still find it; not covered by this site's licenses."
+
+- id: votol-self-learning
+  name: 'Controller Self-Learning Manual'
+  group: controller-docs
+  description: "How to let the controller measure the motor's Hall phase angle for better performance."
+  release: '2026-11-13'
+  asset: votol-controller-self-learning.pdf
+  size_bytes: 330670
+  sha256: 8e819c14d6c87d7f69f2b09f7e5153846f0f52b06810c91e6bccb9b3df3f2093
+  origin: 'Votol (named in the text).'
+  retrieved_from: 'https://metacyclopedia.github.io/Downloads/Controller-self-learning-function.pdf'
+  retrieved: 2026-11-13
+  original_url: TODO
+  rights: "Rights stay with the original publisher. Mirrored so owners can still find it; not covered by this site's licenses."
+
+- id: controller-fault-codes
+  name: 'Controller Fault Codes'
+  group: controller-docs
+  description: 'Fault-code bitmasks used by the software and sent over CAN, and the blink codes for each. Spreadsheet.'
+  release: '2026-11-13'
+  asset: votol-controller-fault-codes.xlsx
+  size_bytes: 28520
+  sha256: 5085811be669a5c80c1992985d86b587be10a0029f8f3287b9867802ce05dadb
+  origin: 'Not named in the file.'
+  retrieved_from: 'https://metacyclopedia.github.io/Downloads/Fault%20Codes.xlsx'
+  retrieved: 2026-11-13
+  original_url: TODO
+  rights: "Rights stay with the original publisher. Mirrored so owners can still find it; not covered by this site's licenses."
+
+- id: controller-interface
+  name: 'Controller Interface'
+  group: controller-docs
+  description: "Image showing the controller's pins and connections."
+  release: '2026-11-13'
+  asset: votol-controller-interface.jpg
+  size_bytes: 102731
+  sha256: 91cc62cf50edbd046f166b84594e50b4e1d29e486ee94e973c5f953eca5d4f56
+  origin: 'Not named in the file.'
+  retrieved_from: 'https://metacyclopedia.github.io/Downloads/controller%20interface.jpg'
+  retrieved: 2026-11-13
+  original_url: TODO
+  rights: "Rights stay with the original publisher. Mirrored so owners can still find it; not covered by this site's licenses."
+
+- id: throttle-manual
+  name: 'Throttle Manual'
+  group: controller-docs
+  description: 'One-page throttle drawing.'
+  release: '2026-11-13'
+  asset: throttle-manual.pdf
+  size_bytes: 1551177
+  sha256: cfa8a1ed52d026719f2391880f2f075e474b77fa93a24da3568f9fe1f0d6ffd3
+  origin: 'Not named in the file.'
+  retrieved_from: 'https://metacyclopedia.github.io/Downloads/Throttle%20Manual.pdf'
+  retrieved: 2026-11-13
+  original_url: TODO
+  rights: "Rights stay with the original publisher. Mirrored so owners can still find it; not covered by this site's licenses."
+
+- id: votol-em-v3-40
+  name: 'Votol EM_V3-40 (Windows software)'
+  group: controller-software
+  description: "Votol's EM-2 series programming software for Windows. The zip holds one file, EM_V3-40.exe (dated 2022-03-01). Metacyclopedia's factory settings file was made with this version."
+  release: '2026-11-13'
+  asset: votol-em-v3-40.zip
+  size_bytes: 2878295
+  sha256: b69027d8a8f0ac47e5c2f2d01305ad82a5857121bac0892a0024507f808b5548
+  origin: "Votol, per Metacyclopedia's listing."
+  retrieved_from: 'https://metacyclopedia.github.io/Software/EM_V3-40.zip'
+  retrieved: 2026-11-13
+  original_url: TODO
+  rights: "Rights stay with the original publisher. Mirrored so owners can still find it; not covered by this site's licenses."
+  notes: 'Windows .exe inside. Metacyclopedia says it scanned its copy with VirusTotal before listing it; scan the file again yourself before running it.'
+
+- id: votol-em-v3-50
+  name: 'Votol EM_V3-50 (Windows software)'
+  group: controller-software
+  description: 'A later version of the same software. The zip holds one file, EM_V3-50.exe (dated 2025-04-18).'
+  release: '2026-11-13'
+  asset: votol-em-v3-50.zip
+  size_bytes: 2736040
+  sha256: e716ea44acdeeb37d4d63bb7cef744909632a56aa37d5b7ca719e4ead4f7b916
+  origin: "Votol, per Metacyclopedia's listing."
+  retrieved_from: 'https://metacyclopedia.github.io/Software/EM_V3-50.zip'
+  retrieved: 2026-11-13
+  original_url: TODO
+  rights: "Rights stay with the original publisher. Mirrored so owners can still find it; not covered by this site's licenses."
+  notes: 'Windows .exe inside. Metacyclopedia says it scanned its copy with VirusTotal before listing it; scan the file again yourself before running it.'
+
+- id: votol-locale-note
+  name: 'Votol software: system locale note'
+  group: controller-software
+  description: "The publisher's instructions for switching Windows to a Chinese system locale if the software won't run. Metacyclopedia says most owners don't need this. Word document."
+  release: '2026-11-13'
+  asset: votol-software-locale-note.docx
+  size_bytes: 765352
+  sha256: c412e2e9a15dbba1636a8a4c03c4769890f2dc970312654757293e1258c1bf43
+  origin: "Votol, per Metacyclopedia's listing."
+  retrieved_from: 'https://metacyclopedia.github.io/Software/PC%20adjust%20for%20Votol-2%20series%20controller%20software.docx'
+  retrieved: 2026-11-13
+  original_url: TODO
+  rights: "Rights stay with the original publisher. Mirrored so owners can still find it; not covered by this site's licenses."
+
+- id: factory-2021-settings
+  name: 'Factory 2021 Metacycle Settings (.ini)'
+  group: controller-software
+  description: "A backup of the factory controller settings, made with EM_V3-40, for owners who didn't save their own. Per Metacyclopedia, the last 7 lines can be any numbers."
+  release: '2026-11-13'
+  asset: factory-2021-metacycle-settings.ini
+  size_bytes: 484
+  sha256: 7a9a4b3178129f13a3d750c5cf2908c2bfe2d8cd6d03d48b9490d7e0d9e51a99
+  origin: "Shared on Metacyclopedia; who made it isn't stated."
+  retrieved_from: 'https://metacyclopedia.github.io/Downloads/Factory%202021%20Metacycle%20Settings.ini'
+  retrieved: 2026-11-13
+  original_url: TODO
+  rights: "Shared on Metacyclopedia; its rights aren't stated. Mirrored so owners can still find it; not covered by this site's licenses."
