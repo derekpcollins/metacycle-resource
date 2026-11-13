@@ -39,8 +39,9 @@ function emit(rel: string, text: string) {
 
 // 1. Part options, sorted by name, from the content files.
 const partsDir = join(root, 'src/content/parts');
-const parts = readdirSync(partsDir)
-  .filter((f) => /\.ya?ml$/.test(f))
+type PartRow = { id: string; name: string; system: string };
+const parts: PartRow[] = readdirSync(partsDir)
+  .filter((f: string) => /\.ya?ml$/.test(f))
   .map(
     (f) =>
       parse(readFileSync(join(partsDir, f), 'utf8')) as {

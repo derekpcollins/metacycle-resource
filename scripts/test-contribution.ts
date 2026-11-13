@@ -174,7 +174,7 @@ await test('function files a labeled issue (JSON mode)', async () => {
   });
   const create = calls.find((c) => c.url.endsWith('/issues') && c.method === 'POST');
   assert.ok(create);
-  assert.deepEqual(JSON.parse(create.body ?? '{}').labels, ['fix', 'needs-source', 'web-form']);
+  assert.deepEqual(JSON.parse(create?.body ?? '{}').labels, ['fix', 'needs-source', 'web-form']);
 });
 await test('plain form POST redirects to the thanks page', async () => {
   reset();

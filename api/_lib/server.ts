@@ -25,7 +25,8 @@ export const TURNSTILE_TEST_SECRETS = {
 
 export function turnstileSecret(): string | undefined {
   const mode = env('TURNSTILE_TEST_MODE');
-  if (mode === 'pass' || mode === 'fail') return TURNSTILE_TEST_SECRETS[mode];
+  if (mode === 'pass') return TURNSTILE_TEST_SECRETS.pass;
+  if (mode === 'fail') return TURNSTILE_TEST_SECRETS.fail;
   return env('TURNSTILE_SECRET_KEY');
 }
 
