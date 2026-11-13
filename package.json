@@ -1,0 +1,32 @@
+{
+  "name": "metacycle-resource",
+  "version": "0.1.0",
+  "description": "Community-maintained owner resource for the Sondors Metacycle",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "validate": "astro sync",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "ci": "npm run format:check && npm run check && npm run build && npm run test:validation",
+    "test:validation": "node scripts/test-validation.mjs"
+  },
+  "license": "SEE LICENSE IN LICENSE-CODE and LICENSE-CONTENT",
+  "dependencies": {
+    "@astrojs/mdx": "^8.1.5",
+    "astro": "^7.4.11"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.12",
+    "prettier": "^3.10.1",
+    "prettier-plugin-astro": "^1.1.2",
+    "typescript": "^6.0.3"
+  },
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  }
+}
