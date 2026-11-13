@@ -230,7 +230,7 @@ Entries count as stale 90 days after `last_verified`.
 
 - [ ] **Charging port / cable connector (Chogori)** · OEM · fit exact
   - link: <https://bmsbattery.com/home/880-18681-a-pair-50a-waterproof-connector-2-1-5-pins.html#/567-connector_type-male>
-  - status: `unverified` · verified: never · price: TODO (USD)
+  - status: `dead` · verified: never · price: TODO (USD)
   - note: Returned HTTP 404 in an automated check on 2026-11-12; probably dead.
   - edit: [charging-port.yaml](https://github.com/derekpcollins/metacycle-resource/edit/main/src/content/parts/charging-port.yaml) → `sources[1]`
 
@@ -423,7 +423,7 @@ Entries count as stale 90 days after `last_verified`.
 
 - **Charging port / cable connector (Chogori)** ([charging-port.yaml](https://github.com/derekpcollins/metacycle-resource/edit/main/src/content/parts/charging-port.yaml))
   - AliExpress (seller not confirmed): `unverified`, verified never, price TODO (USD)
-  - BMS Battery: `unverified`, verified never, price TODO (USD)
+  - BMS Battery: `dead`, verified never, price TODO (USD)
   - Jnicon: `unverified`, verified never, price TODO (USD)
   - Wagner Electronics: `unverified`, verified never, price TODO (USD)
   - Wagner Electronics: `unverified`, verified never, price TODO (USD)
