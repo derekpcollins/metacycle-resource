@@ -19,7 +19,8 @@ export const CONTRIBUTION_TYPES = {
   'broken-link': {
     label: 'Report a broken link',
     short: 'Broken link',
-    blurb: 'A buy link is dead, out of stock, the wrong item, or the price changed.',
+    blurb:
+      'A buy link is dead, out of stock, the wrong item, or the price changed. Or you checked it and it works.',
     template: 'broken-link.yml',
   },
   suggest: {
@@ -91,7 +92,10 @@ export const systemOptions = (): string[] => [
 ];
 
 export const SUGGEST_KINDS = { part: 'A part', vendor: 'A vendor (a store that sells parts)' };
+/** Help Wanted's "I checked this" picks this option (a working link, maybe a new price). */
+export const LINK_CHECKED = 'It works: I checked it';
 export const LINK_PROBLEMS = [
+  LINK_CHECKED,
   'The page is gone',
   'Out of stock',
   'Wrong item',
@@ -170,7 +174,7 @@ export const FIELDS: Field[] = [
   {
     id: 'problem',
     kind: 'dropdown',
-    label: 'What’s wrong with it?',
+    label: 'What did you find?',
     options: () => LINK_PROBLEMS,
     types: ['broken-link'],
     requiredFor: ['broken-link'],
@@ -178,7 +182,7 @@ export const FIELDS: Field[] = [
   {
     id: 'replacement',
     kind: 'input',
-    label: 'Working link or new price, if you have one',
+    label: 'Price you saw, or a working link',
     maxLength: 500,
     types: ['broken-link'],
   },

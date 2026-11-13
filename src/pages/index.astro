@@ -6,11 +6,13 @@ import { SYSTEMS, keys } from '../lib/enums';
 import { community } from '../data/community';
 import SearchBox from '../components/SearchBox.astro';
 import SymptomShortcuts from '../components/SymptomShortcuts.astro';
+import { helpWanted } from '../lib/help-wanted';
 
 const [symptoms, parts] = await Promise.all([
   getCollection('troubleshooting'),
   getCollection('parts'),
 ]);
+const hw = (await helpWanted()).counts;
 symptoms.sort((a, b) => a.data.symptom.localeCompare(b.data.symptom));
 
 const systemCounts = keys(SYSTEMS).map((s) => ({
@@ -75,6 +77,25 @@ const systemCounts = keys(SYSTEMS).map((s) => ({
             </a>
           </li>
         ))}
+      </ul>
+    </section>
+
+    <section class="block" aria-labelledby="h-help">
+      <h2 class="block-title" id="h-help">
+        <span class="n">04</span>Help wanted
+      </h2>
+      <ul class="rows">
+        <li>
+          <a href="/contribute/help-wanted">
+            <span class="t">
+              {hw.needsCheck} buy links to check, {hw.questions + hw.gaps} unknown values
+              <span class="sub">Know your bike? Most take a few minutes and no account.</span>
+            </span>
+            <span class="go" aria-hidden="true">
+              →
+            </span>
+          </a>
+        </li>
       </ul>
     </section>
   </div>

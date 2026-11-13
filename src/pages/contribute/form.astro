@@ -6,7 +6,7 @@
  * definitions as the GitHub issue forms.
  *
  * Prefill: /contribute/form?type=broken-link&part=<part id>&system=<slug>&page=/parts/x
- *          &vendor=<name>&url=<link>
+ *          &vendor=<name>&url=<link>&problem=<option text>&summary=<one line>
  */
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import {
@@ -307,6 +307,8 @@ const prefillData = JSON.stringify({
   setIf('page', params.get('page'));
   setIf('vendor', params.get('vendor'));
   setIf('url', params.get('url'));
+  setIf('problem', params.get('problem'));
+  setIf('summary', params.get('summary'));
   const page = params.get('page');
   if (page?.startsWith('/')) {
     const back = done.querySelector<HTMLAnchorElement>('.done-back')!;
