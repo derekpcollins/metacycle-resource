@@ -32,8 +32,7 @@ const recentlyVerified = parts
 <BaseLayout title={site.name} editPath="src/pages/index.astro">
   <section class="hero">
     <div class="wrap">
-      <p class="label">sondors metacycle / owner resource</p>
-      <h1>{site.tagline}</h1>
+      <h1 class="visually-hidden">{site.name}</h1>
       <SearchBox id="home-search" />
       <p class="hint label">try: absorber · won’t power on · battery removal</p>
     </div>
@@ -87,7 +86,7 @@ const recentlyVerified = parts
         ) : (
           <EmptyState title="no buy links verified yet">
             <p>
-              Every link is checked by a person and dated. Found one that works?{' '}
+              Every link is checked and dated. Found one that works?{' '}
               <a href="/contribute">Help verify it</a>.
             </p>
           </EmptyState>
@@ -124,18 +123,16 @@ const recentlyVerified = parts
 
 <style>
   .hero {
-    padding: var(--space-10) 0 var(--space-6);
-  }
-  .hero h1 {
-    font-size: var(--text-2xl);
-    margin: var(--space-3) 0 var(--space-6);
-    max-width: 22ch;
+    padding: var(--space-6) 0 0;
   }
   .hint {
     margin: var(--space-3) 0 0;
   }
   .sections .block {
     padding-top: var(--space-10);
+  }
+  .sections .block:first-child {
+    padding-top: var(--space-8);
   }
   .systems {
     list-style: none;
@@ -192,10 +189,7 @@ const recentlyVerified = parts
   }
   @media (min-width: 60rem) {
     .hero {
-      padding: var(--space-16) 0 var(--space-6);
-    }
-    .hero h1 {
-      font-size: var(--text-3xl);
+      padding: var(--space-12) 0 0;
     }
     .systems {
       columns: 3;

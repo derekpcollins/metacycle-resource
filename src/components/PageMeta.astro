@@ -81,15 +81,16 @@ const display = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '');
     margin: 0;
     padding: 0;
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
     align-items: flex-start;
+    gap: 0 var(--space-6);
   }
   @media (min-width: 60rem) {
     .grid {
       grid-template-columns: 2fr 1fr;
     }
     .acts {
-      align-items: flex-end;
+      justify-content: flex-end;
     }
   }
 </style>

@@ -25,9 +25,7 @@ const filters = [
   <div class="wrap">
     <header class="page-head">
       <h1>Parts</h1>
-      <p class="lede">
-        Every part, where to buy it today, and when each link was last checked by a person.
-      </p>
+      <p class="lede">Every part, where to buy it today, and when each link was last checked.</p>
     </header>
 
     <form class="filters" id="part-filters" action="/parts" method="get">
@@ -36,20 +34,24 @@ const filters = [
         {filters.map((f) => (
           <div class="field">
             <label for={`f-${f.name}`}>{f.label}</label>
-            <select id={`f-${f.name}`} name={f.name}>
-              <option value="">{f.all}</option>
-              {keys(f.options).map((k) => (
-                <option value={k}>{(f.options as Record<string, string>)[k]}</option>
-              ))}
-            </select>
+            <span class="select">
+              <select id={`f-${f.name}`} name={f.name}>
+                <option value="">{f.all}</option>
+                {keys(f.options).map((k) => (
+                  <option value={k}>{(f.options as Record<string, string>)[k]}</option>
+                ))}
+              </select>
+            </span>
           </div>
         ))}
         <div class="field">
           <label for="f-sort">sort</label>
-          <select id="f-sort" name="sort">
-            <option value="name">name (a–z)</option>
-            <option value="verified">last verified (newest)</option>
-          </select>
+          <span class="select">
+            <select id="f-sort" name="sort">
+              <option value="name">name (a–z)</option>
+              <option value="verified">last verified (newest)</option>
+            </select>
+          </span>
         </div>
         <div class="field reset">
           <button type="reset" class="btn">
@@ -121,17 +123,36 @@ const filters = [
     font-size: var(--text-xs);
     color: var(--color-text-muted);
   }
+  /* Native look varies (Safari ignores min-height), so draw our own box + chevron. */
+  .select {
+    position: relative;
+    display: block;
+  }
+  .select::after {
+    content: '▾';
+    position: absolute;
+    right: var(--space-3);
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
   select {
+    appearance: none;
+    -webkit-appearance: none;
     width: 100%;
     min-width: 0;
-    min-height: var(--tap-target);
-    padding: 0 var(--space-3);
+    height: var(--tap-target);
+    padding: 0 calc(var(--space-3) + 1.25em) 0 var(--space-3);
     border: var(--border) solid var(--color-rule-strong);
     border-radius: 0;
     background: var(--color-bg);
     color: var(--color-text);
     font-family: var(--font-mono);
-    font-size: var(--text-sm);
+    font-size: var(--text-xs);
+    line-height: 1;
+    cursor: pointer;
   }
   .reset {
     justify-content: flex-end;

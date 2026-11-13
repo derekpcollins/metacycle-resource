@@ -114,16 +114,25 @@ const menuActive = menuNav.some((l) => isCurrent(path, l.href));
   .menu summary:hover {
     color: var(--color-text);
   }
+  .topnav a,
+  .menu summary {
+    position: relative;
+  }
   .topnav a[aria-current='page'],
   .menu summary.active {
     color: var(--color-text);
     font-weight: 600;
-    background: linear-gradient(
-      transparent 62%,
-      var(--color-mark) 62%,
-      var(--color-mark) 92%,
-      transparent 92%
-    );
+  }
+  /* Active item: a short yellow underline, inset to the label width. */
+  .topnav a[aria-current='page']::after,
+  .menu summary.active::before {
+    content: '';
+    position: absolute;
+    left: var(--space-3);
+    right: var(--space-3);
+    bottom: 10px;
+    height: var(--border-accent);
+    background: var(--color-accent);
   }
   .menu {
     position: relative;
