@@ -333,7 +333,7 @@ function issueReport(rows: Row[], applied: Awaited<ReturnType<typeof applyDead>>
     out.push('✅ No failures. This issue closes itself when a run has no failures.');
   if (applied.length)
     out.push(
-      `**Pull request:** ${applied.length} buy option${applied.length === 1 ? '' : 's'} set to \`status: dead\` (see the linked pull request). The checker never sets \`last_verified\`.`,
+      `**Pull request:** ${applied.length} buy option${applied.length === 1 ? '' : 's'} set to \`status: dead\` on branch \`link-checker/dead-links\`; the workflow opens or updates one pull request from it. The checker never sets \`last_verified\`.`,
     );
   const section = (o: LinkOutcome, intro: string, withTitle = false) => {
     const list = rows.filter((r) => r.result.outcome === o);

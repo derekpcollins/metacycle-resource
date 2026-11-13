@@ -127,16 +127,23 @@ jobs:
             ].join("\n"));
           ' > pr-body.md
 
+          # Pushes and PRs made with GITHUB_TOKEN don't trigger other workflows, so start CI
+          # on the branch explicitly; its result shows as a check on the pull request.
+          gh workflow run ci.yml --ref "$BRANCH"
+
           existing=$(gh api "repos/$GITHUB_REPOSITORY/pulls?state=open&head=${GITHUB_REPOSITORY_OWNER}:${BRANCH}" --jq '.[0].number // empty')
           if [ -n "$existing" ]; then
             gh api -X PATCH "repos/$GITHUB_REPOSITORY/pulls/$existing" -F body=@pr-body.md >/dev/null
             echo "Updated pull request #$existing" >> "$GITHUB_STEP_SUMMARY"
-          else
-            n=$(gh api -X POST "repos/$GITHUB_REPOSITORY/pulls" -f title="Link checker: mark dead buy links" \
-              -f head="$BRANCH" -f base="${{ github.event.repository.default_branch }}" -F body=@pr-body.md --jq .number)
+          elif n=$(gh api -X POST "repos/$GITHUB_REPOSITORY/pulls" -f title="Link checker: mark dead buy links" \
+              -f head="$BRANCH" -f base="${{ github.event.repository.default_branch }}" -F body=@pr-body.md --jq .number); then
             gh api -X POST "repos/$GITHUB_REPOSITORY/issues/$n/labels" -f "labels[]=broken-link" -f "labels[]=$LABEL" >/dev/null
             echo "Opened pull request #$n" >> "$GITHUB_STEP_SUMMARY"
+          else
+            # Needs Settings → Actions → General → "Allow GitHub Actions to create and approve pull requests".
+            compare="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/compare/${{ github.event.repository.default_branch }}...$BRANCH?expand=1"
+            msg="Couldn't open the pull request: turn on Settings → Actions → General → Allow GitHub Actions to create and approve pull requests, or open it by hand: $compare"
+            echo "::error::$msg"
+            echo "$msg" >> "$GITHUB_STEP_SUMMARY"
+            exit 1
           fi
-          # Pushes and PRs made with GITHUB_TOKEN don't trigger other workflows, so start CI
-          # on the branch explicitly; its result shows as a check on the pull request.
-          gh workflow run ci.yml --ref "$BRANCH"
