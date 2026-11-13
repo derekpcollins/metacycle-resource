@@ -1,0 +1,61 @@
+# Auto changelog (docs/SPEC.md → Changelog; decision in docs/PHASES.md → Phase 5).
+# After a pull request is merged into main, adds it to src/data/changelog.json (title,
+# labels, closed issues, credited contributors, files) and commits that file to main.
+# The commit deploys the site (Vercel), which renders /contribute/changelog from it.
+# Pushes made with GITHUB_TOKEN don't start other workflows, so this can't loop.
+name: Changelog
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      pr:
+        description: Pull request number to add or refresh
+        required: true
+
+permissions:
+  contents: write
+  pull-requests: read
+
+concurrency:
+  group: changelog
+  cancel-in-progress: false
+
+jobs:
+  add:
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: Add the pull request to src/data/changelog.json
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number || inputs.pr }}
+        run: npm run changelog -- --pr "$PR"
+      - name: Commit to main
+        env:
+          PR: ${{ github.event.pull_request.number || inputs.pr }}
+        run: |
+          if git diff --quiet -- src/data/changelog.json; then
+            echo "Changelog already up to date."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/data/changelog.json
+          git commit -m "Changelog: add #$PR"
+          for i in 1 2 3; do
+            git push origin HEAD:main && exit 0
+            git pull --rebase origin main
+          done
+          exit 1

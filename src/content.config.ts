@@ -37,6 +37,20 @@ const urlOrTodo = z.union([TODO, url]);
 const dateOrTodo = z.union([TODO, z.coerce.date()]);
 const system = z.enum(keys(SYSTEMS));
 const difficulty = z.union(DIFFICULTIES.map((d) => z.literal(d)));
+/**
+ * People credited on the page they improved (Governance: "credited on the page they
+ * improved and in the changelog"). A name or handle as the contributor gave it; the
+ * editor adds it when merging. Optional; never an email address.
+ */
+const contributors = z
+  .array(
+    z
+      .string()
+      .min(1)
+      .max(60)
+      .refine((n) => !n.includes('@') || n.startsWith('@'), 'Use a name or handle, not an email'),
+  )
+  .default([]);
 
 /** YAML entries carry their own `id`; MDX entries use the file name. */
 const generateId = ({ entry, data }: { entry: string; data: Record<string, unknown> }) =>
@@ -56,6 +70,7 @@ const vendors = defineCollection({
     languages: z.array(z.string()).default([]),
     buying_tips: z.string().optional(),
     references: z.array(url).default([]),
+    contributors,
   }),
 });
 
@@ -103,6 +118,7 @@ const parts = defineCollection({
         .optional(),
       photo_alt: z.string().min(1).optional(),
       photo_credit: z.string().min(1).optional(),
+      contributors,
     })
     .refine((p) => !p.photo || p.photo_alt, {
       message: 'photo_alt is required when photo is set',
@@ -130,6 +146,7 @@ const tools = defineCollection({
         }),
       )
       .default([]),
+    contributors,
   }),
 });
 
@@ -151,6 +168,7 @@ const guides = defineCollection({
     verified_by: z.string().optional(),
     last_verified: dateOrTodo.optional(),
     sources: z.array(url).min(1, 'Every guide needs at least one source link'),
+    contributors,
   }),
 });
 
@@ -181,6 +199,7 @@ const troubleshooting = defineCollection({
     fix: z.array(fix).default([]),
     confidence: z.enum(keys(CONFIDENCE)),
     sources: z.array(url).min(1, 'Every entry needs at least one source link'),
+    contributors,
   }),
 });
 

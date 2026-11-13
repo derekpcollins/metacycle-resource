@@ -26,6 +26,7 @@ const pad = (i: number) => String(i + 1).padStart(2, '0');
 ---
 
 <BaseLayout
+  contributors={d.contributors}
   title={d.symptom}
   description={`Diagnose "${d.symptom}" on a Sondors Metacycle: checks and fixes.`}
   editPath={repoPath(entry)}

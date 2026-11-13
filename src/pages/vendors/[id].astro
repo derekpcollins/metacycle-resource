@@ -20,6 +20,7 @@ const yn = (v: keyof typeof YES_NO_UNKNOWN) => YES_NO_UNKNOWN[v].toLowerCase();
 ---
 
 <BaseLayout
+  contributors={d.contributors}
   title={d.name}
   description={`Buying Metacycle parts from ${d.name}: shipping, US warehouse and tips.`}
   editPath={repoPath(entry)}

@@ -17,6 +17,8 @@ interface Props {
   sources?: string[];
   /** Last-verified line in the page meta block ('never' or an ISO date). */
   lastVerified?: string;
+  /** Contributors credited on this page (content `contributors` field). */
+  contributors?: string[];
 }
 
 const {
@@ -26,6 +28,7 @@ const {
   report,
   sources = [],
   lastVerified,
+  contributors = [],
 } = Astro.props;
 const pageTitle = title === site.name ? site.name : `${title} · ${site.name}`;
 ---
@@ -63,7 +66,13 @@ const pageTitle = title === site.name ? site.name : `${title} · ${site.name}`;
     <main id="main" tabindex="-1">
       <slot />
     </main>
-    <PageMeta sources={sources} lastVerified={lastVerified} editPath={editPath} report={report} />
+    <PageMeta
+      sources={sources}
+      lastVerified={lastVerified}
+      editPath={editPath}
+      report={report}
+      contributors={contributors}
+    />
     <SiteFooter />
     <TabBar />
     <script>

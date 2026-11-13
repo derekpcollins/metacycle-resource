@@ -8,7 +8,7 @@ Each phase runs in its own chat. Every phase ends by updating this file and writ
 | 2   | Design system & page templates (+ Pagefind search, tools page)                                     | Done        |
 | 3   | Content seed (parts, vendors, tools, troubleshooting, guides, spec sheet)                          | Done        |
 | 4   | Contribution flows (edit links, GitHub issue forms, no-account web form w/ serverless + Turnstile) | Done        |
-| 5   | Automation & trust (weekly link checker, staleness badges, Help Wanted, changelog)                 | Not started |
+| 5   | Automation & trust (weekly link checker, staleness badges, Help Wanted, changelog)                 | Done        |
 | 6   | Downloads repo, polish (a11y/perf/SEO, analytics), make repo public                                | Not started |
 
 **Live URL:** https://metacycle.guide (bought at Hover Nov 12; DNS at Hover points to Vercel; `www` 308-redirects to the apex). https://metacycle-resource.vercel.app still serves the same site (Vercel project `metacycle-resource`, team _Derek's Projects_; pushes to `main` deploy to production).
@@ -113,6 +113,37 @@ Launch (beta invites, announcements) is non-development and happens after Phase 
 - **Env var names:** Vercel warns about `PUBLIC_`-prefixed variables, so the build-time flags are `GITHUB_CONTRIBUTIONS` (Preview only, `true`) and `TURNSTILE_SITE_KEY`. Both are read only in Astro frontmatter at build time.
 - **GitHub issue forms don't prefill dropdowns from URL query parameters** (checked with Derek's account: text fields fill, dropdowns stay "None", even for an exact plain-text match). The web form's "use the GitHub form" link therefore also puts the part in the issue title, and the page field carries the part's path.
 - **Tooling:** in this workspace `gh` works only for repo-scoped REST calls (GraphQL and device login are blocked by the proxy), so open PRs with `gh api repos/…/pulls`. The Vercel MCP can read deployments and logs and create share links, but gets 403 on environment variables; ask Derek to set them.
+
+### Phase 5 decisions (confirmed by Derek, Nov 13)
+
+- **What the link checker may change: report + a pull request for provably dead links only.** One rolling issue lists every failure. A pull request sets `status: dead` only on buy options whose page returned HTTP 404/410, or whose domain no longer exists, on two tries. Likely out-of-stock (detected from structured data) goes in the report only; a person confirms it. The checker never sets `last_verified` or `status: live`. AliExpress and other bot-blocking hosts are never fetched and stay `unverified` ("needs a human").
+- **Actions minutes: manual dispatch only until the repo is public.** The weekly cron is in `.github/workflows/link-check.yml`, commented out. Phase 6 turns it on.
+- **Changelog: from merged pull requests, into a committed data file.** `.github/workflows/changelog.yml` runs `scripts/changelog.ts` after each merge and commits `src/data/changelog.json` to `main`, so the build needs no GitHub token and forks keep the history. **Credit:** a new optional `contributors` field on every content type shows on the page ("improved by …"). Changelog credit comes from `Credit:` lines in the PR description, names newly added to `contributors`, and non-maintainer, non-bot PR authors (`site.maintainers`).
+- **Contacts and Turnstile: neither is set up yet.** The takedown/maintainer contacts stay `TODO`. Production still uses Cloudflare's test keys (`TURNSTILE_TEST_MODE=pass`).
+
+### Phase 5 implementation decisions
+
+- **One staleness rule.** `src/lib/staleness.ts` (plain TS, reads `site.staleAfterDays`) has `isStale`, `checkReasons` (dead, out-of-stock, never verified, stale, unverified, no link, no price) and `summarize`. The badge (`format.ts`), Help Wanted, the checker report and `verify-list` all use it. `verify-list` moved to TypeScript (`tsx scripts/verify-list.ts`) to import it; its output didn't change. Shared YAML loading for scripts is in `scripts/lib/content-files.ts`.
+- **Link outcomes** (`src/lib/link-rules.ts`, classification in `scripts/lib/link-classify.ts`): live · dead · likely out of stock · redirects to the home page · couldn't reach · needs a human. Only dead, out of stock, moved and couldn't reach keep the rolling issue open. "Needs a human" doesn't, or the issue could never close (34 of 72 URLs are on blocked hosts or behind bot walls). Those links are listed on Help Wanted instead.
+- **Stock detection uses structured data only** (schema.org `availability` in JSON-LD or microdata, og/product `availability` meta). A page counts as out of stock only when no variant is in stock. Page text like "sold out" is ignored because it shows up in related-product carousels.
+- **Bot walls served as 2xx** (SiteGround's `sgcaptcha`, Cloudflare and Imperva challenges, a bare 202) count as "needs a human". **cnqsmotor.com now does this to the checker** (HTTP 202 → captcha), so its 19 buy links and its vendor page show as "needs a human" and not live. In Phase 3, curl got 200s. The checker doesn't spoof a browser User-Agent.
+- **`--apply` edits YAML in place** by the `status` value's source range, so comments and folded text stay byte-for-byte the same, then reruns `verify:list`. (Re-serialising with the `yaml` package unwrapped folded strings.)
+- **Workflow-made PRs don't trigger CI** (pushes with `GITHUB_TOKEN` start no workflows). `ci.yml` gained `workflow_dispatch`, and the link-check workflow runs `gh workflow run ci.yml --ref link-checker/dead-links`; the check run attaches to the PR's head commit. The dead-links branch is force-pushed and the PR reused, so re-runs never duplicate it. The rolling issue is found by label + an HTML marker; any duplicates are closed.
+- **PR mode** (`--changed-since origin/<base>`) checks only URLs that appear in changed content files (and `src/data/specs.ts` / `community.ts`) but weren't in the base versions. It writes to the job summary, exits 1 only on dead links, and says "skipped" when no content changed. CI checks out full history on PRs for this.
+- **Help Wanted** (`/contribute/help-wanted`, data in `src/lib/help-wanted.ts`): a summary row of counts, buy links grouped by vendor (most first), unknown values (vendor URLs that are `TODO`, guide `time_minutes: TODO`, and every "TODO…" sentence in guide and troubleshooting text and checks, except notes about the site's own roadmap such as "(Phase 6)"), the Specs page's `gaps`, and guides with no `verified_by`. Prices and URLs show as reasons on buy rows and aren't listed twice. Each item opens the web form prefilled; edit links show once GitHub contributions are open.
+- **"I checked this"** opens the broken-link form with the new first option **"It works: I checked it"** (`LINK_CHECKED`), the vendor, the URL and a summary. The question now reads "What did you find?", and the price field reads "Price you saw, or a working link". The form also prefills `problem` and `summary` from the URL. Issue forms were regenerated. The editor treats such a report as a verification (CONTRIBUTING → Reviewing).
+- **Changelog page** (`/contribute/changelog`, `src/lib/changelog.ts`): date, PR number (linked once GitHub is open), title, known labels, "thanks to", pages changed (content files map to their pages by file name, plus Specs, Community, Help wanted and plain `.astro` routes; up to 8, then "+N more"), a count of other files ("site code"), and closed issues. Backfilled with the only merged PR so far (#1). Phases 1–3 were pushed straight to `main`.
+- **New label `link-check`** in `LABELS` (`npm run labels:sync`; the workflow also creates it if missing).
+- **Template tweaks (no restyle):** home gets a fourth section, "04 Help wanted" (one row with counts). Contribute opens with Help wanted and Changelog rows, and "04 The link checker" now explains the outcomes. PageMeta shows "improved by: … · changelog" under last verified. Help Wanted buy rows use the row inset without hover (each has several actions); its count summary is a row list on phones and four columns on desktop.
+- **Validation:** `test:validation` now also proves an email address in `contributors` is rejected. `test:links` (16 tests, no network) covers classification, bot-blocking hosts and the staleness rule, and runs in `npm run ci`.
+
+## Phase 5 notes (verified / deferred / learned)
+
+- **Verified:** see below (filled in after the merge).
+
+- **Deferred:** the weekly schedule (Phase 6, when Actions minutes are free); real Turnstile keys and contact emails (still waiting on Derek); a weekly rebuild so "needs re-check" flags age without a content change. Staleness is computed at build time, so a site that isn't redeployed for weeks shows dates as they stood at the last build. Phase 6 could add a Vercel deploy hook to the scheduled checker.
+- **Waiting on the repo going public:** the scheduled run, edit links on Help Wanted, and PR/issue links on the changelog.
+- **Learned:** Node's `fetch` gets different bot treatment than curl (cnqsmotor.com challenges Node but not curl). Some Shopify product pages have no `<title>` within the first 3 MB, so the report's page-title column can be empty. Workflow-made pushes need an explicit `workflow_dispatch` to get CI.
 
 ## Phase 4 notes (verified / deferred / learned)
 

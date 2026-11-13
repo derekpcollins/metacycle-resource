@@ -14,8 +14,10 @@ interface Props {
   lastVerified?: string;
   editPath?: string;
   report?: { type?: string; part?: string; system?: string };
+  /** People credited for improving this page (Governance: credit on the page improved). */
+  contributors?: string[];
 }
-const { sources = [], lastVerified, editPath, report = {} } = Astro.props;
+const { sources = [], lastVerified, editPath, report = {}, contributors = [] } = Astro.props;
 const page = Astro.url.pathname;
 const display = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '');
 ---
@@ -34,6 +36,11 @@ const display = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '');
         </ol>
       )}
       {lastVerified && <p class="label lv">last verified: {lastVerified}</p>}
+      {contributors.length > 0 && (
+        <p class="label lv">
+          improved by: {contributors.join(', ')} · <a href="/contribute/changelog">changelog</a>
+        </p>
+      )}
     </div>
     <ul class="acts">
       <li>

@@ -15,7 +15,7 @@ const d = entry.data;
 const usedIn = await guidesUsingTool(entry.id);
 ---
 
-<BaseLayout title={d.name} editPath={repoPath(entry)}>
+<BaseLayout title={d.name} editPath={repoPath(entry)} contributors={d.contributors}>
   <div class="wrap">
     <nav class="crumbs" aria-label="Breadcrumb">
       <ol>

@@ -6,14 +6,16 @@ Please follow the [Code of Conduct](CODE_OF_CONDUCT.md). By contributing, you ag
 
 ## Four ways in, one review queue
 
-| Way in             | Who it's for                   | What happens                                                                                       |
-| ------------------ | ------------------------------ | -------------------------------------------------------------------------------------------------- |
-| **Edit this page** | Comfortable with GitHub        | Opens the page's file in GitHub's web editor. Saving creates a pull request with a preview deploy. |
-| **Issue forms**    | Owners with a GitHub account   | Report a broken link · Suggest a part or vendor · Share a fix · Correct a spec.                    |
-| **Web form**       | Everyone else                  | Same fields, no account; files a labeled issue through the site's bot.                             |
-| **Link checker**   | Automation (coming in Phase 5) | Keeps one rolling issue listing dead or stale buy links.                                           |
+| Way in             | Who it's for                 | What happens                                                                                       |
+| ------------------ | ---------------------------- | -------------------------------------------------------------------------------------------------- |
+| **Edit this page** | Comfortable with GitHub      | Opens the page's file in GitHub's web editor. Saving creates a pull request with a preview deploy. |
+| **Issue forms**    | Owners with a GitHub account | Report a broken link · Suggest a part or vendor · Share a fix · Correct a spec.                    |
+| **Web form**       | Everyone else                | Same fields, no account; files a labeled issue through the site's bot.                             |
+| **Link checker**   | Automation                   | Keeps one rolling issue listing failing buy links; proposes `status: dead` for provably dead ones. |
 
 Nothing goes live until the editor approves it.
+
+Short on time? **[Help wanted](https://metacycle.guide/contribute/help-wanted)** lists every buy link that needs a check, every unknown value and every unverified guide, generated from the content on each build. The **[changelog](https://metacycle.guide/contribute/changelog)** lists every merged change and who to thank.
 
 ## The rules that matter
 
@@ -21,7 +23,7 @@ Nothing goes live until the editor approves it.
 2. **Never guess.** If you don't know a value, write `TODO` (see below). Never invent part numbers, prices, specs or URLs.
 3. **Vendors don't edit their own listings without disclosure.** If you sell a part or work for a store, say so in the pull request (or tick the disclosure box on a form). Undisclosed self-promotion is removed.
 4. **Price-only updates and dead-link fixes** are merged quickly. **New vendors** get a closer look for scams and counterfeits.
-5. **Credit:** contributors are credited on the page they improved and in the changelog.
+5. **Credit:** contributors are credited on the page they improved and in the changelog (see [Credit](#credit)).
 
 ## How content files are structured
 
@@ -62,10 +64,49 @@ sources:
     notes: Select the US plug.
 ```
 
-- When you check a link, set `status`, `price` and `last_verified` to what you saw **that day**. Only a person (or, from Phase 5, the link checker) sets `last_verified`.
+- When you check a link, set `status`, `price` and `last_verified` to what you saw **that day**. Only a person sets `last_verified` or `status: live`; the link checker never does.
 - `unverified` means nobody has confirmed it. AliExpress blocks automated checks, so its links stay `unverified` until a person looks.
-- Rows not verified in the last 90 days are greyed on the site and flagged "needs re-check."
+- Rows never verified, or not verified in the last 90 days (`staleAfterDays` in `src/site.config.ts`), are greyed on the site, flagged "needs re-check" and listed on Help wanted. One helper, `src/lib/staleness.ts`, applies this rule everywhere (badge, Help wanted, checklist, checker report).
 - `npm run verify:list` regenerates [`docs/VERIFICATION.md`](docs/VERIFICATION.md), a checklist of every buy link still to check, each with an edit link. Re-run it after editing parts or vendors.
+
+## The link checker
+
+`scripts/link-check.ts` visits every buy-option and vendor URL. It's polite: two stores at a time, one request at a time per store with a pause between, a 20-second timeout, one retry, and a User-Agent that names the site. Each URL gets one outcome:
+
+| Outcome                    | Meaning                                                                                                                                                          | What happens                                                               |
+| -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| Live                       | The page loaded                                                                                                                                                  | Nothing. Loading isn't verifying, so `status`/`last_verified` don't change |
+| Dead                       | HTTP 404/410, or the domain no longer exists, on two tries                                                                                                       | Listed in the issue; the pull request sets `status: dead`                  |
+| Likely out of stock        | The page's structured data (schema.org / og `availability`) says out of stock, and no variant is in stock                                                        | Listed in the issue; a person confirms and edits                           |
+| Redirects to the home page | A product link lands on the store's front page                                                                                                                   | Listed in the issue                                                        |
+| Couldn't reach             | Timeouts, 5xx, connection errors, on two tries                                                                                                                   | Listed in the issue; usually temporary                                     |
+| Needs a human              | Bot-blocking stores (`NEEDS_HUMAN_HOSTS` in `src/lib/link-rules.ts`: AliExpress, Alibaba, Amazon) are never fetched; 401/403/429 and captcha pages land here too | Never marked dead; stays `unverified`; listed on Help wanted               |
+
+**In GitHub Actions:** Actions → **Link check** → **Run workflow** (manual only while the repo is private; the weekly schedule is commented out in `.github/workflows/link-check.yml`). A run opens or updates **one** issue labeled `link-check` (re-runs edit it; it closes itself when a run has no failures) and, if anything is provably dead and "open pull request" is ticked, force-pushes `link-checker/dead-links` and opens or updates **one** pull request. Pushes made by the workflow don't trigger CI on their own, so the workflow starts CI on that branch; its result shows on the pull request.
+
+**On every pull request:** CI checks only the URLs the pull request adds or changes in content files and writes the result to the job summary. It fails only on a clearly dead link (404/410 or a missing domain); blocked stores and timeouts never fail it. No content changes, no check.
+
+**Locally:**
+
+```sh
+npm run links:check                                   # dry run: report only, changes nothing
+npm run links:check -- --only https://example.com/x   # one URL (repeatable)
+npm run links:check -- --apply                        # also set status: dead on provably dead buy options
+npm run links:check -- --changed-since origin/main    # PR mode
+npm run links:check -- --report r.md --json r.json    # write the report and raw results
+npm run test:links                                    # rule tests, no network
+```
+
+To stop the checker fetching a store that always blocks it, add its host to `NEEDS_HUMAN_HOSTS`.
+
+## Credit
+
+Contributors are credited in two places:
+
+- **On the page they improved.** Every content file has an optional `contributors` list (a name or handle as the contributor gave it; never an email address). The page shows "improved by …" in its footer. Add the name when you merge their change.
+- **In the changelog.** After each merge, `.github/workflows/changelog.yml` runs `npm run changelog -- --pr N`, which adds the pull request to `src/data/changelog.json` (don't edit it by hand) and commits it to `main`; `/contribute/changelog` renders it. Credit for an entry comes from `Credit: Name, @handle` lines in the pull request description, names newly added to a `contributors` list, and the pull request's author unless they're a maintainer (`maintainers` in `src/site.config.ts`) or a bot. Web-form issues end with "Credit: **name**"; copy that line into the pull request.
+
+`npm run changelog -- --backfill` rebuilds every entry from GitHub (needs the `gh` CLI).
 
 ## Working from a clone
 
@@ -76,6 +117,7 @@ npm install
 npm run dev            # http://localhost:4321 (no search, no web form)
 npm run ci             # everything CI runs: format, issue forms, type check, build, tests
 npm run verify:list    # rebuild docs/VERIFICATION.md
+npm run links:check    # link checker dry run (see below)
 npm run format         # fix formatting
 ```
 
@@ -108,8 +150,8 @@ Spam defenses: Turnstile, a hidden honeypot field, a same-origin check, a size c
 
 ## Reviewing a contribution (maintainers)
 
-1. **Issue arrives** (form, web form or link checker), labeled by type: `broken-link`, `new-part`, `new-vendor`, `fix`, `spec-correction`; `needs-source` if there's no link or photo; `web-form` if it came from the site.
-2. **Make the change** with "edit this page" (or a branch), then open a pull request that says `Closes #N` and credits the contributor.
+1. **Issue arrives** (form, web form or link checker), labeled by type: `broken-link`, `new-part`, `new-vendor`, `fix`, `spec-correction`; `needs-source` if there's no link or photo; `web-form` if it came from the site; `link-check` for the checker's rolling issue and pull request. A broken-link report that says "It works: I checked it" is a verification: set `status: live`, `last_verified` to the date it was filed and the price it gives.
+2. **Make the change** with "edit this page" (or a branch), add the contributor's name to the file's `contributors` list, then open a pull request that says `Closes #N` and `Credit: Name`.
 3. **Check the preview.** Vercel comments a preview URL on the pull request; CI runs `npm run ci`.
 4. **Merge** when CI passes and the preview looks right; `main` deploys to production. If there's no source, publish it with `confidence: community-reported` and add the `community-reported` label to the issue.
 5. **Needs changes?** Comment on the issue or pull request.

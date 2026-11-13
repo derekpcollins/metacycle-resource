@@ -84,6 +84,17 @@ sources: [https://example.com]
 ---
 `,
   },
+  {
+    // Phase 5: contributors are names or handles, never email addresses.
+    name: 'contributor credited by email address',
+    file: 'src/content/tools/zz-test-contributor-email.yaml',
+    body: `id: zz-test-contributor-email
+name: Test
+spec: Test
+category: hand-tool
+contributors: [someone@example.com]
+`,
+  },
 ];
 
 let failures = 0;

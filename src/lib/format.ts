@@ -3,7 +3,7 @@
  */
 import type { CollectionEntry } from 'astro:content';
 import { SOURCE_STATUSES } from './enums';
-import { isStale } from './content';
+import { isStale } from './staleness';
 
 type Source = CollectionEntry<'parts'>['data']['sources'][number];
 type Status = keyof typeof SOURCE_STATUSES;

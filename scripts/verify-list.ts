@@ -1,66 +1,44 @@
-#!/usr/bin/env node
 /**
  * Builds docs/VERIFICATION.md: every buy link, vendor URL and price that needs a human
  * check, grouped by vendor and by part, with current status and last-verified date.
- * Run with `npm run verify:list` after changing parts or vendors.
+ * Run with `npm run verify:list` (tsx) after changing parts or vendors.
  *
  * Output is deterministic (no timestamps), so re-running without content changes produces
  * no diff. An entry "needs a check" when its status is unverified, its last_verified is
- * TODO or older than site.staleAfterDays, its URL is TODO, or its price is TODO.
+ * TODO or older than site.staleAfterDays, its URL is TODO, its price is TODO, or it's
+ * marked dead or out of stock (checkReasons() in src/lib/staleness.ts).
  */
-import { readFileSync, readdirSync, writeFileSync } from 'node:fs';
+import { writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { parse } from 'yaml';
 import * as prettier from 'prettier';
+import { editUrl, site } from '../src/site.config.js';
+import { needsCheck } from '../src/lib/staleness.js';
+import { ROOT, loadParts, loadVendors } from './lib/content-files.js';
 
-const ROOT = new URL('..', import.meta.url).pathname;
 const OUT = join(ROOT, 'docs/VERIFICATION.md');
+const staleDays = site.staleAfterDays;
+const edit = (path: string) => editUrl(path);
 
-// Read repo URL, edit branch and stale window from src/site.config.ts (single source).
-const cfg = readFileSync(join(ROOT, 'src/site.config.ts'), 'utf8');
-const repoUrl = cfg.match(/repoUrl:\s*'([^']+)'/)?.[1];
-const branch = cfg.match(/editBranch:\s*'([^']+)'/)?.[1] ?? 'main';
-const staleDays = Number(cfg.match(/staleAfterDays:\s*(\d+)/)?.[1] ?? 90);
-const edit = (path) => (repoUrl ? `${repoUrl}/edit/${branch}/${path}` : path);
-
-const load = (dir) =>
-  readdirSync(join(ROOT, dir))
-    .filter((f) => /\.ya?ml$/.test(f))
-    .sort()
-    .map((f) => ({ file: `${dir}/${f}`, data: parse(readFileSync(join(ROOT, dir, f), 'utf8')) }));
-
-const vendors = load('src/content/vendors');
-const parts = load('src/content/parts');
+const vendors = loadVendors();
+const parts = loadParts();
 const vendorById = Object.fromEntries(vendors.map((v) => [v.data.id, v]));
 
-const isTodo = (v) => v === undefined || v === null || v === 'TODO';
-const dateStr = (d) =>
+const isTodo = (v: unknown) => v === undefined || v === null || v === 'TODO';
+const dateStr = (d: unknown) =>
   isTodo(d) ? 'never' : d instanceof Date ? d.toISOString().slice(0, 10) : String(d);
-const isStale = (d) => {
-  if (isTodo(d)) return true;
-  const t = new Date(d).getTime();
-  return Number.isNaN(t) || Date.now() - t > staleDays * 86_400_000;
-};
-const priceStr = (p) =>
+const priceStr = (p?: { amount: number | string; currency: string }) =>
   !p ? 'none' : isTodo(p.amount) ? `TODO (${p.currency})` : `${p.amount} ${p.currency}`;
 
 // One row per buy option.
 const rows = parts.flatMap((p) =>
-  (p.data.sources ?? []).map((s, i) => {
-    const reasons = [];
-    if (s.status === 'unverified') reasons.push('unverified');
-    if (isStale(s.last_verified))
-      reasons.push(isTodo(s.last_verified) ? 'never verified' : 'stale');
-    if (isTodo(s.url)) reasons.push('no URL');
-    if (!s.price || isTodo(s.price.amount)) reasons.push('no price');
-    return { part: p, source: s, index: i, reasons };
-  }),
+  (p.data.sources ?? []).map((s, i) => ({ part: p, source: s, index: i })),
 );
-const pending = rows.filter((r) => r.reasons.length);
+// Same rule as the site's "needs re-check" badge and Help Wanted (src/lib/staleness.ts).
+const pending = rows.filter((r) => needsCheck(r.source));
 
 const vendorPending = vendors.filter((v) => isTodo(v.data.url));
 
-const line = (r) => {
+const line = (r: (typeof rows)[number]) => {
   const s = r.source;
   const link = isTodo(s.url) ? '**URL: TODO**' : `<${s.url}>`;
   return [

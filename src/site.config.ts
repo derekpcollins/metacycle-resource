@@ -26,6 +26,11 @@ export const site = {
   githubContributionsOpen: false,
   /** Editor/maintainer credited on the About page. */
   editor: 'Derek',
+  /**
+   * GitHub logins of maintainers. Their own pull requests aren't auto-credited in the
+   * changelog (they credit contributors with a `Credit:` line instead).
+   */
+  maintainers: ['derekpcollins'],
   license: {
     content: { name: 'CC BY-SA 4.0', url: 'https://creativecommons.org/licenses/by-sa/4.0/' },
     code: { name: 'MIT', url: 'https://opensource.org/license/mit' },
@@ -56,6 +61,9 @@ export const reportProblemUrl = (
     page?: string;
     vendor?: string;
     url?: string;
+    /** A "What did you find?" option, e.g. LINK_CHECKED. */
+    problem?: string;
+    summary?: string;
   } = {},
 ) => {
   const q = new URLSearchParams();
