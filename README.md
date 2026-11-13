@@ -1,8 +1,8 @@
-# Metacycle Owner Resource
+# Metacycle Owner Guide
 
 An open-source, community-maintained reference that keeps every Sondors Metacycle on the road: what each part is, where to buy it today, and how to fix the common failures. Sondors went out of business; owners keep each other going.
 
-> Working name. The site name, tagline, repo URL and domain all live in [`src/site.config.ts`](src/site.config.ts).
+> Live at https://metacycle.guide (private beta). The site name, tagline, repo URL and domain all live in [`src/site.config.ts`](src/site.config.ts).
 
 ## Run it locally
 
