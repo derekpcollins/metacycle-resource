@@ -209,7 +209,7 @@ A static Astro site built from files in a public GitHub repo. No database, no se
 | Hosting | Vercel (or GitHub Pages) | Free tier; PR preview deploys let you review changes visually |
 | Forms without GitHub | One serverless function + Cloudflare Turnstile | Turns a web form into a GitHub issue via a bot token; spam-protected |
 | Images | Repo `/public` at first; move to an image CDN if size grows | Keep it simple |
-| Domain | TBD | Name not chosen yet |
+| Domain | metacycle.guide | Bought Nov 12, 2026 (Hover DNS → Vercel) |
 
 **Repo structure**
 
@@ -283,7 +283,7 @@ The site gets a one-line disclaimer in every footer, a full Disclaimer page, and
 
 **Still open**
 
-- [ ] Site name and domain
+- [ ] Site name (domain chosen: metacycle.guide)
 
 ## Related project docs
 
