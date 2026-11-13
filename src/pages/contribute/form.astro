@@ -39,6 +39,7 @@ const prefillData = JSON.stringify({
   parts: Object.fromEntries(PART_OPTIONS.map((p) => [p.id, `${p.name} · ${p.id}`])),
   systems: SYSTEMS,
   templates: Object.fromEntries(types.map(([t, v]) => [t, v.template])),
+  shorts: Object.fromEntries(types.map(([t, v]) => [t, v.short])),
   repoUrl: site.repoUrl,
   githubOpen,
 });
@@ -267,6 +268,7 @@ const prefillData = JSON.stringify({
     parts: Record<string, string>;
     systems: Record<string, string>;
     templates: Record<string, string>;
+    shorts: Record<string, string>;
     repoUrl: string;
     githubOpen: boolean;
   };
@@ -343,6 +345,14 @@ const prefillData = JSON.stringify({
     if (!link || !data.templates[t]) return;
     const url = new URL(`${data.repoUrl}/issues/new`);
     url.searchParams.set('template', data.templates[t]);
+    // GitHub prefills text fields from the URL but not dropdowns, so the part also goes
+    // in the title (the page field carries its path).
+    const part = control('part');
+    const partName =
+      part && !part.disabled && / · [a-z0-9-]+$/.test(part.value)
+        ? part.value.replace(/ · [a-z0-9-]+$/, '')
+        : '';
+    url.searchParams.set('title', `[${data.shorts[t]}${partName ? ` · ${partName}` : ''}] `);
     for (const id of ['part', 'system', 'vendor', 'url', 'page']) {
       const el = control(id);
       if (el && !el.disabled && el.value) url.searchParams.set(id, el.value);

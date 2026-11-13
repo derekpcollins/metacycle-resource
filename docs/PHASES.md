@@ -7,11 +7,11 @@ Each phase runs in its own chat. Every phase ends by updating this file and writ
 | 1   | Foundation: repo, schemas, base layout, legal pages, sample content, CI, deploy                    | Done        |
 | 2   | Design system & page templates (+ Pagefind search, tools page)                                     | Done        |
 | 3   | Content seed (parts, vendors, tools, troubleshooting, guides, spec sheet)                          | Done        |
-| 4   | Contribution flows (edit links, GitHub issue forms, no-account web form w/ serverless + Turnstile) | Not started |
+| 4   | Contribution flows (edit links, GitHub issue forms, no-account web form w/ serverless + Turnstile) | Done        |
 | 5   | Automation & trust (weekly link checker, staleness badges, Help Wanted, changelog)                 | Not started |
 | 6   | Downloads repo, polish (a11y/perf/SEO, analytics), make repo public                                | Not started |
 
-**Live URL:** https://metacycle.guide once attached in Vercel (bought Nov 12); https://metacycle-resource.vercel.app until then (Vercel project `metacycle-resource`, team _Derek's Projects_; pushes to `main` deploy to production).
+**Live URL:** https://metacycle.guide (bought at Hover Nov 12; DNS at Hover points to Vercel; `www` 308-redirects to the apex). https://metacycle-resource.vercel.app still serves the same site (Vercel project `metacycle-resource`, team _Derek's Projects_; pushes to `main` deploy to production).
 
 Launch (beta invites, announcements) is non-development and happens after Phase 6.
 
@@ -109,8 +109,18 @@ Launch (beta invites, announcements) is non-development and happens after Phase 
 - **The web form adds a disclosure checkbox** ("I sell this, or I work for this store or vendor") on broken-link and suggest forms, enforcing the Governance vendor-disclosure rule, and a required CC BY-SA 4.0 agreement on all four.
 - **Local testing:** `npm run build && npm run serve:local -- --stub-github` serves `dist/` plus the function with test Turnstile keys and a fake GitHub. `npm run test:contribution` (in CI) covers validation, labels, formatting, the JWT, and the function's success, Turnstile failure, bad input, honeypot, origin, cap, per-IP and missing-credentials paths, with the network stubbed.
 - **Template tweaks (no restyle):** PageMeta's actions span the full width when a page has no sources, so they sit side by side. The form reuses the parts-filter select pattern, the shared `.btn` and the row inset/hover for its type choices. The Turnstile widget is a cross-origin iframe and can't take `.btn`; it uses `data-size="flexible"` to fit 375px.
-- **Two Vercel projects** were linked to the repo on Nov 12 (`metacycle-resource` and a duplicate `metacycle-resource-1cxp`, created around 23:37). The original serves production. Delete the duplicate and keep env vars on the original.
+- **Two Vercel projects** were briefly linked to the repo on Nov 12 (`metacycle-resource` and a duplicate `metacycle-resource-1cxp`). Only `metacycle-resource` should remain; it holds the env vars and serves production. If PR checks ever show a second Vercel context again, delete the extra project.
+- **Env var names:** Vercel warns about `PUBLIC_`-prefixed variables, so the build-time flags are `GITHUB_CONTRIBUTIONS` (Preview only, `true`) and `TURNSTILE_SITE_KEY`. Both are read only in Astro frontmatter at build time.
+- **GitHub issue forms don't prefill dropdowns from URL query parameters** (checked with Derek's account: text fields fill, dropdowns stay "None", even for an exact plain-text match). The web form's "use the GitHub form" link therefore also puts the part in the issue title, and the page field carries the part's path.
 - **Tooling:** in this workspace `gh` works only for repo-scoped REST calls (GraphQL and device login are blocked by the proxy), so open PRs with `gh api repos/…/pulls`. The Vercel MCP can read deployments and logs and create share links, but gets 403 on environment variables; ask Derek to set them.
+
+## Phase 4 notes (verified / deferred / learned)
+
+- **Verified (Nov 13):** `npm run ci` passes locally and in GitHub Actions (format, forms check, astro check, build, 6 validation cases, 23 contribution tests). On the PR preview the function rejected bad input, a missing Turnstile token and a cross-origin POST, and filed two correctly labeled issues as `metacycle-resource-bot[bot]`: #2 via HTTP (`fix`, `needs-source`, `web-form`), and #3 through the real form UI from a part page's "report broken link" (`broken-link`, `web-form`). Both closed. The four issue forms and both contact links render on GitHub with Derek's account; text fields prefill. A PR opened from GitHub's web editor (#4, closed unmerged) got a Vercel preview and a passing CI run. After merging, all 95 routes return 200 on https://metacycle.guide, the live function rejects bad input and missing tokens, and production shows "edit this page (opens at launch)". axe (WCAG 2.0/2.1 A + AA) found 0 violations on Home, Contribute, the form (empty, error and success states), thanks, a part, a guide, a troubleshooting page and Specs at 375px and 1280px in light and dark; no horizontal scroll.
+- **Not verified live:** a _failed_ Turnstile check. Cloudflare's always-pass test secret accepts any token, so live rejection was shown only for a missing token. The always-fail path is covered by `test:contribution` and can be checked live with `TURNSTILE_TEST_MODE=fail` on a preview. Real keys will reject bad tokens.
+- **Deferred:** real Turnstile keys (`TURNSTILE_SITE_KEY`, `TURNSTILE_SECRET_KEY`; then remove `TURNSTILE_TEST_MODE`); contact emails on metacycle.guide (Disclaimer/About still `TODO`); photo uploads on the web form; flipping `site.githubContributionsOpen` when the repo goes public (Phase 6); deleting the leftover branches `derekpcollins-patch-1` and `phase-4-contributions` (the workspace proxy can't delete refs).
+- **Waiting on the repo going public:** "edit this page", the GitHub issue-form links, the label workflow running for outside contributors, and issue links on the web form's success screen.
+- **Learned:** Vercel's Node functions need explicit `.js` import specifiers; issue forms only render from the default branch; issue-form dropdowns ignore URL prefill; the repo's `actions/github-script` label workflow only runs from `main`.
 
 ## Phase 3 notes (deferred / learned)
 
