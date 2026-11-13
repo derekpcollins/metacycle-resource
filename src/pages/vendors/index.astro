@@ -1,10 +1,19 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
-const vendors = (await getCollection('vendors')).sort((a, b) => a.data.name.localeCompare(b.data.name));
+const vendors = (await getCollection('vendors')).sort((a, b) =>
+  a.data.name.localeCompare(b.data.name),
+);
 ---
 
 <BaseLayout title="Vendors">
   <h1>Vendors</h1>
-  <ul>{vendors.map((v) => <li><a href={`/vendors/${v.id}`}>{v.data.name}</a>{v.data.country && <span class="muted"> — {v.data.country}</span>}</li>)}</ul>
+  <ul>
+    {vendors.map((v) => (
+      <li>
+        <a href={`/vendors/${v.id}`}>{v.data.name}</a>
+        {v.data.country && <span class="muted"> — {v.data.country}</span>}
+      </li>
+    ))}
+  </ul>
 </BaseLayout>

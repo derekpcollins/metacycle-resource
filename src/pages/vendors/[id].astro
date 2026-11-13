@@ -6,7 +6,10 @@ import { YES_NO_UNKNOWN } from '../../lib/enums';
 import { partsFromVendor, repoPath } from '../../lib/content';
 
 export async function getStaticPaths() {
-  return (await getCollection('vendors')).map((entry) => ({ params: { id: entry.id }, props: { entry } }));
+  return (await getCollection('vendors')).map((entry) => ({
+    params: { id: entry.id },
+    props: { entry },
+  }));
 }
 const { entry } = Astro.props as { entry: CollectionEntry<'vendors'> };
 const d = entry.data;
@@ -15,14 +18,31 @@ const parts = await partsFromVendor(entry.id);
 
 <BaseLayout title={d.name} editPath={repoPath(entry)} sources={d.references}>
   <h1>{d.name}</h1>
-  <Labeled items={[
-    ['Website', d.url],
-    ['Ships from', d.country],
-    ['Ships to US', YES_NO_UNKNOWN[d.ships_to_us]],
-    ['US warehouse', YES_NO_UNKNOWN[d.us_warehouse]],
-    ['Languages', d.languages.join(', ')],
-  ]} />
-  {d.buying_tips && (<><h2>Buying tips</h2><p>{d.buying_tips}</p></>)}
+  <Labeled
+    items={[
+      ['Website', d.url],
+      ['Ships from', d.country],
+      ['Ships to US', YES_NO_UNKNOWN[d.ships_to_us]],
+      ['US warehouse', YES_NO_UNKNOWN[d.us_warehouse]],
+      ['Languages', d.languages.join(', ')],
+    ]}
+  />
+  {d.buying_tips && (
+    <>
+      <h2>Buying tips</h2>
+      <p>{d.buying_tips}</p>
+    </>
+  )}
   <h2>Parts from this vendor</h2>
-  {parts.length ? <ul>{parts.map((p) => <li><a href={`/parts/${p.id}`}>{p.data.name}</a></li>)}</ul> : <p class="muted">None yet.</p>}
+  {parts.length ? (
+    <ul>
+      {parts.map((p) => (
+        <li>
+          <a href={`/parts/${p.id}`}>{p.data.name}</a>
+        </li>
+      ))}
+    </ul>
+  ) : (
+    <p class="muted">None yet.</p>
+  )}
 </BaseLayout>

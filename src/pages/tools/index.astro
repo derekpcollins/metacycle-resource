@@ -11,10 +11,20 @@ const groups = [
 
 <BaseLayout title="Tools" editPath="src/pages/tools/index.astro">
   <h1>Tools</h1>
-  {groups.map((g) => g.items.length > 0 && (
-    <>
-      <h2>{g.label}</h2>
-      <ul>{g.items.map((t) => <li><a href={`/tools/${t.id}`}>{t.data.name}</a> <span class="muted">— {TOOL_CATEGORIES[t.data.category]}</span></li>)}</ul>
-    </>
-  ))}
+  {groups.map(
+    (g) =>
+      g.items.length > 0 && (
+        <>
+          <h2>{g.label}</h2>
+          <ul>
+            {g.items.map((t) => (
+              <li>
+                <a href={`/tools/${t.id}`}>{t.data.name}</a>{' '}
+                <span class="muted">— {TOOL_CATEGORIES[t.data.category]}</span>
+              </li>
+            ))}
+          </ul>
+        </>
+      ),
+  )}
 </BaseLayout>

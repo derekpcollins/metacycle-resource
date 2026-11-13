@@ -9,11 +9,19 @@ const parts = (await getCollection('parts')).sort((a, b) => a.data.name.localeCo
 <BaseLayout title="Parts">
   <h1>Parts</h1>
   <table>
-    <thead><tr><th>Part</th><th>System</th><th>Buy options</th></tr></thead>
+    <thead>
+      <tr>
+        <th>Part</th>
+        <th>System</th>
+        <th>Buy options</th>
+      </tr>
+    </thead>
     <tbody>
       {parts.map((p) => (
         <tr>
-          <td><a href={`/parts/${p.id}`}>{p.data.name}</a></td>
+          <td>
+            <a href={`/parts/${p.id}`}>{p.data.name}</a>
+          </td>
           <td>{SYSTEMS[p.data.system]}</td>
           <td>{p.data.sources.length}</td>
         </tr>

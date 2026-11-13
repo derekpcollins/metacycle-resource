@@ -12,6 +12,10 @@ const { n, photo, photoAlt = '', torque } = Astro.props;
 <section class="step" aria-label={`Step ${n}`}>
   <h3>Step {n}</h3>
   <slot />
-  {torque && <p><strong>Torque:</strong> {torque}</p>}
+  {torque && (
+    <p>
+      <strong>Torque:</strong> {torque}
+    </p>
+  )}
   {photo && <img src={photo} alt={photoAlt} loading="lazy" />}
 </section>

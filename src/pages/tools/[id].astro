@@ -6,7 +6,10 @@ import { TOOL_CATEGORIES } from '../../lib/enums';
 import { guidesUsingTool, repoPath } from '../../lib/content';
 
 export async function getStaticPaths() {
-  return (await getCollection('tools')).map((entry) => ({ params: { id: entry.id }, props: { entry } }));
+  return (await getCollection('tools')).map((entry) => ({
+    params: { id: entry.id },
+    props: { entry },
+  }));
 }
 const { entry } = Astro.props as { entry: CollectionEntry<'tools'> };
 const d = entry.data;
@@ -15,15 +18,43 @@ const usedIn = await guidesUsingTool(entry.id);
 
 <BaseLayout title={d.name} editPath={repoPath(entry)}>
   <h1>{d.name}</h1>
-  <Labeled items={[
-    ['Spec', d.spec],
-    ['Category', TOOL_CATEGORIES[d.category]],
-    ['Starter kit', d.essential ? 'Yes' : 'No'],
-  ]} />
+  <Labeled
+    items={[
+      ['Spec', d.spec],
+      ['Category', TOOL_CATEGORIES[d.category]],
+      ['Starter kit', d.essential ? 'Yes' : 'No'],
+    ]}
+  />
   <h2>Used in</h2>
-  {usedIn.length ? <ul>{usedIn.map((g) => <li><a href={`/guides/${g.id}`}>{g.data.title}</a></li>)}</ul> : <p class="muted">No guides yet.</p>}
+  {usedIn.length ? (
+    <ul>
+      {usedIn.map((g) => (
+        <li>
+          <a href={`/guides/${g.id}`}>{g.data.title}</a>
+        </li>
+      ))}
+    </ul>
+  ) : (
+    <p class="muted">No guides yet.</p>
+  )}
   <h2>Where to buy</h2>
   {d.buy_links.length ? (
-    <ul>{d.buy_links.map((l) => <li>{l.vendor}: {l.url === 'TODO' ? 'TODO' : <a href={l.url} rel={l.affiliate ? 'sponsored noopener' : 'nofollow noopener'}>Open</a>}{l.affiliate && ' (affiliate link)'}</li>)}</ul>
-  ) : <p class="muted">No buy links yet.</p>}
+    <ul>
+      {d.buy_links.map((l) => (
+        <li>
+          {l.vendor}:{' '}
+          {l.url === 'TODO' ? (
+            'TODO'
+          ) : (
+            <a href={l.url} rel={l.affiliate ? 'sponsored noopener' : 'nofollow noopener'}>
+              Open
+            </a>
+          )}
+          {l.affiliate && ' (affiliate link)'}
+        </li>
+      ))}
+    </ul>
+  ) : (
+    <p class="muted">No buy links yet.</p>
+  )}
 </BaseLayout>

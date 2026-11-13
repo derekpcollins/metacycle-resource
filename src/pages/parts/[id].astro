@@ -6,7 +6,10 @@ import { FAILURE_RATES, FITS, SOURCE_STATUSES, SOURCE_TYPES, SYSTEMS } from '../
 import { formatDate, guidesForPart, isStale, repoPath } from '../../lib/content';
 
 export async function getStaticPaths() {
-  return (await getCollection('parts')).map((entry) => ({ params: { id: entry.id }, props: { entry } }));
+  return (await getCollection('parts')).map((entry) => ({
+    params: { id: entry.id },
+    props: { entry },
+  }));
 }
 const { entry } = Astro.props as { entry: CollectionEntry<'parts'> };
 const d = entry.data;
@@ -16,44 +19,95 @@ const guides = await guidesForPart(entry);
 
 <BaseLayout title={d.name} editPath={repoPath(entry)} sources={d.references}>
   <h1>{d.name}</h1>
-  <Labeled items={[
-    ['System', SYSTEMS[d.system]],
-    ['Also called', d.aliases.join(', ')],
-    ['OEM part number', d.oem_part_number],
-    ['Failure rate', d.failure_rate && FAILURE_RATES[d.failure_rate]],
-    ['Replacement difficulty', d.difficulty && `${d.difficulty} / 5`],
-    ['Diagram callout', d.diagram_ref],
-  ]} />
+  <Labeled
+    items={[
+      ['System', SYSTEMS[d.system]],
+      ['Also called', d.aliases.join(', ')],
+      ['OEM part number', d.oem_part_number],
+      ['Failure rate', d.failure_rate && FAILURE_RATES[d.failure_rate]],
+      ['Replacement difficulty', d.difficulty && `${d.difficulty} / 5`],
+      ['Diagram callout', d.diagram_ref],
+    ]}
+  />
 
   {Object.keys(d.specs).length > 0 && (
     <>
       <h2>Specs</h2>
-      <table><tbody>{Object.entries(d.specs).map(([k, v]) => <tr><th scope="row"><code>{k}</code></th><td>{String(v)}</td></tr>)}</tbody></table>
+      <table>
+        <tbody>
+          {Object.entries(d.specs).map(([k, v]) => (
+            <tr>
+              <th scope="row">
+                <code>{k}</code>
+              </th>
+              <td>{String(v)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </>
   )}
 
   <h2>Where to buy</h2>
-  {d.sources.length === 0 ? <p class="muted">No buy options known yet.</p> : (
+  {d.sources.length === 0 ? (
+    <p class="muted">No buy options known yet.</p>
+  ) : (
     <table>
-      <thead><tr><th>Vendor</th><th>Type</th><th>Fit</th><th>Price</th><th>Status</th><th>Verified</th><th>Link</th></tr></thead>
+      <thead>
+        <tr>
+          <th>Vendor</th>
+          <th>Type</th>
+          <th>Fit</th>
+          <th>Price</th>
+          <th>Status</th>
+          <th>Verified</th>
+          <th>Link</th>
+        </tr>
+      </thead>
       <tbody>
         {d.sources.map((s, i) => (
           <tr class={isStale(s.last_verified) ? 'stale' : undefined}>
-            <td><a href={`/vendors/${s.vendor.id}`}>{vendors[i]?.data.name ?? s.vendor.id}</a></td>
+            <td>
+              <a href={`/vendors/${s.vendor.id}`}>{vendors[i]?.data.name ?? s.vendor.id}</a>
+            </td>
             <td>{SOURCE_TYPES[s.type]}</td>
             <td>{FITS[s.fit]}</td>
             <td>{s.price ? `${s.price.amount} ${s.price.currency}` : '—'}</td>
             <td>{SOURCE_STATUSES[s.status]}</td>
             <td>{formatDate(s.last_verified)}</td>
-            <td>{s.url === 'TODO' ? 'TODO' : <a href={s.url} rel="nofollow noopener">Open</a>}{s.notes && <> — {s.notes}</>}</td>
+            <td>
+              {s.url === 'TODO' ? (
+                'TODO'
+              ) : (
+                <a href={s.url} rel="nofollow noopener">
+                  Open
+                </a>
+              )}
+              {s.notes && <> — {s.notes}</>}
+            </td>
           </tr>
         ))}
       </tbody>
     </table>
   )}
 
-  {d.fits_notes && (<><h2>Fit notes</h2><p>{d.fits_notes}</p></>)}
+  {d.fits_notes && (
+    <>
+      <h2>Fit notes</h2>
+      <p>{d.fits_notes}</p>
+    </>
+  )}
 
   <h2>Related guides</h2>
-  {guides.length ? <ul>{guides.map((g) => <li><a href={`/guides/${g.id}`}>{g.data.title}</a></li>)}</ul> : <p class="muted">None yet.</p>}
+  {guides.length ? (
+    <ul>
+      {guides.map((g) => (
+        <li>
+          <a href={`/guides/${g.id}`}>{g.data.title}</a>
+        </li>
+      ))}
+    </ul>
+  ) : (
+    <p class="muted">None yet.</p>
+  )}
 </BaseLayout>

@@ -25,8 +25,7 @@ export const site = {
   staleAfterDays: 90,
 } as const;
 
-export const editUrl = (repoPath: string) =>
-  `${site.repoUrl}/edit/${site.editBranch}/${repoPath}`;
+export const editUrl = (repoPath: string) => `${site.repoUrl}/edit/${site.editBranch}/${repoPath}`;
 
 export const reportProblemUrl = (pageTitle?: string) => {
   const url = new URL(`${site.repoUrl}/issues/new`);

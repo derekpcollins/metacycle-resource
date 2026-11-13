@@ -14,16 +14,30 @@ const symptoms = await getCollection('troubleshooting');
 
   <h2>What's wrong?</h2>
   <ul>
-    {symptoms.map((t) => <li><a href={`/troubleshooting/${t.id}`}>{t.data.symptom}</a></li>)}
+    {symptoms.map((t) => (
+      <li>
+        <a href={`/troubleshooting/${t.id}`}>{t.data.symptom}</a>
+      </li>
+    ))}
   </ul>
 
   <h2>Browse</h2>
   <ul>
-    <li><a href="/parts">Parts</a></li>
-    <li><a href="/troubleshooting">Troubleshoot</a></li>
-    <li><a href="/guides">Guides</a></li>
-    <li><a href="/specs">Specs</a></li>
-    <li><a href="/tools">Tools</a> · <a href="/vendors">Vendors</a></li>
+    <li>
+      <a href="/parts">Parts</a>
+    </li>
+    <li>
+      <a href="/troubleshooting">Troubleshoot</a>
+    </li>
+    <li>
+      <a href="/guides">Guides</a>
+    </li>
+    <li>
+      <a href="/specs">Specs</a>
+    </li>
+    <li>
+      <a href="/tools">Tools</a> · <a href="/vendors">Vendors</a>
+    </li>
   </ul>
 
   <h2>Systems</h2>

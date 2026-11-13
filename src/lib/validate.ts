@@ -36,7 +36,10 @@ export async function validateContent() {
 
   // YAML entries: the `id` field must match the file name so edit links resolve.
   for (const e of [...parts, ...vendors, ...tools]) {
-    const file = e.filePath?.split('/').pop()?.replace(/\.ya?ml$/, '');
+    const file = e.filePath
+      ?.split('/')
+      .pop()
+      ?.replace(/\.ya?ml$/, '');
     if (file && file !== e.id) {
       errors.push(`${e.collection}/${file}: id "${e.id}" must match the file name`);
     }
@@ -63,9 +66,7 @@ export async function validateContent() {
   }
 
   if (errors.length) {
-    throw new Error(
-      `Content validation failed (${errors.length}):\n  - ${errors.join('\n  - ')}`,
-    );
+    throw new Error(`Content validation failed (${errors.length}):\n  - ${errors.join('\n  - ')}`);
   }
 
   return {

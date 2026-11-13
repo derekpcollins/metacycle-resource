@@ -28,7 +28,8 @@ const menu = [
   { href: '/community', label: 'Community' },
   { href: '/contribute', label: 'Contribute' },
 ];
-const isCurrent = (href: string) => (path === href || path.startsWith(`${href}/`) ? 'page' : undefined);
+const isCurrent = (href: string) =>
+  path === href || path.startsWith(`${href}/`) ? 'page' : undefined;
 ---
 
 <!doctype html>
@@ -43,18 +44,34 @@ const isCurrent = (href: string) => (path === href || path.startsWith(`${href}/`
     <meta name="robots" content="noindex" />
   </head>
   <body>
-    <a class="skip-link" href="#main">Skip to content</a>
+    <a class="skip-link" href="#main">
+      Skip to content
+    </a>
     <header class="site-header">
       <div class="wrap">
-        <a class="site-title" href="/">{site.name}</a>
+        <a class="site-title" href="/">
+          {site.name}
+        </a>
         <nav aria-label="Primary">
           <ul class="nav-list">
-            {primary.map((l) => <li><a href={l.href} aria-current={isCurrent(l.href)}>{l.label}</a></li>)}
+            {primary.map((l) => (
+              <li>
+                <a href={l.href} aria-current={isCurrent(l.href)}>
+                  {l.label}
+                </a>
+              </li>
+            ))}
             <li>
               <details class="menu">
                 <summary>Menu</summary>
                 <ul>
-                  {menu.map((l) => <li><a href={l.href} aria-current={isCurrent(l.href)}>{l.label}</a></li>)}
+                  {menu.map((l) => (
+                    <li>
+                      <a href={l.href} aria-current={isCurrent(l.href)}>
+                        {l.label}
+                      </a>
+                    </li>
+                  ))}
                 </ul>
               </details>
             </li>
@@ -70,15 +87,27 @@ const isCurrent = (href: string) => (path === href || path.startsWith(`${href}/`
         {sources.length > 0 && (
           <>
             <h2 class="muted">Sources</h2>
-            <ol>{sources.map((s) => <li><a href={s}>{s}</a></li>)}</ol>
+            <ol>
+              {sources.map((s) => (
+                <li>
+                  <a href={s}>{s}</a>
+                </li>
+              ))}
+            </ol>
           </>
         )}
         {lastVerified && <p>Last verified: {lastVerified}</p>}
         <ul>
           <li>
-            {editPath ? <a href={editUrl(editPath)}>Edit this page</a> : <span class="muted">Edit this page (coming soon)</span>}
+            {editPath ? (
+              <a href={editUrl(editPath)}>Edit this page</a>
+            ) : (
+              <span class="muted">Edit this page (coming soon)</span>
+            )}
           </li>
-          <li><a href={reportProblemUrl(title)}>Report a problem</a></li>
+          <li>
+            <a href={reportProblemUrl(title)}>Report a problem</a>
+          </li>
         </ul>
       </aside>
     </main>
@@ -86,13 +115,13 @@ const isCurrent = (href: string) => (path === href || path.startsWith(`${href}/`
     <footer class="site-footer">
       <div class="wrap">
         <p>
-          Independent, community-maintained resource — not affiliated with SONDORS Inc. or any seller listed here.
-          Use at your own risk. <a href="/disclaimer">Full disclaimer</a>.
+          Independent, community-maintained resource — not affiliated with SONDORS Inc. or any
+          seller listed here. Use at your own risk. <a href="/disclaimer">Full disclaimer</a>.
         </p>
         <p>
           Content: <a href={site.license.content.url}>{site.license.content.name}</a> · Code:
-          <a href={site.license.code.url}>{site.license.code.name}</a> · <a href="/about">About &amp; license</a> ·
-          <a href={site.repoUrl}>Source on GitHub</a>
+          <a href={site.license.code.url}>{site.license.code.name}</a> ·{' '}
+          <a href="/about">About &amp; license</a> ·<a href={site.repoUrl}>Source on GitHub</a>
         </p>
       </div>
     </footer>
