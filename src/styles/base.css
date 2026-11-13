@@ -391,7 +391,7 @@ main {
   align-items: center;
   gap: var(--space-4);
   min-height: 60px;
-  padding: var(--space-3) var(--space-1);
+  padding: var(--space-3) var(--space-2);
   border-bottom: var(--border) solid var(--color-rule);
   text-decoration: none;
 }

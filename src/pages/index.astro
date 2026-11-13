@@ -3,12 +3,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 import { site } from '../site.config';
 import { SYSTEMS, keys } from '../lib/enums';
-import { isoDate, latestVerified } from '../lib/format';
 import { community } from '../data/community';
 import SearchBox from '../components/SearchBox.astro';
 import SymptomShortcuts from '../components/SymptomShortcuts.astro';
-import PartCard from '../components/PartCard.astro';
-import EmptyState from '../components/EmptyState.astro';
 
 const [symptoms, parts] = await Promise.all([
   getCollection('troubleshooting'),
@@ -21,12 +18,6 @@ const systemCounts = keys(SYSTEMS).map((s) => ({
   label: SYSTEMS[s].toLowerCase(),
   count: parts.filter((p) => p.data.system === s).length,
 }));
-
-const recentlyVerified = parts
-  .map((p) => ({ p, d: latestVerified(p.data.sources) }))
-  .filter((x): x is { p: (typeof parts)[number]; d: Date } => x.d !== undefined)
-  .sort((a, b) => b.d.getTime() - a.d.getTime())
-  .slice(0, 5);
 ---
 
 <BaseLayout title={site.name} editPath="src/pages/index.astro">
@@ -69,52 +60,27 @@ const recentlyVerified = parts
       <p class="caption">number = parts listed</p>
     </section>
 
-    <div class="two-col">
-      <section class="block" aria-labelledby="h-verified">
-        <h2 class="block-title" id="h-verified">
-          <span class="n">03</span>Recently verified
-        </h2>
-        {recentlyVerified.length > 0 ? (
-          <div>
-            {recentlyVerified.map(({ p, d }) => (
-              <div>
-                <PartCard part={p} />
-                <span class="visually-hidden">verified {isoDate(d)}</span>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <EmptyState title="no buy links verified yet">
-            <p>
-              Every link is checked and dated. Found one that works?{' '}
-              <a href="/contribute">Help verify it</a>.
-            </p>
-          </EmptyState>
-        )}
-      </section>
-
-      <section class="block" aria-labelledby="h-community">
-        <h2 class="block-title" id="h-community">
-          <span class="n">04</span>Community
-          <a class="more" href="/community">
-            all groups →
-          </a>
-        </h2>
-        <ul class="community">
-          {community.map((c) => (
-            <li>
-              <a href={c.url ?? '/community'}>
-                <span class="ext">{c.name}</span>
-                <span class="k">
-                  {c.kind}
-                  {c.note && ` · ${c.note}`}
-                </span>
-              </a>
-            </li>
-          ))}
-        </ul>
-      </section>
-    </div>
+    <section class="block" aria-labelledby="h-community">
+      <h2 class="block-title" id="h-community">
+        <span class="n">03</span>Community
+        <a class="more" href="/community">
+          all groups →
+        </a>
+      </h2>
+      <ul class="community">
+        {community.map((c) => (
+          <li>
+            <a href={c.url ?? '/community'}>
+              <span class="ext">{c.name}</span>
+              <span class="k">
+                {c.kind}
+                {c.note && ` · ${c.note}`}
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
   </div>
 </BaseLayout>
 
@@ -130,6 +96,16 @@ const recentlyVerified = parts
   }
   .sections .block:first-child {
     padding-top: var(--space-8);
+  }
+  /* Row lists: the whole row takes the surface colour on hover, like .rows. */
+  .systems a,
+  .community a {
+    padding-left: var(--space-2);
+    padding-right: var(--space-2);
+  }
+  .systems a:hover,
+  .community a:hover {
+    background: var(--color-surface);
   }
   .systems {
     list-style: none;
@@ -147,21 +123,21 @@ const recentlyVerified = parts
     align-items: center;
     gap: var(--space-2);
     min-height: var(--tap-target);
-    padding: var(--space-1) 0;
+    padding-top: var(--space-1);
+    padding-bottom: var(--space-1);
     border-bottom: var(--border) solid var(--color-rule);
     text-decoration: none;
     font-family: var(--font-mono);
     font-size: var(--text-sm);
     line-height: 1.3;
   }
-  .systems a:hover span:first-child {
-    text-decoration: underline;
-  }
   .systems .c {
     color: var(--color-text-muted);
     font-size: var(--text-xs);
   }
   .community {
+    columns: 1;
+    column-gap: var(--space-6);
     list-style: none;
     margin: 0;
     padding: 0;
@@ -169,6 +145,7 @@ const recentlyVerified = parts
     font-size: var(--text-sm);
   }
   .community li {
+    break-inside: avoid;
     display: flex;
     align-items: center;
     min-height: var(--tap-target);
@@ -183,9 +160,6 @@ const recentlyVerified = parts
     min-height: var(--tap-target);
     text-decoration: none;
   }
-  .community a:hover .ext {
-    text-decoration: underline;
-  }
   .community .k {
     font-size: var(--text-xs);
     color: var(--color-text-muted);
@@ -198,10 +172,8 @@ const recentlyVerified = parts
     .systems {
       columns: 3;
     }
-    .two-col {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: var(--space-10);
+    .community {
+      columns: 2;
     }
   }
 </style>
