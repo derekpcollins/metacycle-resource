@@ -1,0 +1,53 @@
+---
+/**
+ * Where a plain (no-script) web-form POST lands after the issue is filed. With scripts on,
+ * the form shows its own success state and this page isn't used.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { site } from '../../site.config';
+import { githubOpen } from '../../lib/github-open';
+---
+
+<BaseLayout
+  title="Thanks"
+  description="Your message is in the review queue."
+  editPath="src/pages/contribute/thanks.astro"
+>
+  <div class="wrap">
+    <header class="page-head">
+      <p class="label">sent</p>
+      <h1>Thanks. It’s in the review queue.</h1>
+      <p class="lede">
+        The editor reviews every report. Changes with a source link or photo go live first; others
+        are published as <em>community-reported</em>.
+      </p>
+    </header>
+    <div class="prose">
+      {githubOpen && (
+        <p id="issue-line" data-repo={site.repoUrl} hidden>
+          Follow it on GitHub: <a href={`${site.repoUrl}/issues`}>issue</a>.
+        </p>
+      )}
+      <p>
+        <a class="btn" href="/contribute/form">
+          send another
+        </a>
+      </p>
+      <p>
+        <a href="/contribute">How contributions are reviewed</a>
+      </p>
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  // Show "#123" when the function passed the issue number (?n=123).
+  const line = document.querySelector<HTMLElement>('#issue-line');
+  const n = new URLSearchParams(location.search).get('n');
+  if (line && n && /^\d+$/.test(n)) {
+    const a = line.querySelector('a')!;
+    a.href = `${line.dataset.repo}/issues/${n}`;
+    a.textContent = `#${n}`;
+    line.hidden = false;
+  }
+</script>

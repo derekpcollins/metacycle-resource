@@ -1,20 +1,27 @@
 ---
-/** Every page ends with: sources, last verified, Edit this page, Report a problem (spec). */
+/**
+ * Every page ends with: sources, last verified, Edit this page, Report a problem (spec).
+ * "Edit this page" opens the page's source file in GitHub's web editor once GitHub
+ * contributions are open (src/lib/github-open.ts); until then it explains the launch state.
+ * "Report a problem" opens the no-account web form, prefilled with this page.
+ */
 import { editUrl, reportProblemUrl } from '../site.config';
+import { githubOpen } from '../lib/github-open';
 
 interface Props {
-  title: string;
   sources?: string[];
   /** ISO date, 'never', or undefined to hide the line. */
   lastVerified?: string;
   editPath?: string;
+  report?: { type?: string; part?: string; system?: string };
 }
-const { title, sources = [], lastVerified, editPath } = Astro.props;
+const { sources = [], lastVerified, editPath, report = {} } = Astro.props;
+const page = Astro.url.pathname;
 const display = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '');
 ---
 
 <aside class="page-meta" aria-label="About this page">
-  <div class="wrap grid">
+  <div class:list={['wrap grid', { 'no-src': sources.length === 0 }]}>
     {sources.length > 0 && <h2 class="label head">sources</h2>}
     <div class="srcs">
       {sources.length > 0 && (
@@ -30,16 +37,18 @@ const display = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '');
     </div>
     <ul class="acts">
       <li>
-        {editPath ? (
+        {editPath && githubOpen ? (
           <a class="text-link" href={editUrl(editPath)}>
             edit this page
           </a>
         ) : (
-          <span class="text-link muted">edit this page (coming soon)</span>
+          <a class="text-link" href="/contribute#edit">
+            edit this page (opens at launch)
+          </a>
         )}
       </li>
       <li>
-        <a class="text-link" href={reportProblemUrl(title)}>
+        <a class="text-link" href={reportProblemUrl({ type: 'spec-correction', ...report, page })}>
           report a problem
         </a>
       </li>
@@ -102,6 +111,10 @@ const display = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '');
       grid-row: 2;
       justify-content: flex-end;
       margin-top: 0;
+    }
+    /* No sources: let the actions use the full width so they sit side by side. */
+    .no-src .acts {
+      grid-column: 1 / -1;
     }
   }
 </style>

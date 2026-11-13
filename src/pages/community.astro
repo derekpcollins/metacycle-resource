@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { reportProblemUrl } from '../site.config';
 import { community, communitySource } from '../data/community';
 ---
 
@@ -33,7 +34,8 @@ import { community, communitySource } from '../data/community';
     </ul>
     <p class="caption">
       List from <a href={communitySource}>Metacyclopedia’s community page</a>. Know a group that’s
-      missing? <a href="/contribute">Tell us</a>.
+      missing?{' '}
+      <a href={reportProblemUrl({ type: 'spec-correction', page: '/community' })}>Tell us</a>.
     </p>
   </div>
 </BaseLayout>

@@ -25,9 +25,13 @@ jobs:
       - run: npm ci
       - name: Format check
         run: npm run format:check
+      - name: Issue forms match the content (part dropdowns are generated)
+        run: npm run forms:check
       - name: Type check (includes schema validation)
         run: npm run check
       - name: Build (fails on broken cross-references)
         run: npm run build
       - name: Content-validation tests (bad files must be rejected)
         run: npm run test:validation
+      - name: Web-form validation and issue formatting tests
+        run: npm run test:contribution

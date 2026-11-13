@@ -1,0 +1,232 @@
+---
+/**
+ * How to contribute (docs/SPEC.md → "Contribution flows", "Governance"): the four ways in,
+ * the review rules and the trust levels.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { site, issueFormUrl, reportProblemUrl } from '../../site.config';
+import { githubOpen } from '../../lib/github-open';
+import { CONTRIBUTION_TYPES, type ContributionType } from '../../lib/contribution';
+import { CONFIDENCE } from '../../lib/enums';
+
+const types = Object.entries(CONTRIBUTION_TYPES) as [
+  ContributionType,
+  (typeof CONTRIBUTION_TYPES)[ContributionType],
+][];
+const trust: Record<keyof typeof CONFIDENCE, string> = {
+  confirmed: 'The editor or a co-maintainer tested it on a bike.',
+  'community-reported': 'An owner reported it, but there’s no source or photo yet.',
+  theory: 'Reasoned from specs or similar bikes; nobody has confirmed it works.',
+};
+---
+
+<BaseLayout
+  title="Contribute"
+  description="Report a broken link, suggest a part, share a fix or correct a spec. How changes are reviewed and credited."
+  editPath="src/pages/contribute/index.astro"
+>
+  <div class="wrap">
+    <header class="page-head">
+      <h1>Contribute</h1>
+      <p class="lede">
+        Fixes, parts, working buy links and photos all help keep Metacycles on the road. There are
+        four ways in and one review queue: nothing goes live until the editor approves it.
+      </p>
+    </header>
+
+    <section class="block" aria-labelledby="h-form">
+      <h2 class="block-title" id="h-form">
+        <span class="n">01</span>No account: the web form
+      </h2>
+      <div class="block-body">
+        <p class="intro">
+          The quickest way. Pick what you’re sending; add your name or handle if you want credit.
+        </p>
+        <ul class="rows">
+          {types.map(([t, v]) => (
+            <li>
+              <a href={reportProblemUrl({ type: t })}>
+                <span class="t">
+                  {v.label}
+                  <span class="sub">{v.blurb}</span>
+                </span>
+                <span class="go" aria-hidden="true">
+                  →
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+        <p class="caption">
+          Every page also ends with <strong>report a problem</strong>, and every buy link has{' '}
+          <strong>report broken link</strong>; both open this form already filled in.
+        </p>
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="h-issues">
+      <h2 class="block-title" id="h-issues">
+        <span class="n">02</span>GitHub account: issue forms
+      </h2>
+      <div class="block-body">
+        <p class="intro">
+          The same four forms on GitHub, with photo uploads. Good if you want to follow the
+          discussion.
+        </p>
+        {githubOpen ? (
+          <ul class="rows">
+            {types.map(([, v]) => (
+              <li>
+                <a href={issueFormUrl(v.template)}>
+                  <span class="t">{v.label}</span>
+                  <span class="meta">github</span>
+                  <span class="go" aria-hidden="true">
+                    →
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p class="launch">
+            <span class="label">opens at launch</span> The project’s GitHub repository is private
+            until the public launch. Until then, use the web form above: it reaches the same review
+            queue.
+          </p>
+        )}
+      </div>
+    </section>
+
+    <section class="block" id="edit" aria-labelledby="h-edit">
+      <h2 class="block-title" id="h-edit">
+        <span class="n">03</span>Edit this page
+      </h2>
+      <div class="block-body prose">
+        <p>
+          Comfortable with GitHub? Every page ends with <strong>edit this page</strong>, which opens
+          its source file in GitHub’s web editor. Parts, vendors and tools are YAML files; guides
+          and troubleshooting entries are Markdown. Saving creates a pull request, the site builds a
+          preview of your change, and automatic checks catch a misspelled field or a broken
+          reference before the editor looks.
+        </p>
+        {githubOpen ? (
+          <p>
+            Start with the{' '}
+            <a href={`${site.repoUrl}/blob/${site.editBranch}/CONTRIBUTING.md`}>
+              contributing guide
+            </a>{' '}
+            for how the files are laid out and the rules for unknown values.
+          </p>
+        ) : (
+          <p class="launch">
+            <span class="label">opens at launch</span> Edit links go live when the repository
+            becomes public.
+          </p>
+        )}
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="h-checker">
+      <h2 class="block-title" id="h-checker">
+        <span class="n">04</span>The link checker
+      </h2>
+      <div class="block-body prose">
+        <p>
+          Coming next: an automatic checker will visit every buy link each week, mark dead pages,
+          and keep one running list of failures for the editor. Links not verified in{' '}
+          {site.staleAfterDays} days get a “needs re-check” flag and go on a public Help Wanted
+          list. AliExpress blocks automated checks, so those links stay “unverified” until a person
+          confirms them.
+        </p>
+      </div>
+    </section>
+
+    <section class="block" id="review" aria-labelledby="h-review">
+      <h2 class="block-title" id="h-review">
+        Review rules
+      </h2>
+      <div class="block-body prose">
+        <ul>
+          <li>
+            <strong>Specs and fixes need a source link or a photo.</strong> Without one, the change
+            is published as <em>community-reported</em>.
+          </li>
+          <li>
+            <strong>Price updates and dead-link fixes</strong> are merged quickly.
+          </li>
+          <li>
+            <strong>New vendors get a closer look</strong> for scams and counterfeits before they’re
+            listed.
+          </li>
+          <li>
+            <strong>Vendors may not edit their own listings without saying so.</strong> If you sell
+            a part or work for a store, tick the disclosure box or say so in your pull request.
+          </li>
+          <li>
+            <strong>Never guess.</strong> If you don’t know a value (a price, part number or
+            torque), leave it out rather than estimate.
+          </li>
+          <li>
+            <strong>Credit:</strong> contributors are credited on the page they improved and in the
+            changelog.
+          </li>
+        </ul>
+        <p>
+          By contributing, you agree your content is published under{' '}
+          <a href={site.license.content.url}>{site.license.content.name}</a>. Please follow the{' '}
+          <a href={`${site.repoUrl}/blob/${site.editBranch}/CODE_OF_CONDUCT.md`}>code of conduct</a>
+          .
+        </p>
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="h-trust">
+      <h2 class="block-title" id="h-trust">
+        Trust levels
+      </h2>
+      <div class="block-body">
+        <p class="intro">Every guide and fix shows one of these labels.</p>
+        <dl class="trust">
+          {Object.entries(trust).map(([k, text]) => (
+            <div>
+              <dt>{CONFIDENCE[k as keyof typeof CONFIDENCE]}</dt>
+              <dd>{text}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .intro {
+    margin: 0 0 var(--space-4);
+    max-width: var(--measure);
+  }
+  .launch {
+    max-width: var(--measure);
+    margin: 0;
+  }
+  .launch .label {
+    display: block;
+    margin-bottom: var(--space-1);
+  }
+  .trust {
+    margin: 0;
+    border-top: var(--border) solid var(--color-rule);
+    max-width: var(--measure);
+  }
+  .trust div {
+    padding: var(--space-3) 0;
+    border-bottom: var(--border) solid var(--color-rule);
+  }
+  .trust dt {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    font-weight: 600;
+  }
+  .trust dd {
+    margin: var(--space-1) 0 0;
+  }
+</style>

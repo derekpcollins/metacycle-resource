@@ -10,6 +10,7 @@ import ConfidenceLabel from '../../components/ConfidenceLabel.astro';
 import SafetyCallout from '../../components/SafetyCallout.astro';
 import ToolsChecklist from '../../components/ToolsChecklist.astro';
 import Badge from '../../components/Badge.astro';
+import { reportProblemUrl } from '../../site.config';
 
 export async function getStaticPaths() {
   return (await getCollection('guides')).map((entry) => ({
@@ -38,6 +39,7 @@ const verifiedDate = d.last_verified instanceof Date ? isoDate(d.last_verified) 
   title={d.title}
   description={d.summary}
   editPath={repoPath(entry)}
+  report={{ type: 'fix', system: d.system }}
   sources={d.sources}
   lastVerified={verifiedDate ?? 'never'}
 >
@@ -92,7 +94,19 @@ const verifiedDate = d.last_verified instanceof Date ? isoDate(d.last_verified) 
                 {verifiedDate && ` · ${verifiedDate}`}
               </Badge>
             ) : (
-              <Badge tone="off">not yet</Badge>
+              <>
+                <Badge tone="off">not yet</Badge>{' '}
+                <a
+                  class="text-link"
+                  href={reportProblemUrl({
+                    type: 'fix',
+                    system: d.system,
+                    page: `/guides/${entry.id}`,
+                  })}
+                >
+                  help verify it
+                </a>
+              </>
             )}
           </dd>
         </div>

@@ -14,7 +14,16 @@ export const site = {
   /** Branch used for "Edit this page" links. */
   editBranch: 'main',
   /** Bare domain without protocol, e.g. "example.org". null until chosen. */
-  domain: null as string | null,
+  domain: 'metacycle.guide' as string | null,
+  /** Where the site is served until a domain is chosen (Vercel production URL). */
+  productionUrl: 'https://metacycle-resource.vercel.app',
+  /**
+   * GitHub-side contribution paths ("edit this page", issue forms). The repo is private
+   * until Phase 6, so these show "opens at launch" until this is true. Preview builds can
+   * turn them on with GITHUB_CONTRIBUTIONS=true (see src/lib/github-open.ts).
+   * The no-account web form works either way.
+   */
+  githubContributionsOpen: false,
   /** Editor/maintainer credited on the About page. */
   editor: 'Derek',
   license: {
@@ -25,10 +34,40 @@ export const site = {
   staleAfterDays: 90,
 } as const;
 
+/** Absolute site URL (no trailing slash): the chosen domain, else the Vercel URL. */
+export const siteUrl = site.domain ? `https://${site.domain}` : site.productionUrl;
+
+/** `owner/repo`, derived from repoUrl. */
+export const repoSlug = new URL(site.repoUrl).pathname.replace(/^\/|\/$/g, '');
+
+/** Opens a repo file in GitHub's web editor; saving it opens a pull request. */
 export const editUrl = (repoPath: string) => `${site.repoUrl}/edit/${site.editBranch}/${repoPath}`;
 
-export const reportProblemUrl = (pageTitle?: string) => {
+/**
+ * "Report a problem" → the site's no-account web form, prefilled. Works for everyone,
+ * with or without a GitHub account; the form also offers the matching GitHub issue form.
+ * `type` is a contribution type from src/lib/contribution.ts.
+ */
+export const reportProblemUrl = (
+  prefill: {
+    type?: string;
+    part?: string;
+    system?: string;
+    page?: string;
+    vendor?: string;
+    url?: string;
+  } = {},
+) => {
+  const q = new URLSearchParams();
+  for (const [k, v] of Object.entries(prefill)) if (v) q.set(k, v);
+  const qs = q.toString();
+  return `/contribute/form${qs ? `?${qs}` : ''}`;
+};
+
+/** Link to a GitHub issue form, optionally prefilled (field id → value). */
+export const issueFormUrl = (template: string, fields: Record<string, string | undefined> = {}) => {
   const url = new URL(`${site.repoUrl}/issues/new`);
-  if (pageTitle) url.searchParams.set('title', `Problem on: ${pageTitle}`);
+  url.searchParams.set('template', template);
+  for (const [k, v] of Object.entries(fields)) if (v) url.searchParams.set(k, v);
   return url.toString();
 };
