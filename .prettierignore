@@ -1,0 +1,8 @@
+dist/
+.astro/
+node_modules/
+package-lock.json
+LICENSE-*
+# Spec and brief are verbatim copies of the project docs; don't reformat them.
+docs/SPEC.md
+docs/RESEARCH.md
