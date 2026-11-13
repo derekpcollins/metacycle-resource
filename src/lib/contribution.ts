@@ -9,9 +9,9 @@
  *
  * Plain TypeScript with no Astro imports: it also runs in the Vercel function and in tsx.
  */
-import { SYSTEMS } from './enums';
-import { PART_OPTIONS } from '../data/part-options';
-import { site } from '../site.config';
+import { SYSTEMS } from './enums.js';
+import { PART_OPTIONS } from '../data/part-options.js';
+import { site } from '../site.config.js';
 
 // ---------- types and labels ----------
 
@@ -44,7 +44,7 @@ export const CONTRIBUTION_TYPES = {
 
 export type ContributionType = keyof typeof CONTRIBUTION_TYPES;
 export const isContributionType = (v: unknown): v is ContributionType =>
-  typeof v === 'string' && Object.hasOwn(CONTRIBUTION_TYPES, v);
+  typeof v === 'string' && Object.prototype.hasOwnProperty.call(CONTRIBUTION_TYPES, v);
 
 /**
  * Repo labels used by the issue forms, the label workflow and the web-form function.
@@ -84,7 +84,10 @@ export const partIdOf = (option: string) => option.match(/ · ([a-z0-9-]+)$/)?.[
 export const partOptions = () => [PART_NONE, PART_UNLISTED, ...PART_OPTIONS.map(partOption)];
 
 export const SYSTEM_UNSURE = 'Not sure';
-export const systemOptions = () => [SYSTEM_UNSURE, ...Object.values(SYSTEMS)];
+export const systemOptions = (): string[] => [
+  SYSTEM_UNSURE,
+  ...Object.keys(SYSTEMS).map((k) => SYSTEMS[k as keyof typeof SYSTEMS]),
+];
 
 export const SUGGEST_KINDS = { part: 'A part', vendor: 'A vendor (a store that sells parts)' };
 export const LINK_PROBLEMS = [
@@ -124,7 +127,7 @@ export const FIELDS: Field[] = [
     id: 'kind',
     kind: 'dropdown',
     label: 'What are you suggesting?',
-    options: () => Object.values(SUGGEST_KINDS),
+    options: (): string[] => [SUGGEST_KINDS.part, SUGGEST_KINDS.vendor],
     types: ['suggest'],
     requiredFor: ['suggest'],
   },

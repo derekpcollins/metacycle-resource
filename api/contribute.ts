@@ -9,15 +9,15 @@
  *   - anything else (plain HTML form POST): a 303 redirect to /contribute/thanks or back
  *     to /contribute/form with an error code.
  */
-import { validate, labelsFor, issueTitle, issueBody } from '../src/lib/contribution';
-import { repoSlug } from '../src/site.config';
+import { validate, labelsFor, issueTitle, issueBody } from '../src/lib/contribution.js';
+import { repoSlug } from '../src/site.config.js';
 import {
   ConfigError,
   createIssue,
   ipAllowed,
   underHourlyCap,
   verifyTurnstile,
-} from './_lib/server';
+} from './_lib/server.js';
 
 const MAX_BYTES = 32 * 1024;
 /** Fields copied back into the form URL after a no-JS error (short ones only). */
