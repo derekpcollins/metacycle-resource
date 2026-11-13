@@ -11,6 +11,8 @@ Each phase runs in its own chat. Every phase ends by updating this file and writ
 | 5   | Automation & trust (weekly link checker, staleness badges, Help Wanted, changelog)                 | Not started |
 | 6   | Downloads repo, polish (a11y/perf/SEO, analytics), make repo public                                | Not started |
 
+**Live URL:** https://metacycle-resource.vercel.app (Vercel project `metacycle-resource`, team _Derek's Projects_; pushes to `main` deploy to production).
+
 Launch (beta invites, announcements) is non-development and happens after Phase 6.
 
 ## Decisions log
@@ -41,3 +43,11 @@ Launch (beta invites, announcements) is non-development and happens after Phase 
   - Troubleshooting `checks` are `{ step, pass, fail }`; `fix` is a list of `{ guide?, part?, note? }`.
   - Tool `buy_links[].vendor` is a free-text store name, not a vendor id, since the vendors collection is for parts sellers.
 - **`noindex` on every page** until the public launch (Phase 6).
+
+## Phase 1 notes (deferred / learned)
+
+- **Deployment:** Vercel project `metacycle-resource` is linked to the GitHub repo; every push to `main` deploys to production at https://metacycle-resource.vercel.app. All 21 routes plus `/content-check.json` returned 200 on Nov 12. Pages carry `noindex`, but the production URL itself is public (no Vercel deployment protection). Turn protection on if it should stay private before launch.
+- **Tooling gotchas:** `gh` isn't authenticated in Claude's cloud workspace and the Vercel MCP got a 403 creating the project. What worked: create the GitHub repo by hand and attach it to the session, then log in to the Vercel CLI with the device flow (`vercel login`) and run `vercel link`.
+- **GitHub Actions:** the CI workflow is committed but its first run wasn't checked from the workspace (no `gh` auth). Check the Actions tab. The repo is private, so runs use Actions minutes (about 2 min each).
+- **Deferred to later phases:** real "Edit this page" behavior for non-content pages, issue-form "Report a problem" (Phase 4); the takedown contact, maintainer contact and affiliate disclosure are still TODO placeholders; the Specs, Community and Contribute pages are stubs.
+- **Learned:** Astro 7 moved schemas to `src/content.config.ts` and only _logs_ broken references, which is why the hard check exists. Prettier formats content files too (YAML/MDX), but not `docs/SPEC.md` / `docs/RESEARCH.md`, which stay verbatim copies of the project docs.

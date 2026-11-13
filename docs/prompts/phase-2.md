@@ -3,7 +3,7 @@ You are starting Phase 2 (Design system & page templates) of an open-source, com
 ## Context
 
 - Repo: `derekpcollins/metacycle-resource` (private GitHub repo, `main` branch). Clone it, or attach it to the session if your tools work that way. If `gh` isn't authenticated, ask me rather than working around it.
-- Hosting: Vercel project linked to the repo; pushes to `main` deploy automatically.
+- Hosting: Vercel project `metacycle-resource` (team _Derek's Projects_), linked to the repo; pushes to `main` deploy to https://metacycle-resource.vercel.app. If your workspace's `vercel` CLI isn't logged in, use `vercel login` (device flow; I'll approve it).
 - Read these before writing any code, in this order:
   1. `docs/SPEC.md`: the site spec and **source of truth**. Read it fully. Follow its data models, IA, page templates and decisions.
   2. `docs/PHASES.md`: phase status, decisions log, and what Phase 1 built, deferred or learned.
