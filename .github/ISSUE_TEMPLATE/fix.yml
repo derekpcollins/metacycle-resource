@@ -10,7 +10,7 @@ body:
       value: |-
         Something you did that solved a problem, or a step that worked for you.
 
-        No GitHub account? Use the [web form](https://metacycle-resource.vercel.app/contribute/form?type=fix) instead. Please read the [review rules](https://metacycle-resource.vercel.app/contribute#review).
+        No GitHub account? Use the [web form](https://metacycle.guide/contribute/form?type=fix) instead. Please read the [review rules](https://metacycle.guide/contribute#review).
   - type: dropdown
     id: part
     attributes:

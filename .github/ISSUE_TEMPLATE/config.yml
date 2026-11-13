@@ -2,9 +2,9 @@
 blank_issues_enabled: false
 contact_links:
   - name: No GitHub account? Use the web form
-    url: https://metacycle-resource.vercel.app/contribute/form
+    url: https://metacycle.guide/contribute/form
     about: Same questions, no account needed.
   - name: Ask the community
-    url: https://metacycle-resource.vercel.app/community
+    url: https://metacycle.guide/community
     about: Questions and chat belong in the owner groups (Reddit, Discord,
       Facebook). Metacycle Resource isn’t a forum.

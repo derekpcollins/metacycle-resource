@@ -10,7 +10,7 @@ body:
       value: |-
         Something on a page is wrong or out of date: a spec, a step, a part number.
 
-        No GitHub account? Use the [web form](https://metacycle-resource.vercel.app/contribute/form?type=spec-correction) instead. Please read the [review rules](https://metacycle-resource.vercel.app/contribute#review).
+        No GitHub account? Use the [web form](https://metacycle.guide/contribute/form?type=spec-correction) instead. Please read the [review rules](https://metacycle.guide/contribute#review).
   - type: dropdown
     id: part
     attributes:

@@ -14,7 +14,7 @@ export const site = {
   /** Branch used for "Edit this page" links. */
   editBranch: 'main',
   /** Bare domain without protocol, e.g. "example.org". null until chosen. */
-  domain: null as string | null,
+  domain: 'metacycle.guide' as string | null,
   /** Where the site is served until a domain is chosen (Vercel production URL). */
   productionUrl: 'https://metacycle-resource.vercel.app',
   /**

@@ -11,7 +11,7 @@ Each phase runs in its own chat. Every phase ends by updating this file and writ
 | 5   | Automation & trust (weekly link checker, staleness badges, Help Wanted, changelog)                 | Not started |
 | 6   | Downloads repo, polish (a11y/perf/SEO, analytics), make repo public                                | Not started |
 
-**Live URL:** https://metacycle-resource.vercel.app (Vercel project `metacycle-resource`, team _Derek's Projects_; pushes to `main` deploy to production).
+**Live URL:** https://metacycle.guide once attached in Vercel (bought Nov 12); https://metacycle-resource.vercel.app until then (Vercel project `metacycle-resource`, team _Derek's Projects_; pushes to `main` deploy to production).
 
 Launch (beta invites, announcements) is non-development and happens after Phase 6.
 
@@ -91,7 +91,8 @@ Launch (beta invites, announcements) is non-development and happens after Phase 
 - **Private repo vs public contributors: flag-gated.** The web form works for everyone now. "Edit this page" and the GitHub issue-form links show "opens at launch" until `site.githubContributionsOpen` (in `src/site.config.ts`) is set to `true` in Phase 6. Preview builds turn them on with `PUBLIC_GITHUB_CONTRIBUTIONS=true` (Vercel, Preview only) so the editor can test them.
 - **Bot credentials: a GitHub App** (Issues: read & write, this repo only), created by Derek. Issues show as the app's bot, not as Derek. Env: `GITHUB_APP_ID`, `GITHUB_APP_PRIVATE_KEY`, `GITHUB_APP_INSTALLATION_ID` (optional).
 - **Turnstile: Cloudflare's public test keys for now** behind `TURNSTILE_TEST_MODE=pass` (production + preview). Swap in real keys later with `PUBLIC_TURNSTILE_SITE_KEY` + `TURNSTILE_SECRET_KEY` and remove the test mode; no code change. **Until then production has no real bot check**: the honeypot, same-origin check, per-IP limit and hourly cap (20) are the only spam defenses.
-- **Contacts:** takedown and maintainer contacts will be an email address on the new domain, so they stay `TODO` until a domain is bought. Domain shortlist (Vercel prices, Nov 12): metacycle.guide (Derek's preference), metacycle.fyi, metacycleowners.org. `metacycle.org` is taken.
+- **Domain: metacycle.guide** (bought by Derek, Nov 12; preferred over metacycle.fyi and metacycleowners.org). `site.domain` is set, so issue forms, the canonical site URL and absolute links use it. It must be attached to the `metacycle-resource` Vercel project (Settings → Domains) for those links to work.
+- **Contacts:** takedown and maintainer contacts will be an email address on metacycle.guide, so they stay `TODO` until Derek sets up mail for the domain.
 - **`likely_causes` dropped** from the spec, schema and the six troubleshooting entries. Ordered checks with `most_likely` carry it; every dropped fact already appeared in a check or the entry body. `test:validation` now proves the retired field is rejected.
 
 ### Phase 4 implementation decisions
