@@ -1,0 +1,17 @@
+---
+symptom: Speedometer reads wrong
+system: controls-display
+likely_causes:
+  - Display is set to the factory tire circumference of 1915 mm.
+checks:
+  - step: Check the tire circumference setting in the display.
+    pass: It's already 1675 mm. Look for another cause (TODO).
+    fail: It's 1915 mm (factory). Change it to 1675 mm.
+fix:
+  - note: Set the tire circumference in the display to 1675 mm.
+confidence: community-reported
+sources:
+  - https://metacyclopedia.github.io/problems/
+---
+
+The factory display setting uses a 1915 mm tire circumference. Owners report correct readings after changing it to 1675 mm.

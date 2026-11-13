@@ -1,0 +1,24 @@
+# Facts from docs/RESEARCH.md §1, §2 and §4. Buy-link details still TODO.
+id: controller
+name: Motor controller (Votol EM200-2SP)
+system: powertrain
+aliases: [controller, votol, em200, em200-2sp, esc]
+specs:
+  model: Votol EM200-2SP (not the plain EM200)
+  voltage_v: 60–72
+  factory_current_limit: under 200 A (220 A in sport mode)
+failure_rate: common
+fits_notes: >
+  A former Sondors engineer cites a high controller failure rate (poor MOSFET
+  choice). Replacement alternatives (e.g. Fardriver) are not yet documented — TODO.
+sources:
+  - vendor: siaecosys-aliexpress
+    url: TODO
+    type: OEM
+    fit: exact
+    price: { amount: TODO, currency: USD }
+    last_verified: TODO
+    status: unverified
+references:
+  - https://metacyclopedia.github.io/controller/
+  - https://electrek.co/2024/05/12/failed-sondors-metacycle-motorcycle-was-never-street-legal-reveals-employee/

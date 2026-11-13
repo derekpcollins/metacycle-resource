@@ -1,0 +1,37 @@
+---
+symptom: Won't power on / remotes dead
+system: electrical
+likely_causes:
+  - Kill switch is in the off position.
+  - Controller or motor is too hot.
+  - Battery needs reactivating.
+  - Key fob batteries are dead.
+  - Blown 5 A fuse.
+  - Alarm module fault.
+checks:
+  - step: Check the kill switch.
+    pass: Switch is on. Continue.
+    fail: Flip it on and try again.
+  - step: Let the controller and motor cool down, then retry.
+    pass: Still dead. Continue.
+    fail: Powers on. Heat was the cause.
+  - step: Reactivate the battery (activator dongle or charger).
+    pass: Still dead. Continue.
+    fail: Powers on. Battery needed reactivating.
+  - step: Replace the key fob batteries.
+    pass: Still dead. Continue.
+    fail: Remotes work again.
+  - step: Check the 5 A fuse.
+    pass: Fuse is good. Continue.
+    fail: Replace the fuse.
+  - step: If the alarm is silent, bridge the orange and red wires under the seat to test.
+    pass: Bike powers on. The alarm is the likely fault.
+    fail: TODO — next diagnostic step not yet documented.
+fix:
+  - note: Work through the checks in order. If the alarm is at fault, see "Lost key fobs" for alarm replacement or removal options (TODO guide).
+confidence: community-reported
+sources:
+  - https://metacyclopedia.github.io/problems/
+---
+
+Work through the checks in order; most owners find the cause in the first few.

@@ -1,0 +1,14 @@
+# SiAECOSYS built the Metacycle under contract (docs/RESEARCH.md §2).
+id: siaecosys-aliexpress
+name: SiAECOSYS (AliExpress store)
+url: TODO
+country: China
+ships_to_us: unknown
+us_warehouse: unknown
+buying_tips: >
+  SiAECOSYS (Taizhou Sia Science and Technology Co., a QS Motor subsidiary) built the
+  Metacycle under contract and sells the bike's parts — hub motor, wheels, controller —
+  on AliExpress.
+references:
+  - https://metacyclopedia.github.io/parts/
+  - https://endless-sphere.com/sphere/threads/sonders-metacycle-for-sale-again-now-sold-by-saiecosys-company.125850/

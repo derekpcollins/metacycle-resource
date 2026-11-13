@@ -1,0 +1,25 @@
+# Example from docs/SPEC.md. Prices, URLs and verification dates still TODO.
+id: rear-shock
+name: Rear shock absorber
+system: suspension
+aliases: [shock, rear suspension, absorber]
+specs:
+  eye_to_eye_mm: 310
+  mount_hole_mm: 10
+  end_width_mm: 25
+failure_rate: occasional
+difficulty: 2
+fits_notes: >
+  Stock unit is reported as low quality. Some owners fit 320–330 mm
+  to raise ride height.
+sources:
+  - vendor: siaecosys-aliexpress
+    url: TODO
+    type: OEM
+    fit: exact
+    price: { amount: TODO, currency: USD }
+    last_verified: TODO
+    status: unverified
+references:
+  - https://metacyclopedia.github.io/parts/
+  - https://sites.google.com/view/metacycle-pedia/parts

@@ -1,0 +1,12 @@
+# SiAECOSYS reseller (docs/RESEARCH.md §2; buying tip from docs/SPEC.md).
+id: e-smart-way
+name: E Smart Way
+url: https://e-smartway.com
+ships_to_us: unknown
+us_warehouse: some-items
+buying_tips: >
+  SiAECOSYS reseller with a US warehouse for some items. Customs duties are not
+  included on orders.
+references:
+  - https://metacyclopedia.github.io/parts/
+  - https://e-smartway.com/products/us-warehouse-siaecosys-siayq72180-programmable-electric-motorcycle-controller-72v-180a-for-high-power-motor-1
