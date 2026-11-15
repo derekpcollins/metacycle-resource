@@ -2,7 +2,12 @@
 # After a pull request is merged into main, adds it to src/data/changelog.json (title,
 # labels, closed issues, credited contributors, files) and commits that file to main.
 # The commit deploys the site (Vercel), which renders /contribute/changelog from it.
-# Pushes made with GITHUB_TOKEN don't start other workflows, so this can't loop.
+#
+# main is protected (pull request required), so the commit is pushed with a deploy key,
+# the one actor the ruleset lets bypass that. The key's private half is the secret
+# CHANGELOG_DEPLOY_KEY in the "changelog" environment, which only runs on main.
+# A deploy-key push does start other workflows, so the commit message carries [skip ci].
+# It can't loop either way: this workflow runs only on merged pull requests (or by hand).
 #
 # pull_request_target, not pull_request: a pull request from a fork gets a read-only token
 # under pull_request, so the commit to main would fail. pull_request_target runs in this
@@ -33,10 +38,12 @@ jobs:
     if: github.event_name == 'workflow_dispatch' || github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    environment: changelog
     steps:
       - uses: actions/checkout@v4
         with:
           ref: main
+          ssh-key: ${{ secrets.CHANGELOG_DEPLOY_KEY }}
       - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
@@ -58,7 +65,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add src/data/changelog.json
-          git commit -m "Changelog: add #$PR"
+          git commit -m "Changelog: add #$PR [skip ci]"
           for i in 1 2 3; do
             git push origin HEAD:main && exit 0
             git pull --rebase origin main
