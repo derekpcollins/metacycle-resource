@@ -3,6 +3,9 @@ name: CI
 on:
   push:
     branches: [main]
+    # The changelog workflow's commits touch only this file; the PR it records already passed CI.
+    paths-ignore:
+      - src/data/changelog.json
   pull_request:
   # Lets the link checker start CI on its dead-links branch (its pushes don't trigger runs).
   workflow_dispatch:
