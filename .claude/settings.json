@@ -1,5 +1,15 @@
 {
   "permissions": {
-    "deny": ["Bash(git push *main)", "Bash(git -C * push *main)", "Bash(git -c * push *main)"]
+    "deny": [
+      "Bash(git push *main)",
+      "Bash(git push * main *)",
+      "Bash(git push *:main *)",
+      "Bash(git -C * push *main)",
+      "Bash(git -C * push * main *)",
+      "Bash(git -C * push *:main *)",
+      "Bash(git -c * push *main)",
+      "Bash(git -c * push * main *)",
+      "Bash(git -c * push *:main *)"
+    ]
   }
 }
