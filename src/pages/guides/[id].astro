@@ -32,6 +32,8 @@ const parts = await Promise.all(
   })),
 );
 const { Content } = await render(entry);
+/** Guides without <Step> blocks (e.g. a schedule) show their body without the Steps heading. */
+const hasSteps = entry.body === undefined || /<Step[\s>]/.test(entry.body);
 const verifiedDate = d.last_verified instanceof Date ? isoDate(d.last_verified) : undefined;
 ---
 
@@ -180,20 +182,26 @@ const verifiedDate = d.last_verified instanceof Date ? isoDate(d.last_verified) 
       </section>
     </div>
 
-    <section class="block steps" aria-labelledby="h-steps">
-      <h2 class="block-title" id="h-steps">
-        <span class="n" data-pagefind-ignore>
-          03
-        </span>
-        Steps
-      </h2>
-      <div class="steps-body">
+    {hasSteps ? (
+      <section class="block steps" aria-labelledby="h-steps">
+        <h2 class="block-title" id="h-steps">
+          <span class="n" data-pagefind-ignore>
+            03
+          </span>
+          Steps
+        </h2>
+        <div class="steps-body">
+          <Content />
+        </div>
+        <p class="caption" data-pagefind-ignore>
+          Tick steps as you go. Ticks stay on this device only.
+        </p>
+      </section>
+    ) : (
+      <div class="block steps-body">
         <Content />
       </div>
-      <p class="caption" data-pagefind-ignore>
-        Tick steps as you go. Ticks stay on this device only.
-      </p>
-    </section>
+    )}
   </article>
 </BaseLayout>
 
