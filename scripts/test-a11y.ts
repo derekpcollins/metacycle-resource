@@ -23,6 +23,7 @@ const DEFAULT_ROUTES = [
   '/parts',
   '/parts/rear-shock',
   '/guides/battery-removal',
+  '/guides/maintenance-schedule',
   '/troubleshooting/wont-power-on',
   '/vendors/e-smart-way',
   '/tools',
