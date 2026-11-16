@@ -1,0 +1,112 @@
+---
+title: Tire inspection & replacement
+summary: Check pressure, tread and damage on a schedule, know when a tire is done, and what to watch for when you replace one.
+type: maintenance
+system: wheels-tires
+difficulty: 3
+time_minutes: TODO
+tools: [tire-pressure-gauge]
+parts: [tires, hub-motor]
+safety:
+  - Under-inflation is a common cause of tire failure. The manual warns it can crack the tire, separate the tread, unseat the bead or cause a blowout and loss of control.
+  - If a wheel or tire shows any of the damage listed below, replace it before riding again.
+  - The rear wheel is the hub motor. It's heavy, and its wiring connects to the bike's 72 V system. If you're unsure, use a qualified technician.
+confidence: community-reported
+sources:
+  - https://metacyclopedia.github.io/Downloads/Sondors%20Metacycle%20e-Motorcycle%20User%20Manual.pdf
+  - https://metacyclopedia.github.io/files/
+  - https://metacyclopedia.github.io/parts/
+  - https://metacyclopedia.github.io/problems/
+  - https://metacyclopedia.github.io/motor/
+  - https://www.youtube.com/watch?v=Q7U2baauyt8
+  - https://www.youtube.com/watch?v=VoAgnKyHUw4
+---
+
+import Step from '../../components/Step.astro';
+
+The inspection half of this guide comes straight from the Sondors owner's manual (§17, §20 and §21.1). The replacement half is thin: nobody has written up the Metacycle procedure yet, and axle torque values aren't documented anywhere. If you've done it, please [share your steps](/contribute/form?type=fix&system=wheels-tires&page=/guides/tire-inspection-replacement).
+
+### How often
+
+| When                        | What to check                                             |
+| --------------------------- | --------------------------------------------------------- |
+| Before every ride           | Pressure, tread depth, visible damage                     |
+| Every 500 mi or 1 month     | Full inspection below, plus wheels for run-out and damage |
+| Every 6,000 mi or 18 months | Full tire inspection                                      |
+
+The manual's maintenance table also lists wheel run-out at 3,000 mi / 12 months.
+
+### Inspection
+
+<Step n={1}>
+  Check pressure with the tires **cold**, meaning not ridden for at least 3 hours. Set the front to
+  **32 psi (221 kPa)** and the rear to **30 psi (207 kPa)**. Put the valve stem caps back on
+  afterwards. (The maintenance table says 32 psi for both; the manual's tire page and Metacyclopedia
+  both give 30 psi for the rear.)
+</Step>
+
+<Step n={2}>
+  Measure tread depth. The manual gives two limits: the maintenance table says replace below **2
+  mm**, and the tire page says below **1.6 mm (1/16 in)**. Plan to replace at 2 mm.
+</Step>
+
+<Step n={3}>
+  Inspect both tires for cuts, cracks, splits or missing tread lugs in the tread or sidewall; bumps
+  or bulges in the tire body; and exposed thread or cords.
+</Step>
+
+<Step n={4}>
+  Look for uneven wear. The manual says wear on one side of the tread, or flat spots, means there's
+  a problem with the tire or with the bike. Find out which before you fit a new tire.
+</Step>
+
+<Step n={5}>
+  Inspect both wheels for bends, cracks and impact marks. Spin each wheel and check for run-out
+  (wobble).
+</Step>
+
+<Step n={6}>
+  On the rear, check that no cables are touching the tire. The orange power wire and the brake-light
+  wires are known to rub; see [Cables rubbing rear tire](/troubleshooting/cables-rubbing-rear-tire).
+</Step>
+
+If anything in steps 2–5 fails, the manual says to replace the wheel and/or tire immediately.
+
+### Replacement
+
+<Step n={7}>
+  Buy the right size: front **110/70 R17**, rear **150/60 R17**. Bikes shipped with Michelin Pilot
+  Road 5 or CST CM-NK01 tires (possibly Kenda on some). The manual says to use only "approved radial
+  tires"; with Sondors gone there's no approved list, so match the size and type of what you have.
+  See [Tires](/parts/tires).
+</Step>
+
+<Step n={8}>
+  Check whether you have tubeless tires: if the spokes go to tabs on the wheel rim, they're
+  tubeless.
+</Step>
+
+<Step n={9}>
+  Remove the wheel and change the tire. Owner videos: [short
+  version](https://www.youtube.com/watch?v=Q7U2baauyt8) and [long
+  version](https://www.youtube.com/watch?v=VoAgnKyHUw4). TODO: a written procedure for each wheel.
+  The rear wheel is the [hub motor](/parts/hub-motor), so it's heavier than the front and its wiring
+  is attached to it; how to disconnect it safely isn't documented yet.
+</Step>
+
+<Step n={10}>
+  Reinstall the wheel. TODO: axle nut and wheel bolt torque values aren't documented anywhere yet.
+  If you know them (with a source or a photo of the manual), please [share
+  them](/contribute/form?type=fix&system=wheels-tires&page=/guides/tire-inspection-replacement).
+</Step>
+
+<Step n={11}>
+  Check that the front wheel bolts, rear wheel bolts and swingarm bolt are secure. The factory
+  marked them with blue paint: the mark on each bolt should line up with the mark on its housing.
+</Step>
+
+<Step n={12}>
+  Set the pressures (step 1), then check the speedometer on your first ride. A different tire brand
+  or profile can change the rolling circumference. The fix is the display's circumference setting;
+  see [Speedometer reads wrong](/troubleshooting/speedometer-reads-wrong).
+</Step>
