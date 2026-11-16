@@ -34,6 +34,9 @@ const parts = await Promise.all(
 const { Content } = await render(entry);
 /** Guides without <Step> blocks (e.g. a schedule) show their body without the Steps heading. */
 const hasSteps = entry.body === undefined || /<Step[\s>]/.test(entry.body);
+/** Section numbers (01, 02…) skip sections that are hidden. */
+const shown = [tools.length > 0 && 'tools', 'parts', hasSteps && 'steps'].filter(Boolean);
+const num = (id: string) => String(shown.indexOf(id) + 1).padStart(2, '0');
 const verifiedDate = d.last_verified instanceof Date ? isoDate(d.last_verified) : undefined;
 ---
 
@@ -126,26 +129,28 @@ const verifiedDate = d.last_verified instanceof Date ? isoDate(d.last_verified) 
       </section>
     )}
 
-    <div class="prep">
-      <section class="block" aria-labelledby="h-tools">
-        <h2 class="block-title" id="h-tools">
-          <span class="n" data-pagefind-ignore>
-            01
-          </span>
-          Tools you’ll need
-          <a class="more" href="/tools">
-            all tools →
-          </a>
-        </h2>
-        <div data-pagefind-ignore>
-          <ToolsChecklist tools={tools} />
-        </div>
-      </section>
+    <div class:list={['prep', { single: tools.length === 0 }]}>
+      {tools.length > 0 && (
+        <section class="block" aria-labelledby="h-tools">
+          <h2 class="block-title" id="h-tools">
+            <span class="n" data-pagefind-ignore>
+              {num('tools')}
+            </span>
+            Tools you’ll need
+            <a class="more" href="/tools">
+              all tools →
+            </a>
+          </h2>
+          <div data-pagefind-ignore>
+            <ToolsChecklist tools={tools} />
+          </div>
+        </section>
+      )}
 
       <section class="block" aria-labelledby="h-parts">
         <h2 class="block-title" id="h-parts">
           <span class="n" data-pagefind-ignore>
-            02
+            {num('parts')}
           </span>
           Parts
         </h2>
@@ -186,7 +191,7 @@ const verifiedDate = d.last_verified instanceof Date ? isoDate(d.last_verified) 
       <section class="block steps" aria-labelledby="h-steps">
         <h2 class="block-title" id="h-steps">
           <span class="n" data-pagefind-ignore>
-            03
+            {num('steps')}
           </span>
           Steps
         </h2>
@@ -252,7 +257,7 @@ const verifiedDate = d.last_verified instanceof Date ? isoDate(d.last_verified) 
     border-top: 0;
   }
   @media (min-width: 60rem) {
-    .prep {
+    .prep:not(.single) {
       grid-template-columns: 1fr 1fr;
     }
   }
