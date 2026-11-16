@@ -64,7 +64,7 @@ Source: [Metacyclopedia – Community](https://metacyclopedia.github.io/communit
 ## 7. Open gaps to fill for the new site
 - ~~Tire sizes/brand~~ (found in Phase 3, see §1 and §8), rim sizes, front brake caliper + pads, fork model/oil spec
 - Torque specs (axle nuts, caliper bolts, motor mount)
-- Maintenance schedule (none exists anywhere)
+- ~~Maintenance schedule~~ (found Nov 15, 2026: Sondors owner's manual §20, mirrored on Metacyclopedia; published as /guides/maintenance-schedule). Brake fluid DOT 3/4, replaced every 12 months; pads ≥3 mm, rotors ≥2 mm (manual §21.2)
 - Exploded/parts diagrams with numbered callouts
 - Controller replacement alternatives (Fardriver etc.) beyond the stock Votol
 - Live verification of every purchase link + current prices

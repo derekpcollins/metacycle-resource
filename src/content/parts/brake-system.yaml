@@ -8,8 +8,15 @@ aliases:
   - calipers
   - master cylinder
   - brake kit
+specs:
+  fluid: DOT 3 or DOT 4
+  fluid_change_interval: 12 months
+  pad_min_mm: 3
+  rotor_min_mm: 2
 fits_notes: >-
-  Front caliper, pads and fluid specs are not documented anywhere yet. Contributions welcome.
+  Separate front and rear hydraulic systems, each with its own reservoir and handlebar
+  sightglass. Fluid type, interval and wear limits are from the Sondors owner's manual. The
+  front caliper model and front pad part number are still unknown. Contributions welcome.
 sources:
   - vendor: aliexpress
     url: https://a.aliexpress.com/_mr3b3VW
@@ -21,5 +28,9 @@ sources:
     last_verified: TODO
     status: unverified
     notes: Full brake system.
+related_guides:
+  - brake-service
+  - maintenance-schedule
 references:
   - https://metacyclopedia.github.io/parts/
+  - https://metacyclopedia.github.io/Downloads/Sondors%20Metacycle%20e-Motorcycle%20User%20Manual.pdf

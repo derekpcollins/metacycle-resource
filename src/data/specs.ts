@@ -52,6 +52,10 @@ const s = {
     'RevZilla',
   ],
   old: ['https://sites.google.com/view/metacycle-pedia/parts', 'Metacycle-pedia (old site)'],
+  manual: [
+    `${MC}Downloads/Sondors%20Metacycle%20e-Motorcycle%20User%20Manual.pdf`,
+    "Sondors owner's manual",
+  ],
 } as const;
 
 const row = (
@@ -134,6 +138,25 @@ export const specSections: SpecSection[] = [
       row('Rear shock', '310 mm eye to eye, 10 mm holes, 25 mm end widths', s.parts, {
         part: 'rear-shock',
       }),
+      row(
+        'Brakes',
+        'Separate front and rear hydraulic discs; right lever front, left lever rear',
+        s.manual,
+        {
+          part: 'brake-system',
+        },
+      ),
+      row('Brake fluid', 'DOT 3 or DOT 4, replaced every 12 months', s.manual, {
+        part: 'brake-system',
+      }),
+      row(
+        'Brake wear limits',
+        'Pads at least 3 mm of friction material; rotors at least 2 mm thick',
+        s.manual,
+        {
+          part: 'brake-system',
+        },
+      ),
       row('Rear brake pads', 'EBC FA266 (organic reported quietest)', s.old, {
         part: 'rear-brake-pads',
       }),
@@ -267,8 +290,8 @@ export const downloadsSource = s.files[0];
 /** Known gaps, from docs/RESEARCH.md §7. Shown so owners know what's missing. */
 export const gaps = [
   'Rim sizes',
-  'Front brake caliper and pads',
+  'Front brake caliper model and front pad part number',
+  'Brake bleed-screw size and fluid capacity per brake',
   'Fork model and oil spec',
   'Torque specs (axle nuts, caliper bolts, motor mount)',
-  'Maintenance schedule',
 ];

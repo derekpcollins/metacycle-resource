@@ -1,0 +1,7 @@
+# Generic motorcycle brake bleeding gear. buy_links stay empty; affiliate is off.
+id: brake-bleed-kit
+name: Brake bleed kit
+spec: Clear hose that fits snugly over the bleed screw, a catch bottle, and a syringe for the reservoir
+category: hand-tool
+essential: false
+buy_links: []

@@ -1,0 +1,126 @@
+---
+title: Brake fluid & pad service
+summary: Check and replace the brake fluid (DOT 3 or DOT 4, every 12 months), inspect pads and rotors, and swap worn pads.
+type: maintenance
+system: brakes
+difficulty: 3
+time_minutes: TODO
+tools: [brake-fluid-dot4, brake-bleed-kit, nitrile-gloves]
+parts: [brake-system, rear-brake-pads]
+safety:
+  - Brakes are safety-critical. If you're not confident doing this, use a qualified motorcycle technician, and test the brakes at walking speed before riding in traffic.
+  - Don't ride if either reservoir is below MIN, or if a lever feels spongy or travels unusually far. Fix it first.
+  - Brake fluid is toxic and strips paint and plastic. Wear gloves and eye protection, cover nearby bodywork, and wipe up spills right away with soapy water.
+  - Never get brake fluid on the pads or rotors. Contaminated pads must be replaced.
+confidence: theory
+sources:
+  - https://metacyclopedia.github.io/Downloads/Sondors%20Metacycle%20e-Motorcycle%20User%20Manual.pdf
+  - https://metacyclopedia.github.io/parts/
+  - https://www.cyclegear.com/common-tread/video-how-to-bleed-motorcycle-brakes
+---
+
+import Step from '../../components/Step.astro';
+
+The Metacycle has separate front and rear hydraulic disc brakes, and each has its own fluid reservoir with a sightglass on the handlebars. As on a scooter, the right lever works the front brake and the left lever works the rear; there's no foot brake. Sondors' owner's manual gives the fluid type, the replacement interval and the wear limits, but no step-by-step procedure (it says to use a Sondors technician, and there aren't any now). The fluid change below is the standard method for any single-caliper motorcycle brake. Nobody has confirmed it on a Metacycle yet, which is why this guide is marked _theory_. If you've done it, tell us what worked.
+
+**From the owner's manual:**
+
+- **Fluid:** DOT 3 or DOT 4 only, from a sealed bottle. Fluid from an opened bottle, or fluid bled out of the bike, has absorbed moisture and must not be reused.
+- **Replace the fluid every 12 months,** however far you've ridden.
+- **Pads:** replace when less than 3 mm (0.1 in) of friction material is left.
+- **Rotors:** replace if thinner than 2 mm or visibly damaged.
+- **Lever free travel:** 2–3 mm.
+
+### Check fluid and wear (every ride, and monthly)
+
+<Step n={1}>
+  With the bike upright on level ground, look at both sightglasses on the handlebars. The fluid
+  should be above the MIN mark. The level drops a little as the pads wear, which is normal. A sudden
+  or repeated drop means a leak, so find it before riding.
+</Step>
+
+<Step n={2}>
+  Look at each caliper and check how much pad material is left. Replace the pads if there's less
+  than 3 mm. Check the rotors for scoring, cracks or warping.
+</Step>
+
+<Step n={3}>
+  Squeeze each lever. It should have 2–3 mm of free travel and then firm up. A spongy lever means
+  air in the line or old fluid; bleed it (below).
+</Step>
+
+### Replace the brake fluid (every 12 months)
+
+Do one brake at a time. A full change is an "extended bleed": push fresh fluid through until clean, bubble-free fluid comes out of the caliper.
+
+<Step n={4}>
+  Cover the tank, display and paint around the reservoir with rags. Turn the handlebar so the
+  reservoir you're working on sits level. TODO: what screws hold the reservoir caps, and their
+  driver size.
+</Step>
+
+<Step n={5}>
+  Remove the reservoir cap and the rubber diaphragm under it. Suck most of the old fluid out with a
+  syringe or turkey baster, but don't let it run dry, or you'll pull air into the master cylinder.
+  Refill with fresh DOT 4 (or DOT 3) to just below the top.
+</Step>
+
+<Step n={6}>
+  At the caliper, pull the rubber cap off the bleed screw. Fit a clear hose over it with the other
+  end in a catch bottle holding a little fresh fluid, so air can't be sucked back up. TODO: the
+  bleed-screw wrench size for the front and rear calipers.
+</Step>
+
+<Step n={7}>
+  Squeeze the lever and hold it. Open the bleed screw about a quarter turn, let the fluid and air
+  flow out, then close the screw **before** you release the lever. Repeat. Keep topping up the
+  reservoir so it never drops below MIN.
+</Step>
+
+<Step n={8}>
+  Keep going until the fluid in the hose is clean and has no bubbles. Old fluid is darker; new fluid
+  is clear to light amber. Expect to run a reservoir's worth through, or a little more. TODO: how
+  much fluid each brake takes for a full change.
+</Step>
+
+<Step n={9}>
+  Tighten the bleed screw snugly. Don't overtighten it; the threads are small. Refit the dust cap.
+  TODO: bleed-screw torque.
+</Step>
+
+<Step n={10}>
+  Set the fluid level between MIN and MAX, refit the diaphragm and cap, and wipe everything down.
+  Pump the lever until it's firm. Repeat steps 4–10 for the other brake.
+</Step>
+
+<Step n={11}>
+  If the lever stays spongy, let the bike sit for a while with the cap off and the reservoir level,
+  then bleed again. If you still can't get a firm lever, don't ride it.
+</Step>
+
+### Replace the pads
+
+<Step n={12}>
+  Rear pads are **EBC FA266**. Several compounds share that number, and owners report the organic
+  ones are the quietest. TODO: the front pad part number and the caliper model aren't known. If
+  you've changed your front pads, send us the part number, or photos of the old pad and the caliper.
+</Step>
+
+<Step n={13}>
+  Remove the pad retaining pin(s) and the old pads. Push the pistons back into the caliper with
+  steady, even pressure. The fluid level in the reservoir rises as you do, so watch it doesn't
+  overflow. TODO: whether the caliper has to come off to change the pads, and the caliper bolt size
+  and torque.
+</Step>
+
+<Step n={14}>
+  Fit the new pads and the retaining pin(s). Pump the lever until it's firm **before** you move the
+  bike; the first squeezes do nothing while the pistons come back out.
+</Step>
+
+<Step n={15}>
+  Bed in the new pads: make several moderate stops from about 20–30 mph on a quiet road, without
+  locking the wheel. Braking will be weaker until the pads have bedded in.
+</Step>
+
+For the full list of checks and intervals, see the [maintenance schedule](/guides/maintenance-schedule).
