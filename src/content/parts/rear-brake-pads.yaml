@@ -20,6 +20,8 @@ sources:
       currency: USD
     last_verified: TODO
     status: unverified
+related_guides:
+  - brake-service
 references:
   - https://metacyclopedia.github.io/parts/
   - https://sites.google.com/view/metacycle-pedia/parts

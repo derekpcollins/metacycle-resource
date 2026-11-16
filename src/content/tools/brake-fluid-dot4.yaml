@@ -1,0 +1,7 @@
+# Source: Sondors owner's manual §21.2 (DOT 3 or DOT 4, sealed container). buy_links stay empty; affiliate is off.
+id: brake-fluid-dot4
+name: DOT 4 brake fluid
+spec: DOT 4 (or DOT 3) brake fluid, new sealed bottle. Never DOT 5 (silicone) or mineral oil.
+category: consumable
+essential: false
+buy_links: []

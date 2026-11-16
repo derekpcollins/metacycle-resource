@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getCollection, getEntries, getEntry, render, type CollectionEntry } from 'astro:content';
+import { getCollection, getEntries, render, type CollectionEntry } from 'astro:content';
 import { GUIDE_TYPES, SOURCE_STATUSES, SYSTEMS } from '../../lib/enums';
 import { repoPath } from '../../lib/content';
 import { bestStatus, isoDate, statusTone } from '../../lib/format';
@@ -21,17 +21,17 @@ export async function getStaticPaths() {
 const { entry } = Astro.props as { entry: CollectionEntry<'guides'> };
 const d = entry.data;
 const tools = await getEntries(d.tools);
-const parts = await Promise.all(
-  (await getEntries(d.parts)).map(async (p) => ({
-    p,
-    links: await Promise.all(
-      p.data.sources
-        .filter((s) => s.url !== 'TODO')
-        .map(async (s) => ({ url: s.url, vendor: (await getEntry(s.vendor))?.data.name })),
-    ),
-  })),
-);
+/** Each part links to its page's buy table (type, fit, price, verified) instead of listing stores. */
+const parts = (await getEntries(d.parts)).map((p) => ({
+  p,
+  buyable: p.data.sources.filter((s) => s.url !== 'TODO' && s.status !== 'dead').length,
+}));
 const { Content } = await render(entry);
+/** Guides without <Step> blocks (e.g. a schedule) show their body without the Steps heading. */
+const hasSteps = entry.body === undefined || /<Step[\s>]/.test(entry.body);
+/** Section numbers (01, 02…) skip sections that are hidden. */
+const shown = [tools.length > 0 && 'tools', 'parts', hasSteps && 'steps'].filter(Boolean);
+const num = (id: string) => String(shown.indexOf(id) + 1).padStart(2, '0');
 const verifiedDate = d.last_verified instanceof Date ? isoDate(d.last_verified) : undefined;
 ---
 
@@ -124,26 +124,28 @@ const verifiedDate = d.last_verified instanceof Date ? isoDate(d.last_verified) 
       </section>
     )}
 
-    <div class="prep">
-      <section class="block" aria-labelledby="h-tools">
-        <h2 class="block-title" id="h-tools">
-          <span class="n" data-pagefind-ignore>
-            01
-          </span>
-          Tools you’ll need
-          <a class="more" href="/tools">
-            all tools →
-          </a>
-        </h2>
-        <div data-pagefind-ignore>
-          <ToolsChecklist tools={tools} />
-        </div>
-      </section>
+    <div class:list={['prep', { single: tools.length === 0 }]}>
+      {tools.length > 0 && (
+        <section class="block" aria-labelledby="h-tools">
+          <h2 class="block-title" id="h-tools">
+            <span class="n" data-pagefind-ignore>
+              {num('tools')}
+            </span>
+            Tools you’ll need
+            <a class="more" href="/tools">
+              all tools →
+            </a>
+          </h2>
+          <div data-pagefind-ignore>
+            <ToolsChecklist tools={tools} />
+          </div>
+        </section>
+      )}
 
       <section class="block" aria-labelledby="h-parts">
         <h2 class="block-title" id="h-parts">
           <span class="n" data-pagefind-ignore>
-            02
+            {num('parts')}
           </span>
           Parts
         </h2>
@@ -151,7 +153,7 @@ const verifiedDate = d.last_verified instanceof Date ? isoDate(d.last_verified) 
           <p class="muted none">No parts needed.</p>
         ) : (
           <ul class="parts">
-            {parts.map(({ p, links }) => {
+            {parts.map(({ p, buyable }) => {
               const best = bestStatus(p.data.sources);
               return (
                 <li>
@@ -162,14 +164,14 @@ const verifiedDate = d.last_verified instanceof Date ? isoDate(d.last_verified) 
                     <Badge tone={statusTone(best)}>{SOURCE_STATUSES[best].toLowerCase()}</Badge>
                   )}
                   <span class="buy">
-                    {links.length === 0 ? (
+                    {buyable === 0 ? (
                       <span class="todo">no buy link yet</span>
                     ) : (
-                      links.map((l) => (
-                        <a class="text-link ext" href={l.url} rel="nofollow noopener noreferrer">
-                          {l.vendor ?? 'store'}
-                        </a>
-                      ))
+                      <a class="text-link" href={`/parts/${p.id}#h-buy`}>
+                        {buyable} {buyable === 1 ? 'place' : 'places'} to buy{' '}
+                        <span aria-hidden="true">→</span>
+                        <span class="visually-hidden">: {p.data.name}</span>
+                      </a>
                     )}
                   </span>
                 </li>
@@ -180,20 +182,26 @@ const verifiedDate = d.last_verified instanceof Date ? isoDate(d.last_verified) 
       </section>
     </div>
 
-    <section class="block steps" aria-labelledby="h-steps">
-      <h2 class="block-title" id="h-steps">
-        <span class="n" data-pagefind-ignore>
-          03
-        </span>
-        Steps
-      </h2>
-      <div class="steps-body">
+    {hasSteps ? (
+      <section class="block steps" aria-labelledby="h-steps">
+        <h2 class="block-title" id="h-steps">
+          <span class="n" data-pagefind-ignore>
+            {num('steps')}
+          </span>
+          Steps
+        </h2>
+        <div class="steps-body">
+          <Content />
+        </div>
+        <p class="caption" data-pagefind-ignore>
+          Tick steps as you go. Ticks stay on this device only.
+        </p>
+      </section>
+    ) : (
+      <div class="block steps-body">
         <Content />
       </div>
-      <p class="caption" data-pagefind-ignore>
-        Tick steps as you go. Ticks stay on this device only.
-      </p>
-    </section>
+    )}
   </article>
 </BaseLayout>
 
@@ -233,6 +241,7 @@ const verifiedDate = d.last_verified instanceof Date ? isoDate(d.last_verified) 
     margin-left: auto;
     display: flex;
     gap: var(--space-3);
+    white-space: nowrap;
   }
   .steps-body {
     padding-top: var(--space-2);
@@ -244,7 +253,7 @@ const verifiedDate = d.last_verified instanceof Date ? isoDate(d.last_verified) 
     border-top: 0;
   }
   @media (min-width: 60rem) {
-    .prep {
+    .prep:not(.single) {
       grid-template-columns: 1fr 1fr;
     }
   }

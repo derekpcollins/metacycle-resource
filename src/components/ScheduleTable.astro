@@ -1,0 +1,160 @@
+---
+/**
+ * Maintenance-schedule table for guides: items down the side, intervals across the top.
+ * Stacked cards on phones (each item lists only the intervals that apply, as chips),
+ * a checkmark table on desktop. Same responsive pattern as BuyOptions.
+ *
+ *   <ScheduleTable
+ *     caption="..."
+ *     intervals={['Every ride', '500 mi / 1 mo']}
+ *     rows={[{ item: 'Brake fluid', check: '...', at: [0, 1] }]}  // `at` = interval indexes
+ *   />
+ */
+interface Row {
+  item: string;
+  check: string;
+  /** Indexes into `intervals` where this item is checked. */
+  at: number[];
+}
+interface Props {
+  caption: string;
+  intervals: string[];
+  rows: Row[];
+}
+const { caption, intervals, rows } = Astro.props;
+---
+
+<table class="schedule">
+  <caption class="visually-hidden">{caption}</caption>
+  <thead>
+    <tr>
+      <th scope="col">Item</th>
+      <th scope="col">What to check</th>
+      {intervals.map((label) => (
+        <th scope="col">{label}</th>
+      ))}
+    </tr>
+  </thead>
+  <tbody>
+    {rows.map((r) => (
+      <tr>
+        <th scope="row" class="item">
+          {r.item}
+        </th>
+        <td class="check">{r.check}</td>
+        {intervals.map((label, i) =>
+          r.at.includes(i) ? (
+            <td class="on">
+              <span class="mark" aria-hidden="true">
+                ✓
+              </span>
+              <span class="lab">{label}</span>
+            </td>
+          ) : (
+            <td class="off" />
+          ),
+        )}
+      </tr>
+    ))}
+  </tbody>
+</table>
+
+<style>
+  /* Phones: one card per item; interval headers are read from each chip instead. */
+  .schedule {
+    margin: 0 0 var(--space-6);
+  }
+  .schedule thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+  .schedule tr {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    padding: var(--space-4) 0;
+    border-bottom: var(--border) solid var(--color-rule);
+  }
+  .schedule th,
+  .schedule td {
+    display: block;
+    padding: 0;
+    text-align: left;
+    font-weight: 400;
+  }
+  .item {
+    flex-basis: 100%;
+    font-weight: 600 !important;
+  }
+  .check {
+    flex-basis: 100%;
+    margin-bottom: var(--space-1);
+  }
+  .off,
+  .mark {
+    display: none !important;
+  }
+  .lab {
+    display: inline-block;
+    padding: var(--space-1) var(--space-2);
+    border: var(--border) solid var(--color-rule-strong);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    white-space: nowrap;
+  }
+
+  /* Desktop: a real grid with checkmarks; chip text stays for screen readers. */
+  @media (min-width: 60rem) {
+    .schedule {
+      font-size: var(--text-sm);
+    }
+    .schedule thead {
+      position: static;
+      width: auto;
+      height: auto;
+      overflow: visible;
+      clip: auto;
+      display: table-header-group;
+    }
+    .schedule tr {
+      display: table-row;
+    }
+    .schedule th,
+    .schedule td {
+      display: table-cell !important;
+      padding: var(--space-3) var(--space-3) var(--space-3) 0;
+      border-bottom: var(--border) solid var(--color-rule);
+      vertical-align: top;
+    }
+    .schedule thead th {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+      vertical-align: bottom;
+    }
+    .schedule thead th:nth-child(n + 3),
+    .schedule .on,
+    .schedule .off {
+      text-align: center;
+      width: 10ch;
+      padding-left: var(--space-2);
+      padding-right: var(--space-2);
+    }
+    .mark {
+      display: inline !important;
+    }
+    .lab {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+      border: 0;
+    }
+  }
+</style>

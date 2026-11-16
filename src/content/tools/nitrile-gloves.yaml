@@ -1,0 +1,7 @@
+# Generic shop consumable. buy_links stay empty; affiliate is off.
+id: nitrile-gloves
+name: Nitrile gloves
+spec: Disposable nitrile gloves (brake fluid is toxic and irritates skin)
+category: consumable
+essential: false
+buy_links: []
