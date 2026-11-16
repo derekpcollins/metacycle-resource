@@ -1,0 +1,7 @@
+# Source: Sondors owner's manual §21.1 ("checked using an accurate gauge when the tires are COLD"). buy_links stay empty; affiliate is off.
+id: tire-pressure-gauge
+name: Tire pressure gauge
+spec: Accurate gauge reading at least 0–40 psi (front 32 psi, rear 30 psi)
+category: hand-tool
+essential: true
+buy_links: []
