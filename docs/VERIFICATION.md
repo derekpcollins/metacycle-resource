@@ -259,7 +259,7 @@ Entries count as stale 90 days after `last_verified`.
   - edit: [dc-converter-12v-3a.yaml](https://github.com/derekpcollins/metacycle-resource/edit/main/src/content/parts/dc-converter-12v-3a.yaml) → `sources[0]`
 - [ ] **Display unit / speedometer (DKD 061)** · OEM · fit exact
   - link: <https://www.cnqsmotor.com/product/sondors-motorcycle-72v-dkd-lcd-mt-speedometer-for-metacycle/>
-  - status: `unverified` · verified: never · price: TODO (USD)
+  - status: `dead` · verified: never · price: TODO (USD)
   - edit: [display.yaml](https://github.com/derekpcollins/metacycle-resource/edit/main/src/content/parts/display.yaml) → `sources[0]`
 - [ ] **Folding footpegs** · OEM · fit exact
   - link: <https://www.cnqsmotor.com/product/electric-motorcycle-black-folded-footpeg-scooter-accessories/>
@@ -334,7 +334,7 @@ Entries count as stale 90 days after `last_verified`.
 
 - [ ] **Complete bike (new, from the factory)** · OEM · fit exact
   - link: <https://e-smartway.com/products/siaecosys-electric-motorcycle-72v-120kph-high-power-cast-aluminum-integrally-formed-frame-mt-with-4kwh-lithium-ion-battery>
-  - status: `unverified` · verified: never · price: TODO (USD)
+  - status: `dead` · verified: never · price: TODO (USD)
   - note: Duties and tax not included.
   - edit: [complete-bike.yaml](https://github.com/derekpcollins/metacycle-resource/edit/main/src/content/parts/complete-bike.yaml) → `sources[1]`
 
@@ -430,7 +430,7 @@ Entries count as stale 90 days after `last_verified`.
 
 - **Complete bike (new, from the factory)** ([complete-bike.yaml](https://github.com/derekpcollins/metacycle-resource/edit/main/src/content/parts/complete-bike.yaml))
   - SiAECOSYS (AliExpress store): `unverified`, verified never, price TODO (USD)
-  - E Smart Way: `unverified`, verified never, price TODO (USD)
+  - E Smart Way: `dead`, verified never, price TODO (USD)
 
 - **Motor controller (Votol EM200-2SP)** ([controller.yaml](https://github.com/derekpcollins/metacycle-resource/edit/main/src/content/parts/controller.yaml))
   - AliExpress (seller not confirmed): `unverified`, verified never, price TODO (USD)
@@ -444,7 +444,7 @@ Entries count as stale 90 days after `last_verified`.
 - **Delay relay**: no buy links yet ([delay-relay.yaml](https://github.com/derekpcollins/metacycle-resource/edit/main/src/content/parts/delay-relay.yaml))
 
 - **Display unit / speedometer (DKD 061)** ([display.yaml](https://github.com/derekpcollins/metacycle-resource/edit/main/src/content/parts/display.yaml))
-  - cnqsmotor.com (QS Motor / SiAECOSYS): `unverified`, verified never, price TODO (USD)
+  - cnqsmotor.com (QS Motor / SiAECOSYS): `dead`, verified never, price TODO (USD)
   - AliExpress (seller not confirmed): `unverified`, verified never, price TODO (USD)
 
 - **Folding footpegs** ([footpegs.yaml](https://github.com/derekpcollins/metacycle-resource/edit/main/src/content/parts/footpegs.yaml))

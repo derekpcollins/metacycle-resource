@@ -32,7 +32,7 @@ sources:
       amount: TODO
       currency: USD
     last_verified: TODO
-    status: unverified
+    status: dead
   - vendor: aliexpress
     url: https://www.aliexpress.us/item/3256804221088096.html
     type: OEM

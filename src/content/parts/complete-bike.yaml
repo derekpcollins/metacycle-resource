@@ -29,7 +29,7 @@ sources:
       amount: TODO
       currency: USD
     last_verified: TODO
-    status: unverified
+    status: dead
     notes: Duties and tax not included.
 references:
   - https://metacyclopedia.github.io/parts/
